@@ -269,17 +269,13 @@ LinkedIn rewards conciseness more than Reddit does. Voice:
 - **No hashtag spam.** Optional single relevant hashtag at the
   end is fine. Avoid the "#Innovation #DigitalTransformation
   #Leadership" stack.
-- **No disclosure footer.** Per operator's call. Write as if
-  the operator is writing.
 - **NEVER use em dashes (—) or en dashes (–) as sentence
-  punctuation.** They are one of the most-cited tells that a
-  piece of writing was AI-generated, and you are posting under
-  the operator's real professional identity. Use periods (split
-  into two sentences), colons (for elaboration), parentheses
-  (for asides), semicolons (for connected clauses), commas, or
-  relative clauses ("which", "that") instead. Hyphens in
-  compound words ("off-the-shelf", "well-understood") are fine.
-  The ban is specifically on the dash as a separator.
+  punctuation.** Use periods (split into two sentences), colons
+  (for elaboration), parentheses (for asides), semicolons (for
+  connected clauses), commas, or relative clauses ("which",
+  "that") instead. Hyphens in compound words ("off-the-shelf",
+  "well-understood") are fine. The ban is specifically on the
+  dash as a separator.
 - **No corporate buzz vocabulary.** Words and phrases that
   trigger eye-rolls on LinkedIn (incomplete list, use judgment):
   "synergy", "leverage" as a verb, "circle back", "let's
@@ -482,8 +478,7 @@ to guess whether the engager is alive or stuck.
   desperate.
 - **Don't use emoji.** LinkedIn default is no emoji.
 - **Don't use em dashes or en dashes as separators** (see step
-  6a). Single most cited LLM tell on text in professional
-  contexts. The operator's real identity is on this account.
+  6a).
 - **Don't use corporate buzz vocabulary** (see step 6a).
 - **Don't wrap MCP tool calls in a bash heredoc.** Same
   architectural lesson as the heartbeat and Reddit examples.
