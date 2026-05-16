@@ -1,0 +1,5 @@
+{
+  "ts": "2026-05-16T00:00:00Z",
+  "skip_reason": "auth-check failed: not logged in — LinkedIn redirected to login page. Cookies are expired, partial, or exported from a different account.",
+  "screenshot_path": "data/screenshots/auth-check-redirected-1778919426376.png"
+}
