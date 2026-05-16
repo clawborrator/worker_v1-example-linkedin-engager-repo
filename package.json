@@ -1,0 +1,20 @@
+{
+  "name": "worker_v1-example-linkedin-engager-repo",
+  "version": "0.1.0",
+  "description": "Playbook + Playwright wrapper for the autonomous LinkedIn engager agent. Runs inside ladder99/clawborrator-worker-playwright.",
+  "private": true,
+  "scripts": {
+    "auth-check": "node specialists/linkedin.js auth-check",
+    "scroll-feed": "node specialists/linkedin.js scroll-feed",
+    "read-post": "node specialists/linkedin.js read-post",
+    "comment-post": "node specialists/linkedin.js comment-post",
+    "reply-comment": "node specialists/linkedin.js reply-comment"
+  },
+  "dependencies": {
+    "playwright": "1.49.0"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "comment": "playwright is also pre-installed globally inside the worker_v1-playwright image with NODE_PATH set so require('playwright') resolves to the global install. Declaring it as a local dependency here is defense-in-depth for hosts running stock Node or older image tags."
+}
