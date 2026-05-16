@@ -238,6 +238,7 @@ function parseRelativeAge(s) {
 async function cmdAuthCheck() {
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
+  let screenshotPath = null;
   try {
     await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
@@ -258,6 +259,20 @@ async function cmdAuthCheck() {
       });
       process.exit(2);
     }
+
+    // LinkedIn is a React SPA. domcontentloaded fires before
+    // React has hydrated the shell, so the nav + profile photo
+    // selectors below would all miss against an un-hydrated DOM.
+    // Wait for the nav region to render or for a short timeout,
+    // whichever comes first. networkidle never settles on
+    // LinkedIn (always-on telemetry), so don't use that.
+    await page.waitForSelector(
+      'nav, header, [role="banner"], main, [role="main"]',
+      { timeout: 10_000, state: 'attached' },
+    ).catch(() => {});
+    // Plus a small fixed wait to let React finish first-paint
+    // for the nav-internal elements (photo, links).
+    await page.waitForTimeout(2_500);
 
     // SECONDARY signal: presence of the global nav with profile
     // photo. LinkedIn hashes the CSS classes on these regularly,
@@ -293,9 +308,11 @@ async function cmdAuthCheck() {
     // TERTIARY signal (only fires if the URL check passed but no
     // photo selector matched): look for the global nav itself.
     // If even that is missing, the page is in some unexpected
-    // state and we should bail conservatively.
+    // state and we should bail conservatively. Save a screenshot
+    // first so the operator can SEE what the page looked like
+    // without needing to instrument the container.
     if (!photoFound) {
-      const navPresent = (await page.locator('nav.global-nav, header.global-nav, [role="banner"] nav').count()) > 0;
+      const navPresent = (await page.locator('nav.global-nav, header.global-nav, [role="banner"] nav, nav, header').count()) > 0;
       if (navPresent) {
         emit({
           ok: true,
@@ -305,11 +322,19 @@ async function cmdAuthCheck() {
         });
         return;
       }
+      screenshotPath = `/tmp/auth-check-fail-${Date.now()}.png`;
+      await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => {
+        screenshotPath = null;
+      });
       emit({
         ok: false,
         error: 'not logged in',
         final_url: finalUrl,
-        hint: 'URL did not redirect to login but no global nav or profile photo found either. Session may be in an unexpected state (cookies partially valid, interstitial dialog, account-restriction page). Inspect the live page manually.',
+        screenshot_path: screenshotPath,
+        retrieve_hint: screenshotPath
+          ? `docker cp linkedin-engager:${screenshotPath} ./auth-fail.png  # then open the PNG`
+          : 'screenshot capture failed too',
+        hint: 'URL did not redirect to login but no nav/header/profile-photo found after waiting for React hydration. Pull the screenshot to inspect what the page actually rendered (interstitial dialog, account-restriction page, captcha, or genuinely stale selectors).',
       });
       process.exit(2);
     }
