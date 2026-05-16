@@ -1,0 +1,1 @@
+{"ts":"2026-05-16T07:53:03Z","skip_reason":"auth-check failed: not logged in. LinkedIn session may be in unexpected state (cookies partially valid, interstitial, or restriction page). Refresh ./secrets/linkedin.cookies.json on the host and restart the container."}
