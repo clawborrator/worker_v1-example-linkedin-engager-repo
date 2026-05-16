@@ -197,15 +197,62 @@ async function gotoWithRetry(page, url) {
   throw lastErr;
 }
 
+async function snapshotOnFailure(page, errorTag) {
+  // Dump a full-page screenshot to /tmp so the operator can
+  // SEE what LinkedIn served when a failure path tripped.
+  // Especially useful for the partial-cookie-validity case
+  // where auth-check passes (the feed shell loads) but
+  // interactive requests later get redirected to login. The
+  // screenshot tells you whether the page is the actual login
+  // form, an "is this you?" interstitial, a captcha, or
+  // something else entirely. Returns the path on success, null
+  // on capture failure.
+  const path = `/tmp/${errorTag}-${Date.now()}.png`;
+  try {
+    await page.screenshot({ path, fullPage: true });
+    return path;
+  } catch {
+    return null;
+  }
+}
+
+function emitFailureWithScreenshot(error, details, screenshotPath) {
+  emit({
+    ok: false,
+    error,
+    ...(details ? { details } : {}),
+    ...(screenshotPath
+      ? {
+          screenshot_path: screenshotPath,
+          retrieve_hint: `docker cp linkedin-engager:${screenshotPath} ./${error}.png  # then open the PNG`,
+        }
+      : {}),
+  });
+  process.exit(1);
+}
+
 async function assertNotChallenged(page) {
   // If LinkedIn dropped a captcha, auth challenge, or rate-limit
-  // page, bail with a typed error so the agent can react. Also
-  // catches the silent-redirect-to-login case (cookies expired
+  // page, snapshot the visible state to /tmp then bail with a
+  // typed error so the agent can react. Also catches the silent-
+  // redirect-to-login case (cookies expired or partially valid
   // mid-cycle).
-  if (await page.locator(SELECTORS.captchaIframe).count() > 0)        die('captcha');
-  if (await page.locator(SELECTORS.authChallengePage).count() > 0)    die('auth_lost_mid_cycle', 'LinkedIn challenged the session with an identity verification page');
-  if (await page.locator(SELECTORS.rateLimitNotice).count() > 0)      die('rate_limited');
-  if (await page.locator(SELECTORS.loginRedirectMarker).count() > 0)  die('auth_lost_mid_cycle', 'page redirected to login form');
+  if (await page.locator(SELECTORS.captchaIframe).count() > 0) {
+    const snap = await snapshotOnFailure(page, 'captcha');
+    emitFailureWithScreenshot('captcha', undefined, snap);
+  }
+  if (await page.locator(SELECTORS.authChallengePage).count() > 0) {
+    const snap = await snapshotOnFailure(page, 'auth-challenge');
+    emitFailureWithScreenshot('auth_lost_mid_cycle', 'LinkedIn challenged the session with an identity verification page', snap);
+  }
+  if (await page.locator(SELECTORS.rateLimitNotice).count() > 0) {
+    const snap = await snapshotOnFailure(page, 'rate-limited');
+    emitFailureWithScreenshot('rate_limited', undefined, snap);
+  }
+  if (await page.locator(SELECTORS.loginRedirectMarker).count() > 0) {
+    const snap = await snapshotOnFailure(page, 'login-redirect');
+    emitFailureWithScreenshot('auth_lost_mid_cycle', 'page redirected to login form', snap);
+  }
 }
 
 function ageHoursFromIso(iso) {
