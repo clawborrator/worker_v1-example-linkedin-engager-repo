@@ -241,21 +241,80 @@ async function cmdAuthCheck() {
   try {
     await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
-    const profileBtn = page.locator(SELECTORS.loggedInProfileButton).first();
-    if (await profileBtn.count() === 0) {
-      emit({ ok: false, error: 'not logged in', hint: 'cookies likely expired or never valid; re-export from a logged-in browser' });
+
+    // PRIMARY signal: final URL after navigation. If LinkedIn
+    // bounced an unauthenticated request to /login, /uas/login,
+    // /checkpoint, or /signup, the cookies are dead. This is more
+    // reliable than any DOM selector because LinkedIn's auth
+    // redirect happens before any of our class-based selectors
+    // get a chance to match.
+    const finalUrl = page.url();
+    if (/\/login\b|\/uas\/login\b|\/checkpoint\b|\/signup\b/i.test(finalUrl)) {
+      emit({
+        ok: false,
+        error: 'not logged in',
+        final_url: finalUrl,
+        hint: 'LinkedIn redirected to login or checkpoint. Cookies are expired or were exported from a different account. Re-export from a logged-in browser.',
+      });
       process.exit(2);
     }
-    // Display name lives in the Me-button's title/aria-label or
-    // in the profile photo's alt text. Try both.
+
+    // SECONDARY signal: presence of the global nav with profile
+    // photo. LinkedIn hashes the CSS classes on these regularly,
+    // so try several known-stable patterns in order.
+    const photoSelectors = [
+      'header img.global-nav__me-photo',
+      'img.global-nav__me-photo',
+      'img[alt^="Photo of "]',
+      '[data-test-global-nav-me] img',
+      'nav img[id^="ember"][alt*="profile" i]',
+      'button[data-control-name="nav.settings"]',
+    ];
     let displayName = null;
-    const photoAlt = await page.locator('img[alt^="Photo of "]').first().getAttribute('alt').catch(() => null);
-    if (photoAlt) displayName = photoAlt.replace(/^Photo of\s+/, '').trim();
-    if (!displayName) {
-      const aria = await profileBtn.getAttribute('aria-label').catch(() => null);
-      if (aria) displayName = aria.trim();
+    let photoFound = false;
+    for (const sel of photoSelectors) {
+      const loc = page.locator(sel).first();
+      if (await loc.count() === 0) continue;
+      photoFound = true;
+      const alt = await loc.getAttribute('alt').catch(() => null);
+      const aria = await loc.getAttribute('aria-label').catch(() => null);
+      if (alt) {
+        displayName = alt.replace(/^Photo of\s+/i, '').trim();
+        break;
+      }
+      if (aria) {
+        displayName = aria.trim();
+        break;
+      }
+      displayName = '(photo found, name not extracted)';
+      break;
     }
-    emit({ ok: true, logged_in_as: displayName ?? '(name not extracted)' });
+
+    // TERTIARY signal (only fires if the URL check passed but no
+    // photo selector matched): look for the global nav itself.
+    // If even that is missing, the page is in some unexpected
+    // state and we should bail conservatively.
+    if (!photoFound) {
+      const navPresent = (await page.locator('nav.global-nav, header.global-nav, [role="banner"] nav').count()) > 0;
+      if (navPresent) {
+        emit({
+          ok: true,
+          logged_in_as: '(no display name extracted; global nav present)',
+          final_url: finalUrl,
+          warning: 'profile-photo selectors all stale; LinkedIn DOM may have shifted. Engager will keep working but display name will read this placeholder. Update SELECTORS.loggedInProfileButton in linkedin.js when convenient.',
+        });
+        return;
+      }
+      emit({
+        ok: false,
+        error: 'not logged in',
+        final_url: finalUrl,
+        hint: 'URL did not redirect to login but no global nav or profile photo found either. Session may be in an unexpected state (cookies partially valid, interstitial dialog, account-restriction page). Inspect the live page manually.',
+      });
+      process.exit(2);
+    }
+
+    emit({ ok: true, logged_in_as: displayName, final_url: finalUrl });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('auth_check_failed', e.message);
