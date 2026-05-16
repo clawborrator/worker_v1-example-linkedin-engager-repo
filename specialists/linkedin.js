@@ -197,34 +197,48 @@ async function gotoWithRetry(page, url) {
   throw lastErr;
 }
 
+// Where failure screenshots land. In-repo so the agent commits
+// them as part of its audit step and they show up on GitHub
+// directly viewable in the file browser. Browsable history of
+// every cycle's failure mode without docker exec or docker cp.
+const SCREENSHOTS_DIR = '/workspace/repo/data/screenshots';
+
 async function snapshotOnFailure(page, errorTag) {
-  // Dump a full-page screenshot to /tmp so the operator can
-  // SEE what LinkedIn served when a failure path tripped.
-  // Especially useful for the partial-cookie-validity case
-  // where auth-check passes (the feed shell loads) but
-  // interactive requests later get redirected to login. The
-  // screenshot tells you whether the page is the actual login
-  // form, an "is this you?" interstitial, a captcha, or
-  // something else entirely. Returns the path on success, null
-  // on capture failure.
-  const path = `/tmp/${errorTag}-${Date.now()}.png`;
+  // Dump a full-page screenshot to the in-repo screenshots
+  // directory so it gets committed + pushed on the next audit
+  // step and is viewable in the GitHub UI. Especially useful
+  // for the partial-cookie-validity case where auth-check
+  // passes (the feed shell loads) but interactive requests
+  // later get redirected to login. The screenshot tells you
+  // whether the page is the actual login form, an "is this
+  // you?" interstitial, a captcha, or something else. Returns
+  // the relative repo path on success, null on capture failure.
   try {
-    await page.screenshot({ path, fullPage: true });
-    return path;
+    fs.mkdirSync(SCREENSHOTS_DIR, { recursive: true });
+  } catch {
+    // Continue even if mkdir fails; screenshot() below will
+    // surface the real error.
+  }
+  const filename = `${errorTag}-${Date.now()}.png`;
+  const absolutePath = `${SCREENSHOTS_DIR}/${filename}`;
+  const repoRelativePath = `data/screenshots/${filename}`;
+  try {
+    await page.screenshot({ path: absolutePath, fullPage: true });
+    return repoRelativePath;
   } catch {
     return null;
   }
 }
 
-function emitFailureWithScreenshot(error, details, screenshotPath) {
+function emitFailureWithScreenshot(error, details, screenshotRepoPath) {
   emit({
     ok: false,
     error,
     ...(details ? { details } : {}),
-    ...(screenshotPath
+    ...(screenshotRepoPath
       ? {
-          screenshot_path: screenshotPath,
-          retrieve_hint: `docker cp linkedin-engager:${screenshotPath} ./${error}.png  # then open the PNG`,
+          screenshot_path: screenshotRepoPath,
+          retrieve_hint: `the screenshot is in the repo at ${screenshotRepoPath} and will be on GitHub after the agent's next audit commit; you can also open it locally with \`open /workspace/repo/${screenshotRepoPath}\` from inside the container`,
         }
       : {}),
   });
@@ -369,17 +383,14 @@ async function cmdAuthCheck() {
         });
         return;
       }
-      screenshotPath = `/tmp/auth-check-fail-${Date.now()}.png`;
-      await page.screenshot({ path: screenshotPath, fullPage: true }).catch(() => {
-        screenshotPath = null;
-      });
+      screenshotPath = await snapshotOnFailure(page, 'auth-check-fail');
       emit({
         ok: false,
         error: 'not logged in',
         final_url: finalUrl,
         screenshot_path: screenshotPath,
         retrieve_hint: screenshotPath
-          ? `docker cp linkedin-engager:${screenshotPath} ./auth-fail.png  # then open the PNG`
+          ? `the screenshot is in the repo at ${screenshotPath} and will be on GitHub after the agent's next audit commit`
           : 'screenshot capture failed too',
         hint: 'URL did not redirect to login but no nav/header/profile-photo found after waiting for React hydration. Pull the screenshot to inspect what the page actually rendered (interstitial dialog, account-restriction page, captcha, or genuinely stale selectors).',
       });

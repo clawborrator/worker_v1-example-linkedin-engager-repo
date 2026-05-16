@@ -81,13 +81,19 @@ Expected on success:
 If `{ok: false}` with `error: "not logged in"` or `error:
 "cookies missing"`:
 
+- If the response includes `screenshot_path`, the wrapper saved
+  a PNG to `data/screenshots/` showing what LinkedIn rendered.
+- Run step 7 (audit + commit) so any pending screenshots get
+  pushed to git and visible on GitHub. The audit record carries
+  `skip_reason: "auth-check failed: <details>"` and (if present)
+  `screenshot_path`.
 - Send a brief past-tense notification to `@clauderemote` via
-  `route_to_peer` mode `tell`:
-  `"Cycle skipped: LinkedIn cookies expired or missing. Refresh
-  ./secrets/linkedin.cookies.json on the host and restart the
-  container."`
-- Return. The next cron fire is 8 hours away. Do not burn cycles
-  on a broken session.
+  `route_to_peer` mode `tell` (include the screenshot path /
+  GitHub URL if there is one):
+  `"Cycle skipped: LinkedIn auth-check failed (<error>). Screenshot:
+  <relative-path-or-github-url>. Refresh ./secrets/linkedin.cookies.json
+  on the host and restart the container."`
+- Return. The next cron fire is 8 hours away.
 
 ### Step 2. Scroll feed (bash)
 
@@ -325,10 +331,15 @@ so the audit timeline is complete.
 
 ```bash
 cd /workspace/repo
-mkdir -p data/posted
+mkdir -p data/posted data/screenshots
 TS=$(date -u +%Y-%m-%d-%H%M%SZ)
 echo "$AUDIT_JSON" > "data/posted/$TS.json"
-git add "data/posted/$TS.json"
+# Stage the audit JSON AND any failure screenshots the wrapper
+# produced this cycle (or any pending from prior cycles that
+# didn't get committed). The screenshots live in
+# data/screenshots/ and are visible in the GitHub file browser
+# once pushed.
+git add data/posted/ data/screenshots/
 git commit -m "engager $TS" || true
 git push 2>&1 | tail -5
 ```
@@ -384,6 +395,11 @@ along via `docker logs -f linkedin-engager`.
 
 - `/workspace/repo/data/posted/` is the audit log, one JSON file
   per cycle, committed and pushed.
+- `/workspace/repo/data/screenshots/` is where the wrapper saves
+  full-page PNGs on any `assertNotChallenged` failure path
+  (captcha, auth challenge, rate limit, login redirect) and on
+  the auth-check tertiary failure. The audit step commits +
+  pushes these too so they show up in the GitHub file browser.
 - `/secrets/linkedin.cookies.json` is the Playwright cookies,
   mounted read-only from the host. Don't try to write to this
   path.
@@ -410,9 +426,9 @@ step 8 (notify) before returning.
 
 | Failure                              | Response                                                              |
 |--------------------------------------|-----------------------------------------------------------------------|
-| `auth-check` returns `not logged in` | Notify `@clauderemote`, skip cycle, return.                            |
-| `scroll-feed` returns empty / errors | Notify "feed empty or errored: <err>", skip cycle, return.            |
-| Nothing in feed meets bar            | Notify "nothing met the bar this round", skip cycle, return.          |
+| `auth-check` returns `not logged in` | Run step 7 (commits any screenshot + audit). Notify `@clauderemote` with screenshot path. Return. |
+| `scroll-feed` returns empty / errors | Run step 7. Notify "feed empty or errored: <err>" + screenshot path if any. Return. |
+| Nothing in feed meets bar            | Run step 7. Notify "nothing met the bar this round". Return.          |
 | `read-post` errors                   | Notify "post read failed: <err>", commit audit, return.                |
 | Nothing in comments meets bar        | Notify "found post but no comment would add value", commit audit, return. |
 | `comment-post` / `reply-comment` returns `rate_limited` / `captcha` / `auth_lost_mid_cycle` | STOP. Notify with details. Commit audit. Return. |
