@@ -243,8 +243,7 @@ Voice:
   (for elaboration), parentheses (for asides), semicolons (for
   connected clauses), commas, or relative clauses ("which",
   "that") instead. Hyphens in compound words ("off-the-shelf",
-  "well-understood") are fine. The ban is specifically on the
-  dash as a separator.
+  "well-understood") are fine. 
 - **No corporate buzz vocabulary.** Incomplete list, use
   judgment: "synergy", "leverage" as a verb, "circle back",
   "let's unpack", "this is a masterclass in...", "thoughts?",
