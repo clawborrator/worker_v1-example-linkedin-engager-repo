@@ -300,26 +300,40 @@ async function cmdAuthCheck() {
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
   let screenshotPath = null;
+
+  // Helper: checks the current URL against the dead-cookie redirect
+  // patterns and bails (with screenshot) if it matches. Useful for
+  // both the post-goto check AND any re-check after waiting, because
+  // LinkedIn does client-side JS redirects to /login after the
+  // initial /feed/ load when the session is partially valid.
+  const checkUrlAndMaybeBail = async (label) => {
+    const url = page.url();
+    if (/\/login\b|\/uas\/login\b|\/checkpoint\b|\/signup\b/i.test(url)) {
+      const snap = await snapshotOnFailure(page, 'auth-check-redirected');
+      emit({
+        ok: false,
+        error: 'not logged in',
+        final_url: url,
+        when: label,
+        screenshot_path: snap,
+        retrieve_hint: snap
+          ? `the screenshot is in the repo at ${snap} and will be on GitHub after the agent's next audit commit`
+          : 'screenshot capture failed',
+        hint: 'LinkedIn redirected to login or checkpoint. Cookies are expired, partial, or exported from a different account. Re-export from a fully-logged-in browser session on /feed/ (not the landing page) and include ALL cookies in the export.',
+      });
+      process.exit(2);
+    }
+    return url;
+  };
+
   try {
     await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
 
     // PRIMARY signal: final URL after navigation. If LinkedIn
     // bounced an unauthenticated request to /login, /uas/login,
-    // /checkpoint, or /signup, the cookies are dead. This is more
-    // reliable than any DOM selector because LinkedIn's auth
-    // redirect happens before any of our class-based selectors
-    // get a chance to match.
-    const finalUrl = page.url();
-    if (/\/login\b|\/uas\/login\b|\/checkpoint\b|\/signup\b/i.test(finalUrl)) {
-      emit({
-        ok: false,
-        error: 'not logged in',
-        final_url: finalUrl,
-        hint: 'LinkedIn redirected to login or checkpoint. Cookies are expired or were exported from a different account. Re-export from a logged-in browser.',
-      });
-      process.exit(2);
-    }
+    // /checkpoint, or /signup, the cookies are dead.
+    await checkUrlAndMaybeBail('post-goto');
 
     // LinkedIn is a React SPA. domcontentloaded fires before
     // React has hydrated the shell, so the nav + profile photo
@@ -332,12 +346,26 @@ async function cmdAuthCheck() {
       { timeout: 10_000, state: 'attached' },
     ).catch(() => {});
     // Plus a small fixed wait to let React finish first-paint
-    // for the nav-internal elements (photo, links).
+    // for the nav-internal elements (photo, links). During this
+    // wait LinkedIn's client-side JS can detect a partial-cookie
+    // session and trigger a client-side redirect to /login,
+    // killing the JS execution context. The re-check below
+    // catches that case before we start querying the (now-dead)
+    // page.
     await page.waitForTimeout(2_500);
+
+    // After hydration wait, re-verify the URL. Partial-cookie
+    // sessions land here.
+    const finalUrl = await checkUrlAndMaybeBail('post-hydration-wait');
 
     // SECONDARY signal: presence of the global nav with profile
     // photo. LinkedIn hashes the CSS classes on these regularly,
-    // so try several known-stable patterns in order.
+    // so try several known-stable patterns in order. The whole
+    // loop is wrapped because LinkedIn can client-side-navigate
+    // away mid-query when cookies are partially valid; the
+    // "Execution context was destroyed" error is its signature.
+    // On catch, re-verify URL (which may now be a login page) so
+    // the failure attributes correctly.
     const photoSelectors = [
       'header img.global-nav__me-photo',
       'img.global-nav__me-photo',
@@ -348,22 +376,37 @@ async function cmdAuthCheck() {
     ];
     let displayName = null;
     let photoFound = false;
-    for (const sel of photoSelectors) {
-      const loc = page.locator(sel).first();
-      if (await loc.count() === 0) continue;
-      photoFound = true;
-      const alt = await loc.getAttribute('alt').catch(() => null);
-      const aria = await loc.getAttribute('aria-label').catch(() => null);
-      if (alt) {
-        displayName = alt.replace(/^Photo of\s+/i, '').trim();
+    try {
+      for (const sel of photoSelectors) {
+        const loc = page.locator(sel).first();
+        if (await loc.count() === 0) continue;
+        photoFound = true;
+        const alt = await loc.getAttribute('alt').catch(() => null);
+        const aria = await loc.getAttribute('aria-label').catch(() => null);
+        if (alt) {
+          displayName = alt.replace(/^Photo of\s+/i, '').trim();
+          break;
+        }
+        if (aria) {
+          displayName = aria.trim();
+          break;
+        }
+        displayName = '(photo found, name not extracted)';
         break;
       }
-      if (aria) {
-        displayName = aria.trim();
-        break;
+    } catch (e) {
+      if (/Execution context was destroyed/i.test(e.message ?? '')) {
+        // The page navigated under us; let the URL check decide
+        // whether this is "redirected to login" (dead cookies)
+        // or something stranger.
+        await page.waitForTimeout(1_000);
+        await checkUrlAndMaybeBail('mid-photo-query');
+        // If checkUrlAndMaybeBail returned (URL still ok), the
+        // photo query is stale but the page is fine. Fall through
+        // to the tertiary nav-presence check.
+      } else {
+        throw e;
       }
-      displayName = '(photo found, name not extracted)';
-      break;
     }
 
     // TERTIARY signal (only fires if the URL check passed but no
@@ -400,7 +443,13 @@ async function cmdAuthCheck() {
     emit({ ok: true, logged_in_as: displayName, final_url: finalUrl });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
-    die('auth_check_failed', e.message);
+    // Outermost catch. Try to snapshot whatever page state IS
+    // visible before exiting so the operator has something to
+    // look at even on uncaught errors. screenshot() may itself
+    // throw if the browser is in a weird state; swallow that.
+    const snap = await snapshotOnFailure(page, 'auth-check-uncaught').catch(() => null);
+    const currentUrl = await page.url().catch(() => null);
+    emitFailureWithScreenshot('auth_check_failed', `${e.message}${currentUrl ? ` | url at failure: ${currentUrl}` : ''}`, snap);
   } finally {
     await browser.close();
   }
