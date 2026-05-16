@@ -65,11 +65,18 @@ execute one cycle, return.
 Each step is one or more tool calls. Bash subprocesses for
 browser work, your turn for judgment, MCP for the notification.
 
+Every `node specialists/linkedin.js ...` call is prefixed with
+`xvfb-run -a`. The wrapper runs Chromium with `headless: false`
+under a virtual display, which removes the headless-chromium
+fingerprint signal that LinkedIn's anti-bot stack checks. Without
+the `xvfb-run` prefix, Chromium has no display to render into
+and crashes immediately. Don't drop the prefix.
+
 ### Step 1. Auth check (bash)
 
 ```bash
 cd /workspace/repo
-node specialists/linkedin.js auth-check
+xvfb-run -a node specialists/linkedin.js auth-check
 ```
 
 Expected on success:
@@ -98,7 +105,7 @@ If `{ok: false}` with `error: "not logged in"` or `error:
 ### Step 2. Scroll feed (bash)
 
 ```bash
-node specialists/linkedin.js scroll-feed --count 15
+xvfb-run -a node specialists/linkedin.js scroll-feed --count 15
 ```
 
 Returns JSON:
@@ -163,7 +170,7 @@ If NO post in the list meets the bar, skip this cycle:
 ### Step 4. Read the post (bash)
 
 ```bash
-node specialists/linkedin.js read-post '<post-url-from-step-3>'
+xvfb-run -a node specialists/linkedin.js read-post '<post-url-from-step-3>'
 ```
 
 Returns JSON:
@@ -261,7 +268,7 @@ Voice:
 If commenting on the post itself:
 
 ```bash
-node specialists/linkedin.js comment-post '<post-url>' \
+xvfb-run -a node specialists/linkedin.js comment-post '<post-url>' \
   --text "$(cat <<'COMMENT_EOF'
 <your drafted comment, multi-line OK, COMMENT_EOF as terminator>
 COMMENT_EOF
@@ -271,7 +278,7 @@ COMMENT_EOF
 If replying to a specific comment:
 
 ```bash
-node specialists/linkedin.js reply-comment '<comment-permalink>' \
+xvfb-run -a node specialists/linkedin.js reply-comment '<comment-permalink>' \
   --text "$(cat <<'COMMENT_EOF'
 <your drafted reply, multi-line OK>
 COMMENT_EOF

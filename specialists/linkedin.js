@@ -33,7 +33,20 @@
 
 'use strict';
 
-const { chromium } = require('playwright');
+// playwright-extra is a drop-in wrapper around playwright that
+// supports plugins. The stealth plugin patches navigator.webdriver,
+// chrome.runtime, the plugins array, WebGL fingerprint, canvas
+// hash, language headers, and ~10 other detectable headless
+// signals. Combined with `headless: false` under Xvfb (see
+// CLAUDE.md, every node call is wrapped in `xvfb-run -a`), this
+// is the best we can do against hostile anti-bot stacks without
+// a managed-browser service. It is not bulletproof; LinkedIn
+// updates its detection regularly. Plan for sessions to die
+// faster than on Reddit and re-export cookies as a routine event.
+const { chromium } = require('playwright-extra');
+const StealthPlugin = require('puppeteer-extra-plugin-stealth');
+chromium.use(StealthPlugin());
+
 const fs = require('fs');
 const path = require('path');
 
@@ -157,11 +170,18 @@ function loadCookies() {
 }
 
 async function newContext() {
+  // headless: false plus Xvfb (see CLAUDE.md) removes the
+  // headless-chromium fingerprint signal. The stealth plugin
+  // imported at the top of this file patches the remaining
+  // common tells (navigator.webdriver, chrome.runtime, plugins,
+  // WebGL, canvas, languages). Requires DISPLAY env to be set,
+  // which xvfb-run does automatically.
   const browser = await chromium.launch({
-    headless: true,
+    headless: false,
     args: [
       '--disable-blink-features=AutomationControlled',
       '--no-sandbox',
+      '--disable-dev-shm-usage',
     ],
   });
   const ctx = await browser.newContext({
