@@ -1,0 +1,4 @@
+{
+  "ts": "2026-05-16T08:02:39Z",
+  "skip_reason": "auth-check failed: auth_check_failed - locator.count: Execution context was destroyed, most likely because of a navigation"
+}
