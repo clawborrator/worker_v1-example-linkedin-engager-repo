@@ -888,19 +888,45 @@ async function cmdDebugFeed() {
     }
     const dom = await page.evaluate(() => {
       const q = (s) => { try { return document.querySelectorAll(s).length; } catch { return 'ERR'; } };
+      // 1. Inline bootstrap: LinkedIn embeds model JSON in hidden
+      // <code> blocks. Find ones mentioning feed activity URNs.
+      const codeBlocks = [...document.querySelectorAll('code')]
+        .map(c => c.textContent || '')
+        .filter(t => t.includes('urn:li:activity') || t.includes('fsd_update') || t.includes('feedDash'));
+      const codeSamples = codeBlocks.slice(0, 3).map(t => {
+        const i = t.indexOf('urn:li:activity');
+        return { len: t.length, around: i >= 0 ? t.slice(Math.max(0, i - 40), i + 90) : t.slice(0, 120) };
+      });
+      // 2. Per-card DOM extraction probe under mainFeed.
+      const cards = [...document.querySelectorAll('[data-testid="mainFeed"] [role="listitem"]')].slice(0, 4).map(card => {
+        const body = card.querySelector('[data-testid="expandable-text-box"]');
+        // any link that looks like a post permalink or member/company
+        const links = [...card.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).filter(h => h && (h.includes('/feed/update/') || h.includes('/posts/'))).slice(0, 3);
+        // hunt any attribute on any descendant carrying an activity urn
+        let urnAttr = null;
+        for (const el of card.querySelectorAll('*')) {
+          for (const a of el.attributes) {
+            if (a.value && a.value.includes('urn:li:activity')) { urnAttr = a.name + '=' + a.value.slice(0, 60); break; }
+          }
+          if (urnAttr) break;
+        }
+        return { bodyText: (body?.textContent || '').trim().slice(0, 60), permalinks: links, urnAttr };
+      });
       const testids = {};
       for (const el of document.querySelectorAll('[data-testid]')) {
         const v = el.getAttribute('data-testid'); testids[v] = (testids[v] || 0) + 1;
       }
       return {
         oldSelector_dataIdActivity: q('div[data-id^="urn:li:activity:"]'),
-        oldClass_feedSharedUpdate:  q('.feed-shared-update-v2'),
         new_mainFeed:               q('[data-testid="mainFeed"]'),
         new_sduiScreen:             q('[data-sdui-screen]'),
         new_expandableTextBox:      q('[data-testid="expandable-text-box"]'),
         roleListitem:               q('[role="listitem"]'),
-        componentTypes: [...document.querySelectorAll('[data-component-type]')].map(e => e.getAttribute('data-component-type')).slice(0, 8),
-        testids: Object.entries(testids).slice(0, 25),
+        htmlActivityCount: (document.documentElement.outerHTML.match(/urn:li:activity/g) || []).length,
+        codeBlocksWithFeed: codeBlocks.length,
+        codeSamples,
+        cards,
+        testids: Object.entries(testids).slice(0, 18),
       };
     });
     const shot = await snapshotOnFailure(page, 'debug-feed');
