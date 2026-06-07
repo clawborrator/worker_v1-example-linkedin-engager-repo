@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-07T22:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469392765433298945",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469392765433298945/",
+    "author": "Rob Hulsebos",
+    "topic_summary": "TLS 1.4 outlook: a personal research proposal by Bocai Zhou covering post-quantum key exchange, session-transport decoupling, and improved 0-RTT security. Work discontinued end of 2025; TLS 1.3 remains the standard for now."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Rob Hulsebos",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469392765433298945/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469392765433298945?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469392765433298945%2C7469508554387988480%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469508554387988480%2Curn%3Ali%3Aactivity%3A7469392765433298945%29",
+    "comment_text": "The session-transport decoupling Zhou proposes would address a real industrial problem: mobile equipment (AGVs, forklifts, handheld scanners) that roam between wireless cells trigger a full TLS renegotiation on reconnect, which adds latency and drops in-progress MQTT sessions. Fixed assets do not see this, but it is a genuine issue in facilities with heavy moving equipment.\n\nThe bigger operational gap in industrial TLS right now is not the protocol version. It is certificate lifecycle management on edge hardware. Most plants running MQTT over TLS today issued a self-signed cert at commissioning and have not touched it since. A gateway running an expired cert with no automated renewal is the norm, not the exception. That problem does not get solved by moving to TLS 1.4."
+  },
+  "skip_reason": null
+}
