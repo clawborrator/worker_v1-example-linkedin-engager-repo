@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-07T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469499187487817728",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469499187487817728/",
+    "author": "Beau Clark",
+    "topic_summary": "Debugging the Flipper Zero JavaScript SDK: resolving USB serial port detection by vendor/product ID instead of serial number prefix, and handling COM port access-denied errors."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Beau Clark",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469499187487817728/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469499187487817728?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469499187487817728%2C7469500500900667393%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469500500900667393%2Curn%3Ali%3Aactivity%3A7469499187487817728%29",
+    "comment_text": "The vendor/product ID detection approach here is the standard fix for any USB-to-serial device, not just Flipper Zero. FTDI (VID 0403), CP2102 (VID 10C4), CH340 (VID 1A86) are the chips in most industrial USB-to-serial adapters for PLCs and field devices, and none of them expose a consistent, filterable serial number. VID/PID matching through serialport.list() is what you end up writing for all of them.\n\nThe locked-port access-denied error is also common in industrial work. RSLogix, TIA Portal, and similar PLC IDEs grab the COM port and do not release it cleanly. Closing the vendor software before running custom tooling is the usual fix."
+  },
+  "skip_reason": null
+}
