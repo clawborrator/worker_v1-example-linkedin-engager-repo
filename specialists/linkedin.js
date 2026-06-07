@@ -964,11 +964,18 @@ async function cmdDebugFeed() {
         try {
           const r = await fetch(url, { headers: { 'csrf-token': jsid, 'x-restli-protocol-version': '2.0.0', 'accept': 'application/vnd.linkedin.normalized+json+2.1' }, credentials: 'include' });
           const t = await r.text();
-          out.push({ url, status: r.status, len: t.length, hasActivity: t.includes('urn:li:activity'), start: t.slice(0, 160) });
+          out.push({ url, status: r.status, len: t.length, hasActivity: t.includes('urn:li:activity'), start: t.slice(0, 160), body: (r.status === 200 && t.includes('urn:li:activity')) ? t : undefined });
         } catch (e) { out.push({ url, err: String(e).slice(0, 120) }); }
       }
       return { hadJsid: jsid.length > 0, results: out };
     });
+    // Persist the first clean voyager feed JSON for offline parser design,
+    // then strip the big body from the emitted summary.
+    try {
+      const win = apiTest.results.find(r => r.body);
+      if (win) { fs.writeFileSync('/tmp/voyager-feed.json', win.body); }
+    } catch { /* ignore */ }
+    apiTest.results.forEach(r => { delete r.body; });
     const shot = await snapshotOnFailure(page, 'debug-feed');
     const verdict = dom.oldSelector_dataIdActivity > 0 ? 'OLD_FEED'
       : (dom.new_mainFeed > 0 || dom.new_sduiScreen > 0) ? 'NEW_SDUI_FEED'
