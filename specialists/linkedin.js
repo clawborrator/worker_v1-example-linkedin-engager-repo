@@ -1170,7 +1170,25 @@ async function cmdDebugComposer(postUrl) {
     }
     await page.waitForTimeout(2500);
     const after = await dumpControls();
-    emit({ ok: true, openedVia: opened, before, after });
+    // Playwright locators pierce open shadow DOM (unlike document.query*).
+    // Probe whether the editor is reachable + typeable WITHOUT submitting.
+    const probe = { frames: page.frames().map((f) => f.url().slice(0, 60)).slice(0, 8) };
+    probe.roleTextbox = await page.getByRole('textbox').count().catch(() => 'ERR');
+    probe.contentEditable = await page.locator('div[contenteditable="true"]').count().catch(() => 'ERR');
+    probe.ariaAddComment = await page.getByRole('textbox', { name: /comment/i }).count().catch(() => 'ERR');
+    // Try to type into the first reachable textbox and read it back (no post).
+    let typed = null;
+    try {
+      const ed = page.getByRole('textbox').first();
+      if (await ed.count() > 0) {
+        await ed.click({ timeout: 4000 }).catch(() => {});
+        await ed.type('selector probe', { delay: 20 }).catch(() => {});
+        await page.waitForTimeout(600);
+        typed = (await ed.textContent().catch(() => null)) || (await ed.inputValue().catch(() => null));
+      }
+    } catch (e) { typed = 'TYPE_ERR:' + e.message.slice(0, 60); }
+    probe.typedReadback = typed;
+    emit({ ok: true, openedVia: opened, after, probe });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('debug_composer_failed', e.message);
