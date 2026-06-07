@@ -835,9 +835,19 @@ async function cmdMyProfile() {
     await page.waitForTimeout(3_000);
     await expandSeeMore();
     const about = await page.evaluate(() => {
+      const clean = (t) => (t || '').replace(/^(About\s*)+/i, '').replace(/\s*…?\s*see more\s*$/i, '').trim();
+      // Prefer the section whose heading is exactly "About".
+      for (const sec of document.querySelectorAll('section')) {
+        const h = sec.querySelector('h2, h3, [role="heading"]');
+        if (h && /^about\b/i.test(h.innerText.trim())) return clean(sec.innerText);
+      }
+      // Fallback: anchor div, then its section.
       const a = document.querySelector('#about');
-      const sec = a ? a.closest('section') : null;
-      return (sec ? sec.innerText : '').replace(/^About\s*/i, '').trim();
+      if (a && a.closest('section')) return clean(a.closest('section').innerText);
+      // Last resort: slice the main text between About and the next section.
+      const main = document.querySelector('main')?.innerText || '';
+      const m = main.match(/\bAbout\b([\s\S]{0,3000}?)\n(Activity|Featured|Experience|Education|Top skills|Services)\b/i);
+      return m ? clean(m[1]) : '';
     }).catch(() => '');
 
     // Experience: the dedicated details page lists every position in full.
