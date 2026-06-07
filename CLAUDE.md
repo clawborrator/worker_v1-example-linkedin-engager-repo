@@ -238,26 +238,23 @@ Criteria, apply rather than recite:
   share", motivational quote dumps, sales pitches, and
   thought-leader-bait ("Agree?", "What do you think?", emoji
   bullet lists, hook-and-reveal storytelling).
-- **Matches the target audience.** The author and topic should fit
-  `data/target-audience.md`. Only engage where the operator can add
-  credible signal given their background. Posts outside that audience
-  (off-topic, generic leadership pablum, M&A, recruiting): skip.
-- **Engagement window depends on fit.** For a niche audience like
-  this, on-target posts are rare, so do NOT let a comment-count
-  floor make you skip the best posts:
-  - **On-target posts** (clear fit with `data/target-audience.md`):
-    comment_count of 0 is fine, being an early, substantive commenter
-    on an on-topic post from a relevant person is high value. Only
-    skip on the high end (roughly >150 comments) where your reply is
-    buried.
-  - **Marginal posts** (tangential fit): keep the bar high, roughly
-    5 to 80 comments, or skip.
-- **Age depends on fit.**
-  - **On-target posts:** up to ~48h is fine (manufacturing/IIoT
-    discussion moves slower than general LinkedIn).
-  - **Marginal posts:** < 24h.
-  - Either way, skip anything older than ~72h; a comment on a
-    days-old post reads as engagement-farming.
+- **Matches the target audience.** The author or topic should fit
+  `data/target-audience.md`, or be clearly adjacent to it (related
+  industry, neighboring technical area) where the operator can still
+  add credible signal. Lean toward engaging when it's in or near the
+  wheelhouse; only skip what's clearly off-target (generic leadership
+  pablum, M&A, recruiting, unrelated verticals).
+- **Comment count: don't let it block you.** On-target posts are
+  rare for this niche, so engage regardless of comment count.
+  comment_count of 0 is fine (be an early, substantive commenter on
+  an on-topic post from a relevant person, that's high value). Only
+  skip the very high end (roughly >200 comments) where your reply
+  would be buried.
+- **Age: up to ~2 weeks.** Industrial/IIoT discussion has a long
+  tail, so a thoughtful comment on a relevant post up to ~2 weeks old
+  (~336h) still lands. Prefer fresher when you have a choice, but do
+  not skip a clearly on-target post just because it's a few days old.
+  For marginal/tangential posts, keep it tighter (~1 week).
 - **Not promoted.** `is_promoted: true` is an ad. Never engage
   on ads.
 - **Author is not the operator.** Sanity check.
@@ -553,9 +550,9 @@ step 8 (notify) before returning.
 - **Don't comment on the operator's own posts.** Sanity check
   by author name in step 3.
 - **Don't comment on sponsored / promoted posts.**
-- **Don't comment on posts older than ~48h if on-target, ~24h if
-  marginal, and never older than ~72h** (see step 3 windows).
-- **Don't reply to a comment older than 48 hours.**
+- **Don't comment on posts older than ~2 weeks if on-target, ~1 week
+  if marginal** (see step 3 windows).
+- **Don't reply to a comment older than ~1 week.**
 - **Don't use emoji.**
 - **Don't use em dashes or en dashes as separators** (see step
   6a).
