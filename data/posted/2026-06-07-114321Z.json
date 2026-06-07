@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-07T11:43:21Z",
+  "post": {
+    "urn": "urn:li:activity:7466492660279627776",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7466492660279627776/",
+    "author": "Brian Perlstein",
+    "topic_summary": "Digital manufacturing transformation is about creating capacity for frontline leaders and operators to solve problems, not dashboards or AI for its own sake."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Brian Perlstein",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7466492660279627776/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7466123932698406912?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7466123932698406912%2C7469353218519711744%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469353218519711744%2Curn%3Ali%3AugcPost%3A7466123932698406912%29",
+    "comment_text": "The firefighting loop Brian describes often survives the first round of digital transformation because the data ends up in the wrong place: a historian no one checks, a dashboard built for the plant manager, or a shift report emailed the next morning. Getting operators out of \"find information\" mode means putting the right signal at the point of decision, at the workstation or machine where the call gets made in the next few minutes. The architecture question is less about which platform and more about who needs to see what in the next five minutes and what they are currently doing instead of seeing it. Everything else is downstream of answering that."
+  },
+  "skip_reason": null
+}
