@@ -49,9 +49,35 @@ When you receive the initial prompt:
    })
    ```
 
-4. Execute one cycle immediately as a warmup. Do not make the
+4. Establish the target audience BEFORE any engagement. Run:
+
+   ```bash
+   cd /workspace/repo
+   node specialists/linkedin.js my-profile
+   ```
+
+   This returns the operator's `name`, `headline`, full `about`, and
+   full `experience` as JSON. Read all of it. From it, derive a
+   concrete TARGET AUDIENCE: the people worth engaging with
+   constructively to build the operator's reach, expressed as roles,
+   industries, seniority, company types, and the specific topics where
+   the operator can add credible signal (grounded in their actual
+   background, not generic). Note who to SKIP too. Write it to
+   `data/target-audience.md`, overwriting any prior version (the
+   profile may have changed since the last boot), then commit + push:
+
+   ```bash
+   mkdir -p data
+   # write your derived audience to data/target-audience.md (see the
+   # structure in "Target audience" below), then:
+   git add data/target-audience.md
+   git commit -m "target audience derived from profile" || true
+   git push 2>&1 | tail -3
+   ```
+
+5. Execute one cycle immediately as a warmup. Do not make the
    operator wait 8 hours for the first cycle.
-5. Return.
+6. Return.
 
 After this turn, every cron fire delivers a fresh prompt
 ("Execute one LinkedIn engagement cycle per CLAUDE.md."). Treat
@@ -69,6 +95,38 @@ receive a prompt asking to "run a cycle now" (or any rephrasing:
 like a cron fire: execute one full cycle immediately per the steps
 below, then return. Do not change the cron; the next scheduled fire
 is unaffected. Do not run more than one cycle per such request.
+
+---
+
+## Target audience
+
+`data/target-audience.md` is derived from the operator's own profile
+at boot (step 4) and is the source of truth for who to engage. Write
+it concrete and skimmable, so the pick-a-post step can apply it fast.
+Suggested structure:
+
+```markdown
+# Target audience (derived <date> from <name>'s profile)
+
+## Who the operator is
+One or two lines: their domain, what they build, the credibility they
+bring (pulled from headline + About + Experience).
+
+## Engage with
+- Roles / titles (e.g. controls engineers, plant IT/OT leads, ...)
+- Industries / company types (e.g. discrete manufacturing, SIs, OEMs)
+- Seniority band that makes sense to reach
+- Topics where the operator can add real signal (specific, not generic)
+
+## Skip
+- Audiences / topics that are off-target or where a comment adds nothing
+
+## Voice fit
+One line on how to sound credible to THIS audience.
+```
+
+Re-derived every boot, so if the operator updates their profile the
+audience follows. Cycles read this file; they do not re-derive it.
 
 ---
 
@@ -153,6 +211,17 @@ judgment.
 
 ### Step 3. Pick ONE post worth engaging (your turn)
 
+First, read the target audience derived at boot:
+
+```bash
+cat data/target-audience.md
+```
+
+That file (built from the operator's own profile) is the source of
+truth for WHO and WHAT to engage with. If it is missing (e.g. a cron
+fire on a worker that never completed boot), derive it now via the
+boot step 4 procedure before continuing.
+
 Criteria, apply rather than recite:
 
 - **Substantive over promotional.** Posts that ask a question,
@@ -161,11 +230,10 @@ Criteria, apply rather than recite:
   share", motivational quote dumps, sales pitches, and
   thought-leader-bait ("Agree?", "What do you think?", emoji
   bullet lists, hook-and-reveal storytelling).
-- **In your wheelhouse.** Only engage on topics where you can
-  add real signal. The operator's profile (industrial
-  automation, embedded systems, IIoT, Claude/agent tooling)
-  defines that wheelhouse. Posts about M&A, recruiting, generic
-  leadership pablum: skip.
+- **Matches the target audience.** The author and topic should fit
+  `data/target-audience.md`. Only engage where the operator can add
+  credible signal given their background. Posts outside that audience
+  (off-topic, generic leadership pablum, M&A, recruiting): skip.
 - **Active discussion.** comment_count between roughly 5 and 80
   is the sweet spot. Too few and the post is too quiet to
   matter. Too many and your reply sits below the fold.
