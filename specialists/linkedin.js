@@ -852,6 +852,70 @@ async function cmdLogin() {
   }
 }
 
+// ─── Subcommand: debug-feed (diagnostic) ──────────────────────
+// Confirms which feed DOM this account is served (old class/data-id
+// design vs the new Server-Driven UI) and scouts the Voyager API
+// responses that populate the feed, to inform the JSON-interception
+// rewrite. Read-only; emits a verdict + DOM signals + API hits.
+async function cmdDebugFeed() {
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  const apiHits = [];
+  page.on('response', async (resp) => {
+    try {
+      const url = resp.url();
+      if (!/voyager\/api/.test(url)) return;
+      if (!/(feed|graphql)/i.test(url)) return;
+      let hasActivity = false, sample = null, len = 0;
+      try {
+        const body = await resp.text();
+        len = body.length;
+        hasActivity = body.includes('urn:li:activity');
+        if (hasActivity) {
+          const idx = body.indexOf('urn:li:activity');
+          sample = body.slice(Math.max(0, idx - 25), idx + 70);
+        }
+      } catch { /* body not readable */ }
+      apiHits.push({ url: url.slice(0, 160), status: resp.status(), len, hasActivity, sample });
+    } catch { /* ignore */ }
+  });
+  try {
+    await gotoWithRetry(page, BASE + '/feed/');
+    await assertNotChallenged(page);
+    for (let i = 0; i < 5; i++) {
+      await page.mouse.wheel(0, 2200).catch(() => {});
+      await page.waitForTimeout(1500);
+    }
+    const dom = await page.evaluate(() => {
+      const q = (s) => { try { return document.querySelectorAll(s).length; } catch { return 'ERR'; } };
+      const testids = {};
+      for (const el of document.querySelectorAll('[data-testid]')) {
+        const v = el.getAttribute('data-testid'); testids[v] = (testids[v] || 0) + 1;
+      }
+      return {
+        oldSelector_dataIdActivity: q('div[data-id^="urn:li:activity:"]'),
+        oldClass_feedSharedUpdate:  q('.feed-shared-update-v2'),
+        new_mainFeed:               q('[data-testid="mainFeed"]'),
+        new_sduiScreen:             q('[data-sdui-screen]'),
+        new_expandableTextBox:      q('[data-testid="expandable-text-box"]'),
+        roleListitem:               q('[role="listitem"]'),
+        componentTypes: [...document.querySelectorAll('[data-component-type]')].map(e => e.getAttribute('data-component-type')).slice(0, 8),
+        testids: Object.entries(testids).slice(0, 25),
+      };
+    });
+    const shot = await snapshotOnFailure(page, 'debug-feed');
+    const verdict = dom.oldSelector_dataIdActivity > 0 ? 'OLD_FEED'
+      : (dom.new_mainFeed > 0 || dom.new_sduiScreen > 0) ? 'NEW_SDUI_FEED'
+      : 'UNKNOWN';
+    emit({ ok: true, verdict, dom, apiHits: apiHits.slice(0, 25), screenshot_path: shot });
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('debug_feed_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -862,6 +926,7 @@ async function main() {
     case 'read-post':      await cmdReadPost(args._[0]); break;
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
+    case 'debug-feed':     await cmdDebugFeed(); break;
     default:
       emit({
         ok: false,
