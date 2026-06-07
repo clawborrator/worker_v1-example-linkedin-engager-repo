@@ -1172,30 +1172,32 @@ async function cmdDebugComposer(postUrl) {
     const after = await dumpControls();
     // Playwright locators pierce open shadow DOM (unlike document.query*).
     // Probe whether the editor is reachable + typeable WITHOUT submitting.
-    const probe = { frames: page.frames().map((f) => f.url().slice(0, 60)).slice(0, 8) };
-    probe.roleTextbox = await page.getByRole('textbox').count().catch(() => 'ERR');
-    probe.contentEditable = await page.locator('div[contenteditable="true"]').count().catch(() => 'ERR');
-    probe.ariaAddComment = await page.getByRole('textbox', { name: /comment/i }).count().catch(() => 'ERR');
-    // Try to type into the first reachable textbox and read it back (no post).
-    let typed = null;
+    const probe = {};
+    // List every reachable textbox + its aria-label so we can pick the
+    // comment one (NOT the search bar at the top of the page).
+    probe.textboxes = await page.getByRole('textbox').evaluateAll(
+      (els) => els.map((e) => ({ al: e.getAttribute('aria-label') || e.getAttribute('placeholder'), ce: e.getAttribute('contenteditable') }))
+    ).catch(() => 'ERR');
+    // Target the comment editor specifically by its label.
+    let typed = null, editorLabel = null;
     try {
-      const ed = page.getByRole('textbox').first();
+      const ed = page.getByRole('textbox', { name: /comment|add a comment/i }).first();
       if (await ed.count() > 0) {
+        editorLabel = await ed.getAttribute('aria-label').catch(() => null);
         await ed.click({ timeout: 4000 }).catch(() => {});
-        await ed.type('selector probe', { delay: 20 }).catch(() => {});
-        await page.waitForTimeout(600);
+        await ed.pressSequentially('selector probe', { delay: 25 }).catch(() => {});
+        await page.waitForTimeout(700);
         typed = (await ed.textContent().catch(() => null)) || (await ed.inputValue().catch(() => null));
+      } else {
+        typed = 'NO_COMMENT_TEXTBOX';
       }
-    } catch (e) { typed = 'TYPE_ERR:' + e.message.slice(0, 60); }
+    } catch (e) { typed = 'TYPE_ERR:' + e.message.slice(0, 70); }
+    probe.editorLabel = editorLabel;
     probe.typedReadback = typed;
-    // With text in the composer, the submit button is enabled. Dump
-    // candidates (do NOT click) so we know the submit selector.
-    probe.submitCandidates = await page.evaluate(() => {
-      return [...document.querySelectorAll('button,[role="button"]')]
-        .map((b) => ({ al: b.getAttribute('aria-label'), txt: (b.textContent || '').trim().slice(0, 20), disabled: b.disabled === true || b.getAttribute('aria-disabled') === 'true' }))
-        .filter((b) => /^(post|comment|reply)$/i.test((b.al || '').trim()) || /^(post|comment|reply)$/i.test((b.txt || '').trim()));
-    }).catch(() => 'ERR');
-    emit({ ok: true, openedVia: opened, after, probe });
+    // Find the submit control reachable via Playwright (pierces shadow).
+    probe.submitPost = await page.getByRole('button', { name: /^post$/i }).count().catch(() => 'ERR');
+    probe.submitComment = await page.getByRole('button', { name: /^comment$/i }).count().catch(() => 'ERR');
+    emit({ ok: true, openedVia: opened, probe });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('debug_composer_failed', e.message);
