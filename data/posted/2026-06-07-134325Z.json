@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-07T13:43:25Z",
+  "post": {
+    "urn": "urn:li:activity:7469382287923548160",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469382287923548160/",
+    "author": "Ray Ortiz",
+    "topic_summary": "Documentation is manufacturing's persistent weak spot, not because OT teams don't care but because they are too busy; AI could help if built alongside the system."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Ray Ortiz",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469382287923548160/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7463622929034051584?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7463622929034051584%2C7469383456498552834%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469383456498552834%2Curn%3Ali%3AugcPost%3A7463622929034051584%29",
+    "comment_text": "Documentation fails in OT environments for a reason that goes deeper than OT teams being too busy: it gets captured in a different system than where decisions are made, so it ages out fast and nobody keeps it current. AI can help close that gap, but it needs something real to work from. The installations where documentation actually held up were the ones where someone forced the question \"what does this signal mean in plain terms?\" at the time of connection, before data was flowing. That conversation is slow and sometimes contentious, but it produces the one thing AI can actually use: a context layer tied to the source, not reconstructed from PLC tag names six months later."
+  },
+  "skip_reason": null
+}
