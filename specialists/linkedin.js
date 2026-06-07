@@ -1140,6 +1140,45 @@ async function cmdCaptureComment() {
   emit({ ok: !!got, capturedCount: captured.length, commentRequest: redact(got), allUrls: captured.map((c) => c.method + ' ' + c.url.slice(0, 110)) });
 }
 
+// ─── Subcommand: debug-composer (diagnostic) ──────────────────
+// Opens a post, opens the comment composer (no submit), and dumps
+// candidate selectors for the editor + Post button, to wire the
+// DOM-driven write path. Does NOT type or post.
+async function cmdDebugComposer(postUrl) {
+  if (!postUrl) die('missing_arg', 'debug-composer requires a post URL');
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  try {
+    await gotoWithRetry(page, postUrl);
+    await assertNotChallenged(page);
+    await page.waitForTimeout(2500);
+    const dumpControls = () => page.evaluate(() => {
+      const btns = [...document.querySelectorAll('button,[role="button"]')]
+        .map((b) => ({ al: b.getAttribute('aria-label'), tid: b.getAttribute('data-testid'), txt: (b.textContent || '').trim().slice(0, 24) }))
+        .filter((b) => b.al || b.tid || b.txt)
+        .filter((b) => /comment|post|reply|respond/i.test((b.al || '') + (b.tid || '') + (b.txt || '')));
+      const editors = [...document.querySelectorAll('[contenteditable="true"],[role="textbox"]')]
+        .map((e) => ({ role: e.getAttribute('role'), al: e.getAttribute('aria-label'), tid: e.getAttribute('data-testid'), ce: e.getAttribute('contenteditable') }));
+      return { btns: btns.slice(0, 20), editors: editors.slice(0, 8) };
+    });
+    const before = await dumpControls();
+    // Click the most likely "Comment" action trigger to open the composer.
+    let opened = null;
+    for (const sel of ['button[aria-label^="Comment"]', 'button[aria-label*="omment"]', '[role="button"][aria-label*="omment"]']) {
+      const loc = page.locator(sel).first();
+      if (await loc.count() > 0) { await loc.click().catch(() => {}); opened = sel; break; }
+    }
+    await page.waitForTimeout(2500);
+    const after = await dumpControls();
+    emit({ ok: true, openedVia: opened, before, after });
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('debug_composer_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1153,6 +1192,7 @@ async function main() {
     case 'debug-feed':     await cmdDebugFeed(); break;
     case 'debug-post':     await cmdDebugPost(args._[0]); break;
     case 'capture-comment': await cmdCaptureComment(); break;
+    case 'debug-composer': await cmdDebugComposer(args._[0]); break;
     default:
       emit({
         ok: false,
