@@ -181,8 +181,13 @@ If `{ok: false}` with `error: "not logged in"` or `error:
 ### Step 2. Scroll feed (bash)
 
 ```bash
-node specialists/linkedin.js scroll-feed --count 15
+node specialists/linkedin.js scroll-feed --count 25
 ```
+
+The wrapper pulls BOTH the relevance feed (what you'd see on screen,
+which surfaces older high-signal posts) and the recent feed, then
+merges + dedupes them, so you evaluate a broad set, not just the most
+recent items. Expect ~30-45 posts back.
 
 Returns JSON:
 
@@ -237,12 +242,22 @@ Criteria, apply rather than recite:
   `data/target-audience.md`. Only engage where the operator can add
   credible signal given their background. Posts outside that audience
   (off-topic, generic leadership pablum, M&A, recruiting): skip.
-- **Active discussion.** comment_count between roughly 5 and 80
-  is the sweet spot. Too few and the post is too quiet to
-  matter. Too many and your reply sits below the fold.
-- **Age < 24h.** LinkedIn's feed surfaces older posts as
-  "interesting in your network" cards. Avoid them. Your comment
-  on a 3-day-old post reads as desperate-engagement-farming.
+- **Engagement window depends on fit.** For a niche audience like
+  this, on-target posts are rare, so do NOT let a comment-count
+  floor make you skip the best posts:
+  - **On-target posts** (clear fit with `data/target-audience.md`):
+    comment_count of 0 is fine, being an early, substantive commenter
+    on an on-topic post from a relevant person is high value. Only
+    skip on the high end (roughly >150 comments) where your reply is
+    buried.
+  - **Marginal posts** (tangential fit): keep the bar high, roughly
+    5 to 80 comments, or skip.
+- **Age depends on fit.**
+  - **On-target posts:** up to ~48h is fine (manufacturing/IIoT
+    discussion moves slower than general LinkedIn).
+  - **Marginal posts:** < 24h.
+  - Either way, skip anything older than ~72h; a comment on a
+    days-old post reads as engagement-farming.
 - **Not promoted.** `is_promoted: true` is an ad. Never engage
   on ads.
 - **Author is not the operator.** Sanity check.
@@ -538,7 +553,8 @@ step 8 (notify) before returning.
 - **Don't comment on the operator's own posts.** Sanity check
   by author name in step 3.
 - **Don't comment on sponsored / promoted posts.**
-- **Don't comment on posts older than 24 hours.**
+- **Don't comment on posts older than ~48h if on-target, ~24h if
+  marginal, and never older than ~72h** (see step 3 windows).
 - **Don't reply to a comment older than 48 hours.**
 - **Don't use emoji.**
 - **Don't use em dashes or en dashes as separators** (see step

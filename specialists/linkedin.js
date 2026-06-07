@@ -550,18 +550,30 @@ async function cmdScrollFeed(args) {
     await assertNotChallenged(page);
 
     // The feed DOM is now a Server-Driven UI with no post URNs, so we
-    // read the underlying voyager JSON API instead. chronFeed = recent.
-    const resp = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=${count}&q=chronFeed`);
-    if (resp.status !== 200) {
-      die('scroll_feed_failed', `voyager updatesV2 returned status ${resp.status}`);
+    // read the underlying voyager JSON API. Pull from BOTH the relevance
+    // feed (q=feed, what the member sees on screen, surfaces older
+    // high-signal posts) AND the recent feed (q=chronFeed), then merge +
+    // dedupe by URN, for broad coverage of on-target posts. Fetch at
+    // least 20 from each source regardless of `count`.
+    const fetchN = Math.max(count, 20);
+    const seen = new Set();
+    const posts = [];
+    let any200 = false;
+    for (const q of ['feed', 'chronFeed']) {
+      const resp = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=${fetchN}&q=${q}`);
+      if (resp.status !== 200) continue;
+      any200 = true;
+      let json;
+      try { json = JSON.parse(resp.text); } catch { continue; }
+      for (const p of parseUpdatesV2(json)) {
+        if (!p.urn || !p.author || seen.has(p.urn)) continue; // drop ads/junk w/o an author
+        seen.add(p.urn);
+        delete p.body; // feed listing uses body_excerpt only
+        posts.push(p);
+      }
     }
-    let json;
-    try { json = JSON.parse(resp.text); }
-    catch (e) { die('scroll_feed_failed', `feed JSON parse failed: ${e.message}`); }
-
-    const posts = parseUpdatesV2(json).filter((p) => p.urn).slice(0, count);
-    posts.forEach((p) => { delete p.body; }); // feed listing uses body_excerpt only
-    emit({ ok: true, feed: feedArg, posts });
+    if (!any200) die('scroll_feed_failed', 'both voyager feeds returned non-200');
+    emit({ ok: true, feed: feedArg, sources: ['feed', 'chronFeed'], posts });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('scroll_feed_failed', e.message);
@@ -887,38 +899,6 @@ async function cmdMyProfile() {
   }
 }
 
-// ─── Subcommand: debug-feeds (diagnostic) ─────────────────────
-// Compares voyager feed sort variants to find the relevance feed (what
-// the operator sees) vs chronFeed (recent), for the feed-sourcing fix.
-async function cmdDebugFeeds() {
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  try {
-    await gotoWithRetry(page, BASE + '/feed/');
-    await assertNotChallenged(page);
-    const variants = [
-      '/voyager/api/feed/updatesV2?count=8&q=chronFeed',
-      '/voyager/api/feed/updatesV2?count=8',
-      '/voyager/api/feed/updatesV2?count=8&q=feed',
-      '/voyager/api/feed/updatesV2?count=8&q=homeFeed',
-    ];
-    const out = [];
-    for (const v of variants) {
-      const r = await voyagerGet(page, v);
-      let authors = null;
-      try { authors = parseUpdatesV2(JSON.parse(r.text)).slice(0, 5).map((p) => `${p.author} (${p.age_hours}h,${p.comment_count}c)`); }
-      catch { authors = null; }
-      out.push({ q: v.replace('/voyager/api/feed/updatesV2?count=8', '') || '(none)', status: r.status, len: r.text.length, authors });
-    }
-    emit({ ok: true, variants: out });
-  } catch (e) {
-    if (e.message && /process.exit/.test(e.message)) throw e;
-    die('debug_feeds_failed', e.message);
-  } finally {
-    await browser.close();
-  }
-}
-
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -930,7 +910,6 @@ async function main() {
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'my-profile':     await cmdMyProfile(); break;
-    case 'debug-feeds':    await cmdDebugFeeds(); break;
     default:
       emit({
         ok: false,
