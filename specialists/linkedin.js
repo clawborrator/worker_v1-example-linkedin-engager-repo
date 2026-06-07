@@ -326,6 +326,89 @@ function parseRelativeAge(s) {
   }
 }
 
+// ─── Voyager JSON API ─────────────────────────────────────────
+// LinkedIn's web UI migrated the feed to a Server-Driven UI (hashed
+// classes, no URNs in the DOM), so DOM scraping of the feed is dead.
+// The underlying voyager JSON API is intact, though, and returns clean
+// normalized data. We call it from inside the authenticated page
+// context (so cookies + the csrf-token from JSESSIONID come along) and
+// parse the normalized {data, included} envelope. This is far more
+// stable than CSS-class or SDUI-tree scraping.
+
+// GET a voyager path from within the logged-in page; returns {status, text}.
+async function voyagerGet(page, path) {
+  return await page.evaluate(async (p) => {
+    const jsid = (document.cookie.split('; ').find((c) => c.startsWith('JSESSIONID=')) || '').split('=')[1]?.replace(/"/g, '') || '';
+    const r = await fetch(p, {
+      headers: {
+        'csrf-token': jsid,
+        'x-restli-protocol-version': '2.0.0',
+        'accept': 'application/vnd.linkedin.normalized+json+2.1',
+      },
+      credentials: 'include',
+    });
+    let text = '';
+    try { text = await r.text(); } catch { /* empty */ }
+    return { status: r.status, text };
+  }, path);
+}
+
+// Plain text out of a voyager TextViewModel.
+function tvmText(tvm) {
+  return tvm && typeof tvm.text === 'string' ? tvm.text.trim() : null;
+}
+
+// Index a normalized `included` array by every URN it can be referenced
+// under (entityUrn + dashEntityUrn), for resolving `*`-prefixed refs.
+function indexIncluded(included) {
+  const idx = new Map();
+  for (const e of included || []) {
+    if (e.entityUrn) idx.set(e.entityUrn, e);
+    if (e.dashEntityUrn) idx.set(e.dashEntityUrn, e);
+  }
+  return idx;
+}
+
+// Parse a /feed/updatesV2 normalized response into the post shape the
+// playbook expects (same fields the old DOM scraper produced).
+function parseUpdatesV2(json) {
+  const elements = (json.data && json.data['*elements']) || [];
+  const idx = indexIncluded(json.included);
+  const out = [];
+  for (const elUrn of elements) {
+    const u = idx.get(elUrn);
+    if (!u || !String(u['$type'] || '').endsWith('render.UpdateV2')) continue;
+    const activityUrn = (String(elUrn).match(/urn:li:activity:\d+/) || [])[0] || null;
+    const actor = u.actor || {};
+    let reactionCount = null, commentCount = null;
+    const sd = u['*socialDetail'] ? idx.get(u['*socialDetail']) : null;
+    if (sd) {
+      const sc = sd['*totalSocialActivityCounts'] ? idx.get(sd['*totalSocialActivityCounts']) : null;
+      if (sc) {
+        reactionCount = typeof sc.numLikes === 'number' ? sc.numLikes : null;
+        commentCount = typeof sc.numComments === 'number' ? sc.numComments : null;
+      }
+    }
+    const body = (u.commentary && tvmText(u.commentary.text)) || '';
+    const postUrl = activityUrn
+      ? `${BASE}/feed/update/${activityUrn}/`
+      : (u.socialContent && u.socialContent.shareUrl) || null;
+    out.push({
+      urn: activityUrn,
+      author: tvmText(actor.name),
+      author_headline: tvmText(actor.description),
+      body_excerpt: body.slice(0, 500),
+      post_url: postUrl,
+      reaction_count: reactionCount,
+      comment_count: commentCount,
+      age_hours: parseRelativeAge(tvmText(actor.subDescription)),
+      is_promoted: /sponsoredContentV2|sponsored/i.test(String(elUrn)),
+      is_repost: !!(u.resharedUpdate || u['*resharedUpdate']),
+    });
+  }
+  return out;
+}
+
 // ─── Subcommand: auth-check ───────────────────────────────────
 
 async function cmdAuthCheck() {
@@ -492,72 +575,36 @@ async function cmdAuthCheck() {
 async function cmdScrollFeed(args) {
   const count = parseInt(args.count || '15', 10);
   const feedArg = args.feed || 'home';
-  let url = BASE + '/feed/';
-  if (feedArg.startsWith('hashtag:')) {
-    url = `${BASE}/feed/hashtag/${encodeURIComponent(feedArg.slice(8))}/`;
-  } else if (feedArg !== 'home') {
+  if (feedArg !== 'home' && !feedArg.startsWith('hashtag:')) {
     die('bad_feed', `unknown feed "${feedArg}". Use home or hashtag:<name>`);
+  }
+  if (feedArg.startsWith('hashtag:')) {
+    // The hashtag feed used a separate DOM page that the SDUI migration
+    // also reshaped; the voyager path differs from the home feed. Not
+    // ported yet. The engager defaults to home.
+    die('unsupported_feed', 'hashtag feeds are not supported on the voyager API path yet; use the home feed');
   }
 
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
   try {
-    await gotoWithRetry(page, url);
+    // Land on /feed/ first so the voyager fetch runs in a fully
+    // initialized authenticated page context (cookies + csrf available).
+    await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
 
-    // Scroll up to 5 passes, ~1s between, until we have `count`
-    // post-things visible OR we run out of scroll passes.
-    let posts = [];
-    for (let pass = 0; pass < 5; pass++) {
-      posts = await page.locator(SELECTORS.feedPostThing).all();
-      if (posts.length >= count) break;
-      await page.evaluate(() => window.scrollBy(0, window.innerHeight * 2));
-      await page.waitForTimeout(1_000);
+    // The feed DOM is now a Server-Driven UI with no post URNs, so we
+    // read the underlying voyager JSON API instead. chronFeed = recent.
+    const resp = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=${count}&q=chronFeed`);
+    if (resp.status !== 200) {
+      die('scroll_feed_failed', `voyager updatesV2 returned status ${resp.status}`);
     }
+    let json;
+    try { json = JSON.parse(resp.text); }
+    catch (e) { die('scroll_feed_failed', `feed JSON parse failed: ${e.message}`); }
 
-    const out = [];
-    for (const post of posts.slice(0, count)) {
-      try {
-        const urn = await post.getAttribute('data-id');
-        const isPromoted = (await post.locator(SELECTORS.promotedMarker).count()) > 0;
-        const isRepost = (await post.locator(SELECTORS.repostMarker).count()) > 0;
-        const author = (await post.locator(SELECTORS.postHeaderAuthor).first().textContent().catch(() => null))?.trim()?.replace(/\s+/g, ' ');
-        const headline = (await post.locator(SELECTORS.postHeaderHeadline).first().textContent().catch(() => null))?.trim()?.replace(/\s+/g, ' ');
-        // Body. Don't bother clicking "see more" for the feed
-        // listing; the excerpt is what the agent uses to decide
-        // interest. read-post does the full extraction.
-        const bodyText = (await post.locator(SELECTORS.postBodyContainer).first().textContent().catch(() => ''))?.trim()?.replace(/\s+/g, ' ');
-        const bodyExcerpt = bodyText?.slice(0, 500) ?? '';
-        // Reactions / comments. LinkedIn's text is "142 reactions"
-        // or "Like, Celebrate, and 142 others". Extract the first
-        // integer if present.
-        const reactionText = (await post.locator(SELECTORS.reactionCountSpan).first().textContent().catch(() => null))?.trim();
-        const commentText = (await post.locator(SELECTORS.commentCountButton).first().getAttribute('aria-label').catch(() => null));
-        const reactionCount = reactionText ? (parseInt(reactionText.replace(/[^0-9]/g, ''), 10) || null) : null;
-        const commentCount = commentText ? (parseInt(commentText.replace(/[^0-9]/g, ''), 10) || null) : null;
-        // Age. LinkedIn renders "3h", "1d", "2w" as visible text.
-        // Look in the post header.
-        const ageRaw = await post.locator('time, .feed-shared-actor__sub-description, .update-components-actor__sub-description').first().textContent().catch(() => null);
-        const ageHours = parseRelativeAge((ageRaw || '').trim());
-        const postUrl = urn ? `${BASE}/feed/update/${encodeURIComponent(urn)}/` : null;
-        if (!urn) continue;
-        out.push({
-          urn,
-          author: author || null,
-          author_headline: headline || null,
-          body_excerpt: bodyExcerpt,
-          post_url: postUrl,
-          reaction_count: reactionCount,
-          comment_count: commentCount,
-          age_hours: ageHours,
-          is_promoted: isPromoted,
-          is_repost: isRepost,
-        });
-      } catch (e) {
-        continue;
-      }
-    }
-    emit({ ok: true, feed: feedArg, posts: out });
+    const posts = parseUpdatesV2(json).filter((p) => p.urn).slice(0, count);
+    emit({ ok: true, feed: feedArg, posts });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('scroll_feed_failed', e.message);
