@@ -1117,13 +1117,18 @@ async function cmdCaptureComment() {
       const url = req.url();
       if (!/voyager|graphql|comment/i.test(url)) return;
       const pd = req.postData() || '';
-      const rec = { method: m, url, headers: req.headers(), postData: pd.slice(0, 6000) };
+      const rec = { method: m, url, headers: req.headers(), postData: pd.slice(0, 8000) };
       captured.push(rec);
-      if (/comment/i.test(url) || /comment/i.test(pd)) got = got || rec;
+      // Only the actual CREATE/submit (not the composer-open prompt fetch
+      // or the fetch-comments list) should end the capture.
+      const isCreate = /create|addcomment|postcomment|publishcomment|submitcomment/i.test(url)
+        || /create[A-Za-z]*comment|normcomment|"commentary"/i.test(pd);
+      const isFetch = /fetch/i.test(url);
+      if (isCreate && !isFetch) got = got || rec;
     } catch { /* ignore */ }
   });
   await gotoWithRetry(page, BASE + '/feed/').catch(() => {});
-  process.stderr.write('[capture] Browser open on this display. VNC in and post ONE comment by hand. Waiting up to 12 min...\n');
+  process.stderr.write('[capture] Browser open on this display. VNC in, type a comment AND hit Post, wait for it to appear. Waiting up to 12 min...\n');
   const deadline = Date.now() + 12 * 60 * 1000;
   while (Date.now() < deadline && !got) { await page.waitForTimeout(2000); }
   await page.waitForTimeout(2500); // catch any follow-up requests
