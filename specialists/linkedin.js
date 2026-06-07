@@ -1064,11 +1064,25 @@ async function cmdDebugPost(postUrl) {
     for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 1800).catch(() => {}); await page.waitForTimeout(1500); }
     // also try fetching post detail by urn via updatesV2
     let detail = null;
+    const endpointTests = [];
     if (activityUrn) {
       const r = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${encodeURIComponent(activityUrn)}`);
       detail = { status: r.status, len: r.text.length, hasActivity: r.text.includes('urn:li:activity') };
+      const enc = encodeURIComponent(activityUrn);
+      const candidates = [
+        `/voyager/api/feed/comments?count=5&q=comments&sortOrder=RELEVANCE&start=0&updateId=${enc}`,
+        `/voyager/api/feed/comments?count=5&q=comments&updateId=${enc}`,
+        `/voyager/api/social/comments?count=5&q=comments&updateId=${enc}`,
+        `/voyager/api/feed/socialDash/comments?count=5&q=comments&updateId=${enc}`,
+      ];
+      for (const c of candidates) {
+        const rr = await voyagerGet(page, c);
+        const refs = (rr.text.match(/urn:li:comment:/g) || []).length;
+        if (refs > 0) { try { fs.writeFileSync('/tmp/voyager-comments.json', rr.text); } catch { /* */ } }
+        endpointTests.push({ path: c.slice(0, 70), status: rr.status, len: rr.text.length, commentRefs: refs });
+      }
     }
-    emit({ ok: true, activityUrn, detailFetch: detail, commentHits: hits.slice(0, 12) });
+    emit({ ok: true, activityUrn, detailFetch: detail, endpointTests, commentHits: hits.slice(0, 12) });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('debug_post_failed', e.message);
