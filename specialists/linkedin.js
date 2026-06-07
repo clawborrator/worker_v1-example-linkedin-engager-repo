@@ -950,11 +950,30 @@ async function cmdDebugFeed() {
         testids: Object.entries(testids).slice(0, 18),
       };
     });
+    // Probe whether the underlying voyager feed API still serves clean
+    // JSON to an authenticated request (the durable data source if so).
+    const apiTest = await page.evaluate(async () => {
+      const jsid = (document.cookie.split('; ').find(c => c.startsWith('JSESSIONID=')) || '').split('=')[1]?.replace(/"/g, '') || '';
+      const urls = [
+        '/voyager/api/feed/updatesV2?count=3&moduleKey=home-feed:desktop&q=chronFeed',
+        '/voyager/api/feed/updatesV2?count=3&q=chronFeed',
+        '/voyager/api/feed/updates?count=3&q=chronFeed',
+      ];
+      const out = [];
+      for (const url of urls) {
+        try {
+          const r = await fetch(url, { headers: { 'csrf-token': jsid, 'x-restli-protocol-version': '2.0.0', 'accept': 'application/vnd.linkedin.normalized+json+2.1' }, credentials: 'include' });
+          const t = await r.text();
+          out.push({ url, status: r.status, len: t.length, hasActivity: t.includes('urn:li:activity'), start: t.slice(0, 160) });
+        } catch (e) { out.push({ url, err: String(e).slice(0, 120) }); }
+      }
+      return { hadJsid: jsid.length > 0, results: out };
+    });
     const shot = await snapshotOnFailure(page, 'debug-feed');
     const verdict = dom.oldSelector_dataIdActivity > 0 ? 'OLD_FEED'
       : (dom.new_mainFeed > 0 || dom.new_sduiScreen > 0) ? 'NEW_SDUI_FEED'
       : 'UNKNOWN';
-    emit({ ok: true, verdict, dom, apiHits: apiHits.slice(0, 25), screenshot_path: shot });
+    emit({ ok: true, verdict, dom, apiTest, apiHits: apiHits.slice(0, 25), screenshot_path: shot });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('debug_feed_failed', e.message);
