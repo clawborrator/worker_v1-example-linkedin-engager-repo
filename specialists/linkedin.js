@@ -1060,10 +1060,22 @@ async function cmdDebugPost(postUrl) {
     // also try fetching post detail by urn via updatesV2
     let detail = null;
     const endpointTests = [];
+    const detailTests = [];
     if (activityUrn) {
-      const r = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${encodeURIComponent(activityUrn)}`);
-      detail = { status: r.status, len: r.text.length, hasActivity: r.text.includes('urn:li:activity') };
       const enc = encodeURIComponent(activityUrn);
+      const detailCandidates = [
+        `/voyager/api/feed/updatesV2?q=backendUrnOrNss&urnOrNss=${enc}`,
+        `/voyager/api/feed/updates/${enc}`,
+        `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${enc}`,
+      ];
+      for (const d of detailCandidates) {
+        const rr = await voyagerGet(page, d);
+        let firstUrn = null;
+        try { const jj = JSON.parse(rr.text); const els = (jj.data && (jj.data['*elements'] || (jj.data['*value'] ? [jj.data['*value']] : []))) || []; firstUrn = (String(els[0] || rr.text).match(/urn:li:activity:\d+/) || [])[0] || null; } catch { firstUrn = (rr.text.match(/urn:li:activity:\d+/) || [])[0] || null; }
+        detailTests.push({ path: d.slice(0, 60), status: rr.status, len: rr.text.length, firstUrn, matches: firstUrn === activityUrn });
+      }
+      const r = await voyagerGet(page, `/voyager/api/feed/updatesV2?q=backendUrnOrNss&urnOrNss=${enc}`);
+      detail = { status: r.status, len: r.text.length, hasActivity: r.text.includes('urn:li:activity') };
       const candidates = [
         `/voyager/api/feed/comments?count=5&q=comments&sortOrder=RELEVANCE&start=0&updateId=${enc}`,
         `/voyager/api/feed/comments?count=5&q=comments&updateId=${enc}`,
@@ -1077,7 +1089,7 @@ async function cmdDebugPost(postUrl) {
         endpointTests.push({ path: c.slice(0, 70), status: rr.status, len: rr.text.length, commentRefs: refs });
       }
     }
-    emit({ ok: true, activityUrn, detailFetch: detail, endpointTests, commentHits: hits.slice(0, 12) });
+    emit({ ok: true, activityUrn, detailFetch: detail, detailTests, endpointTests, commentHits: hits.slice(0, 12) });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('debug_post_failed', e.message);
