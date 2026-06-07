@@ -1100,6 +1100,41 @@ async function cmdDebugPost(postUrl) {
   }
 }
 
+// ─── Subcommand: capture-comment (diagnostic, one-time) ───────
+// Opens the engager's profile browser on the current display and waits
+// for a human (over VNC) to post one comment by hand, capturing the
+// outgoing create-comment request so the API write path can replicate
+// it exactly. Read-only w.r.t. our code; the human does the posting.
+async function cmdCaptureComment() {
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  const captured = [];
+  let got = null;
+  ctx.on('request', (req) => {
+    try {
+      const m = req.method();
+      if (m !== 'POST' && m !== 'PUT' && m !== 'PATCH') return;
+      const url = req.url();
+      if (!/voyager|graphql|comment/i.test(url)) return;
+      const pd = req.postData() || '';
+      const rec = { method: m, url, headers: req.headers(), postData: pd.slice(0, 6000) };
+      captured.push(rec);
+      if (/comment/i.test(url) || /comment/i.test(pd)) got = got || rec;
+    } catch { /* ignore */ }
+  });
+  await gotoWithRetry(page, BASE + '/feed/').catch(() => {});
+  process.stderr.write('[capture] Browser open on this display. VNC in and post ONE comment by hand. Waiting up to 12 min...\n');
+  const deadline = Date.now() + 12 * 60 * 1000;
+  while (Date.now() < deadline && !got) { await page.waitForTimeout(2000); }
+  await page.waitForTimeout(2500); // catch any follow-up requests
+  try { fs.writeFileSync('/tmp/comment-capture.json', JSON.stringify(captured, null, 1)); } catch { /* ignore */ }
+  await browser.close().catch(() => {});
+  // Redact sensitive headers from the emitted summary; the full record
+  // (incl. headers) stays in /tmp for local inspection only.
+  const redact = (r) => r && ({ method: r.method, url: r.url, contentType: (r.headers || {})['content-type'], postData: r.postData });
+  emit({ ok: !!got, capturedCount: captured.length, commentRequest: redact(got), allUrls: captured.map((c) => c.method + ' ' + c.url.slice(0, 110)) });
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1112,6 +1147,7 @@ async function main() {
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'debug-feed':     await cmdDebugFeed(); break;
     case 'debug-post':     await cmdDebugPost(args._[0]); break;
+    case 'capture-comment': await cmdCaptureComment(); break;
     default:
       emit({
         ok: false,
