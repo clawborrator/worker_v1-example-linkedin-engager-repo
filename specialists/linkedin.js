@@ -803,6 +803,40 @@ async function cmdLogin() {
   }
 }
 
+// ─── Subcommand: debug-profile (diagnostic) ───────────────────
+// Probes voyager endpoints for the logged-in member's own profile
+// (publicIdentifier, About/summary, Experience) to design my-profile.
+async function cmdDebugProfile() {
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  try {
+    await gotoWithRetry(page, BASE + '/feed/');
+    await assertNotChallenged(page);
+    const me = await voyagerGet(page, '/voyager/api/me');
+    let pub = null;
+    try { pub = (me.text.match(/"publicIdentifier":"([^"]+)"/) || [])[1] || null; } catch { /* */ }
+    const out = { me: { status: me.status, publicIdentifier: pub } };
+    const candidates = pub ? [
+      `/voyager/api/identity/profiles/${pub}/profileView`,
+      `/voyager/api/identity/profiles/${pub}`,
+    ] : [];
+    out.tests = [];
+    for (const c of candidates) {
+      const r = await voyagerGet(page, c);
+      let topKeys = null, dataKeys = null;
+      try { const j = JSON.parse(r.text); topKeys = Object.keys(j); dataKeys = j.data ? Object.keys(j.data) : null; } catch { /* */ }
+      try { if (/profileView/.test(c) && r.status === 200) fs.writeFileSync('/tmp/profileView.json', r.text); } catch { /* */ }
+      out.tests.push({ path: c.slice(0, 70), status: r.status, len: r.text.length, hasSummary: /"summary"/.test(r.text), hasPositions: /position|experience/i.test(r.text), topKeys, dataKeys });
+    }
+    emit(out);
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('debug_profile_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -813,6 +847,7 @@ async function main() {
     case 'read-post':      await cmdReadPost(args._[0]); break;
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
+    case 'debug-profile':  await cmdDebugProfile(); break;
     default:
       emit({
         ok: false,
