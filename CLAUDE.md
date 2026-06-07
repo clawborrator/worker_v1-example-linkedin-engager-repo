@@ -339,13 +339,20 @@ phase (still notify + audit).
 **6a. Draft (your turn).** Write the comment, ~40 to 150 words.
 Voice:
 
-- **Professional, not stiff.** Speak like an industry peer.
-- **Specific.** Reference what the post or target comment
-  actually said. Skip generic agreement ("Great point!",
-  "Couldn't agree more!").
-- **Add something.** Data point, a counter-experience, or a
-  question that opens new ground. If you are only echoing the
-  author back, do not post.
+- **Matter-of-fact.** State things plainly and declaratively, from
+  experience, like you already know the answer. No enthusiasm, no
+  hedging ("I'd argue", "in my opinion", "it seems"), no praise.
+- **Lead with the substance, not the poster.** Do NOT open by
+  addressing or complimenting the author ("Great post", "You're
+  right that...", "@Name ..."). Start with the actual point. You may
+  reference what the post claims when it sharpens your point, stated
+  flatly ("The avoidance X describes is rational, not a culture
+  problem"), but you do not have to mention the poster at all.
+- **Specific.** Ground every claim in a concrete mechanism, number,
+  or experience. Skip generic agreement.
+- **Add something.** A real reason, a counter-experience, or the
+  practical way out. If you are only echoing the post back, do not
+  post.
 - **No emoji.**
 - **No hashtag spam.** Optional single relevant hashtag at the
   end is fine.
@@ -360,6 +367,22 @@ Voice:
   "let's unpack", "this is a masterclass in...", "thoughts?",
   "I'd love to learn more", "this resonated with me", "X is
   just the beginning", "the future of X is...".
+
+Target style (match this register: declarative, substance first,
+practical, no praise, no addressing the poster):
+
+> The avoidance Flexxbotics describes is rational, not a culture
+> problem. Most brownfield PLCs have been patched in place for a
+> decade or more by people who no longer work there, and the
+> documentation for what each function block actually does is
+> incomplete or gone. So nobody touches it.
+>
+> The practical way out for a lot of plants is to bypass the PLC
+> program entirely: read signal-level inputs at the machine,
+> proximity sensors or current loops, push data over MQTT, and never
+> open the ladder logic. You still capture cycle state, counts, and
+> utilization. It is slower to stand up than a proper PLC refactor,
+> but it does not put a running line at risk.
 
 **6b. Post (bash).**
 
