@@ -721,25 +721,45 @@ async function cmdReadPost(postUrl) {
 
 // ─── Composer helpers ─────────────────────────────────────────
 
-async function typeIntoEditor(page, editor, text) {
-  // Click to focus, clear (Ctrl-A + Backspace) just in case
-  // LinkedIn pre-populates a draft, then type. LinkedIn's Quill
-  // editor sometimes ignores Locator.fill(), so we use
-  // keyboard.type for reliability.
-  await editor.click();
+// The new SDUI feed has no usable comment WRITE API (createComment is a
+// server-driven action with opaque per-render binding tokens), so the
+// write path drives the actual composer in the page and lets LinkedIn's
+// own JS build the request. The editor is a shadow-DOM contenteditable
+// labelled "Text editor for creating comment/reply"; Playwright role
+// locators pierce shadow DOM to reach it.
+
+async function fillAndSubmitComment(page, editor, text) {
+  // Focus the comment editor (NOT the page search box), clear any draft,
+  // type, then submit. Ctrl+Enter is LinkedIn's comment-submit shortcut
+  // and sidesteps the two-"Comment"-buttons ambiguity (action bar vs
+  // composer submit); a button click is the fallback.
+  await editor.click({ timeout: 8_000 });
   await page.keyboard.press('Control+a').catch(() => {});
   await page.keyboard.press('Backspace').catch(() => {});
-  await page.keyboard.type(text, { delay: 8 });
+  await editor.pressSequentially(text, { delay: 12 });
+  await page.waitForTimeout(500);
+  await page.keyboard.press('Control+Enter').catch(() => {});
+  await page.waitForTimeout(2_500);
+  // Fallback: if our text is still in the editor, the shortcut didn't
+  // submit; click the composer's "Comment" button (the last one, not
+  // the action-bar toggle).
+  const still = ((await editor.textContent().catch(() => '')) || '').includes(text.trim().slice(0, 12));
+  if (still) {
+    await page.getByRole('button', { name: /^comment$/i }).last().click({ timeout: 5_000 }).catch(() => {});
+    await page.waitForTimeout(2_500);
+  }
 }
 
-async function clickSubmitWhenReady(page, scope) {
-  // The Post button is disabled until the editor has non-empty
-  // content. Wait until it is enabled, then click.
-  const btn = scope.locator(SELECTORS.commentSubmitButton).first();
-  await btn.waitFor({ state: 'visible', timeout: 5_000 });
-  await btn.click();
-  // Wait a beat for LinkedIn to POST and render the new comment.
-  await page.waitForTimeout(2_500);
+// After posting, re-fetch the post's comments via the voyager API and
+// find ours by matching body text, returning its permalink. Best-effort.
+async function findOwnComment(page, activityUrn, text) {
+  try {
+    const r = await voyagerGet(page, `/voyager/api/feed/comments?count=30&q=comments&sortOrder=RELEVANCE&start=0&updateId=${encodeURIComponent(activityUrn)}`);
+    if (r.status !== 200) return null;
+    const needle = text.trim().slice(0, 40);
+    const mine = parseComments(JSON.parse(r.text)).find((c) => (c.body || '').includes(needle));
+    return mine ? mine.permalink : null;
+  } catch { return null; }
 }
 
 // ─── Subcommand: comment-post ─────────────────────────────────
@@ -749,38 +769,30 @@ async function cmdCommentPost(postUrl, args) {
   const text = args.text;
   if (!text || !text.trim()) die('missing_arg', 'comment-post requires --text "..."');
 
+  const activityUrn = (String(postUrl).match(/urn:li:activity:\d+/) || [])[0] || null;
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
   try {
     await gotoWithRetry(page, postUrl);
     await assertNotChallenged(page);
+    await page.waitForTimeout(2_000);
 
-    const postThing = page.locator(SELECTORS.feedPostThing).first();
-    await postThing.waitFor({ state: 'visible', timeout: 15_000 });
-
-    // Click the Comment action to reveal the composer.
-    const commentBtn = postThing.locator(SELECTORS.commentTriggerOnPost).first();
-    if (await commentBtn.count() === 0) {
-      die('comment_form_not_found', 'no Comment action found on this post (locked, banned, or LinkedIn DOM changed)');
+    // Open the composer (action-bar Comment button), then target the
+    // comment editor by its label so we never type into the search box.
+    const openBtn = page.locator('button[aria-label^="Comment"]').first();
+    if (await openBtn.count() > 0) { await openBtn.click().catch(() => {}); await page.waitForTimeout(1_500); }
+    const editor = page.getByRole('textbox', { name: /comment/i }).first();
+    if (await editor.count() === 0) {
+      die('comment_form_not_found', 'comment editor not found (post locked, challenge, or DOM changed)');
     }
-    await commentBtn.click();
-
-    const editor = postThing.locator(SELECTORS.commentEditor).first();
-    await editor.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {
-      die('comment_form_not_found', 'composer did not appear after clicking Comment');
-    });
-
-    await typeIntoEditor(page, editor, text);
-    await clickSubmitWhenReady(page, postThing);
+    await fillAndSubmitComment(page, editor, text);
     await assertNotChallenged(page);
 
-    // Best-effort URL extraction. LinkedIn does not return a
-    // direct permalink in the DOM after post; we leave the URL
-    // null and let the audit's target_url carry the trail.
+    const commentUrl = activityUrn ? await findOwnComment(page, activityUrn, text) : null;
     emit({
       ok: true,
-      comment_url: null,
-      note: 'posted (assertNotChallenged passed post-submit); LinkedIn does not surface a stable permalink in the DOM after post, audit via target_url',
+      comment_url: commentUrl,
+      note: commentUrl ? 'posted and confirmed via voyager comments' : 'submitted; could not confirm a permalink via API (it may still have posted, verify via audit)',
     });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
@@ -797,47 +809,36 @@ async function cmdReplyComment(permalink, args) {
   const text = args.text;
   if (!text || !text.trim()) die('missing_arg', 'reply-comment requires --text "..."');
 
+  const activityUrn = (String(permalink).match(/urn:li:activity:\d+/) || [])[0] || null;
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
   try {
     await gotoWithRetry(page, permalink);
     await assertNotChallenged(page);
+    await page.waitForTimeout(2_500);
 
-    // Wait for comments to render, then find the specific
-    // comment by URN if the permalink encodes one.
-    await page.waitForSelector(SELECTORS.commentArticle, { timeout: 15_000 }).catch(() => {});
-    const urnMatch = permalink.match(/commentUrn=([^&]+)/);
-    const targetUrn = urnMatch ? decodeURIComponent(urnMatch[1]) : null;
-    let targetComment;
-    if (targetUrn) {
-      targetComment = page.locator(`${SELECTORS.commentArticle}[data-id="${targetUrn}"]`).first();
-    } else {
-      targetComment = page.locator(SELECTORS.commentArticle).first();
-    }
-    if (await targetComment.count() === 0) {
-      die('comment_not_found', 'no comment matched the permalink target');
-    }
-
-    // Click Reply on the target comment.
-    const replyBtn = targetComment.locator(SELECTORS.commentReplyTrigger).first();
+    // The permalink anchors to the target comment. Click its Reply
+    // control (the first Reply button at the anchored position).
+    const replyBtn = page.getByRole('button', { name: /^reply$/i }).first();
     if (await replyBtn.count() === 0) {
-      die('comment_form_not_found', 'no Reply action on target comment (locked/banned/DOM changed)');
+      die('comment_form_not_found', 'no Reply control found (locked, challenge, or DOM changed)');
     }
-    await replyBtn.click();
+    await replyBtn.click().catch(() => {});
+    await page.waitForTimeout(1_500);
 
-    const editor = targetComment.locator(SELECTORS.commentEditor).first();
-    await editor.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => {
-      die('comment_form_not_found', 'reply composer did not appear after clicking Reply');
-    });
-
-    await typeIntoEditor(page, editor, text);
-    await clickSubmitWhenReady(page, targetComment);
+    // The reply composer is a comment editor; target by label.
+    const editor = page.getByRole('textbox', { name: /reply|comment/i }).first();
+    if (await editor.count() === 0) {
+      die('comment_form_not_found', 'reply editor did not appear after clicking Reply');
+    }
+    await fillAndSubmitComment(page, editor, text);
     await assertNotChallenged(page);
 
+    const commentUrl = activityUrn ? await findOwnComment(page, activityUrn, text) : null;
     emit({
       ok: true,
-      comment_url: null,
-      note: 'posted (assertNotChallenged passed post-submit); LinkedIn does not surface a stable permalink in the DOM after post, audit via target_url',
+      comment_url: commentUrl,
+      note: commentUrl ? 'reply posted and confirmed via voyager comments' : 'reply submitted; could not confirm a permalink via API (it may still have posted, verify via audit)',
     });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
