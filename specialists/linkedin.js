@@ -860,23 +860,24 @@ async function cmdLogin() {
 async function cmdDebugFeed() {
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
+  // Context-level (all frames incl. the preload iframe) capture of any
+  // response carrying feed fsd_update URNs, to find where the SDUI feed
+  // content actually comes from. Skip messaging (it carries reshares).
   const apiHits = [];
-  page.on('response', async (resp) => {
+  ctx.on('response', async (resp) => {
     try {
       const url = resp.url();
-      if (!/voyager\/api/.test(url)) return;
-      if (!/(feed|graphql)/i.test(url)) return;
-      let hasActivity = false, sample = null, len = 0;
-      try {
-        const body = await resp.text();
-        len = body.length;
-        hasActivity = body.includes('urn:li:activity');
-        if (hasActivity) {
-          const idx = body.indexOf('urn:li:activity');
-          sample = body.slice(Math.max(0, idx - 25), idx + 70);
-        }
-      } catch { /* body not readable */ }
-      apiHits.push({ url: url.slice(0, 160), status: resp.status(), len, hasActivity, sample });
+      if (/[mM]essaging/.test(url)) return;
+      const ct = (resp.headers()['content-type'] || '');
+      if (!/json|text|graphql/i.test(ct) && !/graphql|sdui|feed/i.test(url)) return;
+      let body = '';
+      try { body = await resp.text(); } catch { return; }
+      const fsd = (body.match(/urn:li:fsd_update/g) || []).length;
+      const act = (body.match(/urn:li:activity:\d+/g) || []).length;
+      if (fsd === 0 && act === 0) return;
+      const qid = (url.match(/queryId=([^&]+)/) || [])[1] || null;
+      const firstAct = (body.match(/urn:li:activity:\d+/) || [])[0] || null;
+      apiHits.push({ url: url.slice(0, 120), queryId: qid, frame: resp.frame() === page.mainFrame() ? 'main' : 'subframe', len: body.length, fsdUpdateCount: fsd, activityCount: act, firstActivity: firstAct });
     } catch { /* ignore */ }
   });
   try {
