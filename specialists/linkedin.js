@@ -52,9 +52,6 @@ const path = require('path');
 
 // ─── Config ────────────────────────────────────────────────────
 
-const COOKIES_PATH = process.env.LINKEDIN_COOKIES_PATH
-  || '/secrets/linkedin.cookies.json';
-
 // Persistent browser profile. The LinkedIn session is established once
 // by a human login (the `login` subcommand) and persists here across
 // runs, so the worker reuses a native session instead of importing
@@ -63,63 +60,15 @@ const PROFILE_DIR = process.env.LINKEDIN_PROFILE_DIR || '/profile';
 
 const BASE = 'https://www.linkedin.com';
 
+// The feed/post/comment reading is done via the voyager JSON API and
+// the comment WRITE via the live composer (see below), so the only DOM
+// selectors left are the anti-bot challenge signals that assertNotChallenged
+// checks against any page we load.
 const SELECTORS = {
-  // Logged-in indicator. The global nav contains a "Me" button
-  // when authenticated. Several stable signals; we try them in
-  // order so one DOM refactor does not break all.
-  loggedInProfileButton: 'button[data-control-name="nav.settings"], button:has(img[alt^="Photo of "]), [aria-label="Me"]',
-
-  // Feed posts. data-id is the activity URN, stable for years.
-  feedPostThing:         'div[data-id^="urn:li:activity:"]',
-
-  // Post author + headline. Live inside the post header. Use
-  // role-based fallbacks; LinkedIn frequently re-hashes class
-  // names on these.
-  postHeaderAuthorLink:  'a[href*="/in/"][aria-label*="View"], a.update-components-actor__meta-link',
-  postHeaderAuthor:      'span.update-components-actor__title span[aria-hidden="true"], .update-components-actor__title',
-  postHeaderHeadline:    '.update-components-actor__description',
-
-  // Post body text. The "see more" expander hides part of long
-  // posts. The wrapper clicks it before extraction.
-  postBodyContainer:     '.feed-shared-update-v2__description, .update-components-text',
-  postSeeMoreButton:     'button.feed-shared-inline-show-more-text__see-more-less-toggle, button:has-text("…more")',
-
-  // Counts. LinkedIn renders these as text inside spans with
-  // accessibility labels. Pattern-match on aria-label so we
-  // catch label rephrases.
-  reactionCountSpan:     '.social-details-social-counts__reactions-count, [aria-label*="reactions"], [aria-label*="reaction"]',
-  commentCountButton:    '[aria-label$=" comments"], [aria-label$=" comment"], .social-details-social-counts__comments',
-
-  // Promoted/sponsored content marker. We never engage with it.
-  promotedMarker:        ':text("Promoted"), :text("Sponsored")',
-
-  // Repost marker. Renders as "X reposted this" header above the
-  // original post.
-  repostMarker:          '.update-components-header, :text("reposted this")',
-
-  // Comment thread. LinkedIn lazy-loads comments; click "Load
-  // more comments" repeatedly.
-  loadMoreCommentsButton: 'button.comments-comments-list__load-more-comments-button, button:has-text("Load more comments")',
-  commentArticle:        'article.comments-comment-item, .comments-comment-entity',
-  commentAuthorLink:     'a.comments-post-meta__actor-link, .comments-comment-meta__actor a[href*="/in/"]',
-  commentAuthorName:     '.comments-post-meta__name-text, .comments-comment-meta__actor span[dir="ltr"]',
-  commentAuthorHeadline: '.comments-post-meta__headline, .comments-comment-meta__description',
-  commentBody:           '.comments-comment-item-content-body, .update-components-text',
-  commentReactionCount:  '[aria-label*="reaction"] .social-counts-reactions__social-counts-numRections, .comments-comment-social-bar__reactions-count',
-  commentMenuButton:     'button[aria-label*="Open menu" i], button.comments-comment-social-bar__copy-link-button',
-
-  // Composer. Clicking the "Comment" button reveals a Quill
-  // contenteditable; typing and submit go through that.
-  commentTriggerOnPost:  'button[aria-label$="Comment"][type="button"], button.feed-shared-social-action-bar__action-button:has-text("Comment")',
-  commentReplyTrigger:   'button.comments-comment-social-bar__reply-action-button, button:has-text("Reply")',
-  commentEditor:         'div[role="textbox"][contenteditable="true"], div.ql-editor[contenteditable="true"]',
-  commentSubmitButton:   'button.comments-comment-box__submit-button:not([disabled]), button:has-text("Post"):not([disabled])',
-
-  // Anti-bot signals.
-  captchaIframe:         'iframe[src*="recaptcha"], iframe[src*="captcha"], iframe[title*="captcha" i]',
-  authChallengePage:     ':text("Let us verify it\'s really you")',
-  rateLimitNotice:       ':text("Try again later"), :text("You\'ve reached the weekly invitation limit"), :text("temporarily restricted")',
-  loginRedirectMarker:   'form[action*="checkpoint"], a[href*="/login"]',
+  captchaIframe:       'iframe[src*="recaptcha"], iframe[src*="captcha"], iframe[title*="captcha" i]',
+  authChallengePage:   ':text("Let us verify it\'s really you")',
+  rateLimitNotice:     ':text("Try again later"), :text("You\'ve reached the weekly invitation limit"), :text("temporarily restricted")',
+  loginRedirectMarker: 'form[action*="checkpoint"], a[href*="/login"]',
 };
 
 // ─── Helpers ──────────────────────────────────────────────────
@@ -131,48 +80,6 @@ function emit(obj) {
 function die(error, details) {
   emit({ ok: false, error, ...(details ? { details } : {}) });
   process.exit(1);
-}
-
-function loadCookies() {
-  if (!fs.existsSync(COOKIES_PATH)) {
-    die('cookies missing', `expected file at ${COOKIES_PATH}`);
-  }
-  const raw = fs.readFileSync(COOKIES_PATH, 'utf-8');
-  let cookies;
-  try { cookies = JSON.parse(raw); }
-  catch (e) { die('cookies malformed', `not valid JSON: ${e.message}`); }
-  if (!Array.isArray(cookies)) die('cookies malformed', 'top level must be an array');
-
-  return cookies.map((c) => {
-    const out = { ...c };
-    if (typeof out.expires === 'string') out.expires = Number(out.expires);
-    if (out.expirationDate && !out.expires) out.expires = Math.floor(out.expirationDate);
-    if (out.session === true) delete out.expires;
-    if (!out.domain) out.domain = '.linkedin.com';
-    if (!out.path) out.path = '/';
-    // sameSite normalization across exporter formats (same as
-    // the reddit.js wrapper; lifted here for self-containment).
-    const ss = (() => {
-      if (out.sameSite == null) return null;
-      const v = String(out.sameSite).toLowerCase();
-      switch (v) {
-        case 'strict':         return 'Strict';
-        case 'lax':            return 'Lax';
-        case 'none':           return 'None';
-        case 'no_restriction': return 'None';
-        default:               return null;
-      }
-    })();
-    if (ss) out.sameSite = ss;
-    else delete out.sameSite;
-    // Strip extension-specific bookkeeping fields Playwright
-    // rejects.
-    delete out.hostOnly;
-    delete out.storeId;
-    delete out.id;
-    delete out.expirationDate;
-    return out;
-  });
 }
 
 async function newContext() {
@@ -587,7 +494,7 @@ async function cmdAuthCheck() {
           ok: true,
           logged_in_as: '(no display name extracted; global nav present)',
           final_url: finalUrl,
-          warning: 'profile-photo selectors all stale; LinkedIn DOM may have shifted. Engager will keep working but display name will read this placeholder. Update SELECTORS.loggedInProfileButton in linkedin.js when convenient.',
+          warning: 'profile-photo selectors all stale; LinkedIn DOM may have shifted. Engager will keep working but display name will read this placeholder. Update the photoSelectors list in cmdAuthCheck when convenient.',
         });
         return;
       }
@@ -897,316 +804,6 @@ async function cmdLogin() {
   }
 }
 
-// ─── Subcommand: debug-feed (diagnostic) ──────────────────────
-// Confirms which feed DOM this account is served (old class/data-id
-// design vs the new Server-Driven UI) and scouts the Voyager API
-// responses that populate the feed, to inform the JSON-interception
-// rewrite. Read-only; emits a verdict + DOM signals + API hits.
-async function cmdDebugFeed() {
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  // Context-level (all frames incl. the preload iframe) capture of any
-  // response carrying feed fsd_update URNs, to find where the SDUI feed
-  // content actually comes from. Skip messaging (it carries reshares).
-  const apiHits = [];
-  ctx.on('response', async (resp) => {
-    try {
-      const url = resp.url();
-      if (/[mM]essaging/.test(url)) return;
-      const ct = (resp.headers()['content-type'] || '');
-      if (!/json|text|graphql/i.test(ct) && !/graphql|sdui|feed/i.test(url)) return;
-      let body = '';
-      try { body = await resp.text(); } catch { return; }
-      const fsd = (body.match(/urn:li:fsd_update/g) || []).length;
-      const act = (body.match(/urn:li:activity:\d+/g) || []).length;
-      if (fsd === 0 && act === 0) return;
-      const qid = (url.match(/queryId=([^&]+)/) || [])[1] || null;
-      const firstAct = (body.match(/urn:li:activity:\d+/) || [])[0] || null;
-      // Persist the two big feed-bearing payloads (initial doc + the
-      // SDUI mainFeed pagination) for offline parser design.
-      try {
-        if (/rsc-action.*mainFeed/.test(url)) fs.writeFileSync('/tmp/feed-pagination.txt', body);
-        else if (/\/feed\/?$/.test(url) && resp.frame() === page.mainFrame()) fs.writeFileSync('/tmp/feed-document.txt', body);
-      } catch { /* ignore */ }
-      apiHits.push({ url: url.slice(0, 120), queryId: qid, frame: resp.frame() === page.mainFrame() ? 'main' : 'subframe', len: body.length, fsdUpdateCount: fsd, activityCount: act, firstActivity: firstAct });
-    } catch { /* ignore */ }
-  });
-  try {
-    await gotoWithRetry(page, BASE + '/feed/');
-    await assertNotChallenged(page);
-    for (let i = 0; i < 5; i++) {
-      await page.mouse.wheel(0, 2200).catch(() => {});
-      await page.waitForTimeout(1500);
-    }
-    const dom = await page.evaluate(() => {
-      const q = (s) => { try { return document.querySelectorAll(s).length; } catch { return 'ERR'; } };
-      // 1. Inline bootstrap: LinkedIn embeds model JSON in hidden
-      // <code> blocks. Find ones mentioning feed activity URNs.
-      const codeBlocks = [...document.querySelectorAll('code')]
-        .map(c => c.textContent || '')
-        .filter(t => t.includes('urn:li:activity') || t.includes('fsd_update') || t.includes('feedDash'));
-      const codeSamples = codeBlocks.slice(0, 3).map(t => {
-        const i = t.indexOf('urn:li:activity');
-        return { len: t.length, around: i >= 0 ? t.slice(Math.max(0, i - 40), i + 90) : t.slice(0, 120) };
-      });
-      // 2. Per-card DOM extraction probe under mainFeed.
-      const recoverUrn = (card) => {
-        // 1. plain activity urn anywhere in a descendant attribute
-        for (const el of card.querySelectorAll('*')) {
-          for (const a of el.attributes) {
-            const m = a.value && a.value.match(/urn:li:activity:\d+/);
-            if (m) return { via: 'plain:' + a.name, urn: m[0] };
-          }
-        }
-        // 2. base64-encoded urn inside id / data-testid tokens
-        for (const el of card.querySelectorAll('[id],[data-testid]')) {
-          for (const attr of ['id', 'data-testid']) {
-            const v = el.getAttribute(attr); if (!v) continue;
-            for (const tok of v.split(/[^A-Za-z0-9+/=_-]+/)) {
-              if (tok.length < 16) continue;
-              try {
-                const dec = atob(tok.replace(/-/g, '+').replace(/_/g, '/'));
-                const m = dec.match(/urn:li:activity:\d+/);
-                if (m) return { via: 'b64:' + attr, urn: m[0] };
-              } catch { /* not b64 */ }
-            }
-          }
-        }
-        return null;
-      };
-      const cards = [...document.querySelectorAll('[data-testid="mainFeed"] [role="listitem"]')].slice(0, 6).map(card => {
-        const body = card.querySelector('[data-testid="expandable-text-box"]');
-        return { bodyText: (body?.textContent || '').trim().slice(0, 50), urn: recoverUrn(card) };
-      });
-      const testids = {};
-      for (const el of document.querySelectorAll('[data-testid]')) {
-        const v = el.getAttribute('data-testid'); testids[v] = (testids[v] || 0) + 1;
-      }
-      return {
-        oldSelector_dataIdActivity: q('div[data-id^="urn:li:activity:"]'),
-        new_mainFeed:               q('[data-testid="mainFeed"]'),
-        new_sduiScreen:             q('[data-sdui-screen]'),
-        new_expandableTextBox:      q('[data-testid="expandable-text-box"]'),
-        roleListitem:               q('[role="listitem"]'),
-        htmlActivityCount: (document.documentElement.outerHTML.match(/urn:li:activity/g) || []).length,
-        codeBlocksWithFeed: codeBlocks.length,
-        codeSamples,
-        cards,
-        testids: Object.entries(testids).slice(0, 18),
-      };
-    });
-    // Probe whether the underlying voyager feed API still serves clean
-    // JSON to an authenticated request (the durable data source if so).
-    const apiTest = await page.evaluate(async () => {
-      const jsid = (document.cookie.split('; ').find(c => c.startsWith('JSESSIONID=')) || '').split('=')[1]?.replace(/"/g, '') || '';
-      const urls = [
-        '/voyager/api/feed/updatesV2?count=3&moduleKey=home-feed:desktop&q=chronFeed',
-        '/voyager/api/feed/updatesV2?count=3&q=chronFeed',
-        '/voyager/api/feed/updates?count=3&q=chronFeed',
-      ];
-      const out = [];
-      for (const url of urls) {
-        try {
-          const r = await fetch(url, { headers: { 'csrf-token': jsid, 'x-restli-protocol-version': '2.0.0', 'accept': 'application/vnd.linkedin.normalized+json+2.1' }, credentials: 'include' });
-          const t = await r.text();
-          out.push({ url, status: r.status, len: t.length, hasActivity: t.includes('urn:li:activity'), start: t.slice(0, 160), body: (r.status === 200 && t.includes('urn:li:activity')) ? t : undefined });
-        } catch (e) { out.push({ url, err: String(e).slice(0, 120) }); }
-      }
-      return { hadJsid: jsid.length > 0, results: out };
-    });
-    // Persist the first clean voyager feed JSON for offline parser design,
-    // then strip the big body from the emitted summary.
-    try {
-      const win = apiTest.results.find(r => r.body);
-      if (win) { fs.writeFileSync('/tmp/voyager-feed.json', win.body); }
-    } catch { /* ignore */ }
-    apiTest.results.forEach(r => { delete r.body; });
-    const shot = await snapshotOnFailure(page, 'debug-feed');
-    const verdict = dom.oldSelector_dataIdActivity > 0 ? 'OLD_FEED'
-      : (dom.new_mainFeed > 0 || dom.new_sduiScreen > 0) ? 'NEW_SDUI_FEED'
-      : 'UNKNOWN';
-    emit({ ok: true, verdict, dom, apiTest, apiHits: apiHits.slice(0, 25), screenshot_path: shot });
-  } catch (e) {
-    if (e.message && /process.exit/.test(e.message)) throw e;
-    die('debug_feed_failed', e.message);
-  } finally {
-    await browser.close();
-  }
-}
-
-// ─── Subcommand: debug-post (diagnostic) ──────────────────────
-// Loads a post and captures which voyager call returns its comments,
-// to find the comments endpoint for the read-post rewrite.
-async function cmdDebugPost(postUrl) {
-  if (!postUrl) die('missing_arg', 'debug-post requires a post URL');
-  const activityUrn = (String(postUrl).match(/urn:li:activity:\d+/) || [])[0] || null;
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  const hits = [];
-  ctx.on('response', async (resp) => {
-    try {
-      const url = resp.url();
-      if (!/voyager\/api/.test(url)) return;
-      let body = ''; try { body = await resp.text(); } catch { return; }
-      if (!/urn:li:comment|Comment/.test(body)) return;
-      const qid = (url.match(/queryId=([^&]+)/) || [])[1] || null;
-      const nComments = (body.match(/urn:li:comment:/g) || []).length;
-      if (nComments === 0) return;
-      try { fs.writeFileSync('/tmp/voyager-comments.json', body); } catch { /* */ }
-      hits.push({ url: url.slice(0, 150), queryId: qid, len: body.length, commentRefs: nComments });
-    } catch { /* */ }
-  });
-  try {
-    await gotoWithRetry(page, postUrl);
-    await assertNotChallenged(page);
-    for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 1800).catch(() => {}); await page.waitForTimeout(1500); }
-    // also try fetching post detail by urn via updatesV2
-    let detail = null;
-    const endpointTests = [];
-    const detailTests = [];
-    if (activityUrn) {
-      const enc = encodeURIComponent(activityUrn);
-      const detailCandidates = [
-        `/voyager/api/feed/updatesV2?q=backendUrnOrNss&urnOrNss=${enc}`,
-        `/voyager/api/feed/updates/${enc}`,
-        `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${enc}`,
-      ];
-      for (const d of detailCandidates) {
-        const rr = await voyagerGet(page, d);
-        let firstUrn = null;
-        try { const jj = JSON.parse(rr.text); const els = (jj.data && (jj.data['*elements'] || (jj.data['*value'] ? [jj.data['*value']] : []))) || []; firstUrn = (String(els[0] || rr.text).match(/urn:li:activity:\d+/) || [])[0] || null; } catch { firstUrn = (rr.text.match(/urn:li:activity:\d+/) || [])[0] || null; }
-        detailTests.push({ path: d.slice(0, 60), status: rr.status, len: rr.text.length, firstUrn, matches: firstUrn === activityUrn });
-      }
-      const r = await voyagerGet(page, `/voyager/api/feed/updatesV2?q=backendUrnOrNss&urnOrNss=${enc}`);
-      detail = { status: r.status, len: r.text.length, hasActivity: r.text.includes('urn:li:activity') };
-      const candidates = [
-        `/voyager/api/feed/comments?count=5&q=comments&sortOrder=RELEVANCE&start=0&updateId=${enc}`,
-        `/voyager/api/feed/comments?count=5&q=comments&updateId=${enc}`,
-        `/voyager/api/social/comments?count=5&q=comments&updateId=${enc}`,
-        `/voyager/api/feed/socialDash/comments?count=5&q=comments&updateId=${enc}`,
-      ];
-      for (const c of candidates) {
-        const rr = await voyagerGet(page, c);
-        const refs = (rr.text.match(/urn:li:comment:/g) || []).length;
-        if (refs > 0) { try { fs.writeFileSync('/tmp/voyager-comments.json', rr.text); } catch { /* */ } }
-        endpointTests.push({ path: c.slice(0, 70), status: rr.status, len: rr.text.length, commentRefs: refs });
-      }
-    }
-    emit({ ok: true, activityUrn, detailFetch: detail, detailTests, endpointTests, commentHits: hits.slice(0, 12) });
-  } catch (e) {
-    if (e.message && /process.exit/.test(e.message)) throw e;
-    die('debug_post_failed', e.message);
-  } finally {
-    await browser.close();
-  }
-}
-
-// ─── Subcommand: capture-comment (diagnostic, one-time) ───────
-// Opens the engager's profile browser on the current display and waits
-// for a human (over VNC) to post one comment by hand, capturing the
-// outgoing create-comment request so the API write path can replicate
-// it exactly. Read-only w.r.t. our code; the human does the posting.
-async function cmdCaptureComment() {
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  const captured = [];
-  let got = null;
-  ctx.on('request', (req) => {
-    try {
-      const m = req.method();
-      if (m !== 'POST' && m !== 'PUT' && m !== 'PATCH') return;
-      const url = req.url();
-      if (!/voyager|graphql|comment/i.test(url)) return;
-      const pd = req.postData() || '';
-      const rec = { method: m, url, headers: req.headers(), postData: pd.slice(0, 8000) };
-      captured.push(rec);
-      // Only the actual CREATE/submit (not the composer-open prompt fetch
-      // or the fetch-comments list) should end the capture.
-      const isCreate = /create|addcomment|postcomment|publishcomment|submitcomment/i.test(url)
-        || /create[A-Za-z]*comment|normcomment|"commentary"/i.test(pd);
-      const isFetch = /fetch/i.test(url);
-      if (isCreate && !isFetch) got = got || rec;
-    } catch { /* ignore */ }
-  });
-  await gotoWithRetry(page, BASE + '/feed/').catch(() => {});
-  process.stderr.write('[capture] Browser open on this display. VNC in, type a comment AND hit Post, wait for it to appear. Waiting up to 12 min...\n');
-  const deadline = Date.now() + 12 * 60 * 1000;
-  while (Date.now() < deadline && !got) { await page.waitForTimeout(2000); }
-  await page.waitForTimeout(2500); // catch any follow-up requests
-  try { fs.writeFileSync('/tmp/comment-capture.json', JSON.stringify(captured, null, 1)); } catch { /* ignore */ }
-  await browser.close().catch(() => {});
-  // Redact sensitive headers from the emitted summary; the full record
-  // (incl. headers) stays in /tmp for local inspection only.
-  const redact = (r) => r && ({ method: r.method, url: r.url, contentType: (r.headers || {})['content-type'], postData: r.postData });
-  emit({ ok: !!got, capturedCount: captured.length, commentRequest: redact(got), allUrls: captured.map((c) => c.method + ' ' + c.url.slice(0, 110)) });
-}
-
-// ─── Subcommand: debug-composer (diagnostic) ──────────────────
-// Opens a post, opens the comment composer (no submit), and dumps
-// candidate selectors for the editor + Post button, to wire the
-// DOM-driven write path. Does NOT type or post.
-async function cmdDebugComposer(postUrl) {
-  if (!postUrl) die('missing_arg', 'debug-composer requires a post URL');
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  try {
-    await gotoWithRetry(page, postUrl);
-    await assertNotChallenged(page);
-    await page.waitForTimeout(2500);
-    const dumpControls = () => page.evaluate(() => {
-      const btns = [...document.querySelectorAll('button,[role="button"]')]
-        .map((b) => ({ al: b.getAttribute('aria-label'), tid: b.getAttribute('data-testid'), txt: (b.textContent || '').trim().slice(0, 24) }))
-        .filter((b) => b.al || b.tid || b.txt)
-        .filter((b) => /comment|post|reply|respond/i.test((b.al || '') + (b.tid || '') + (b.txt || '')));
-      const editors = [...document.querySelectorAll('[contenteditable="true"],[role="textbox"]')]
-        .map((e) => ({ role: e.getAttribute('role'), al: e.getAttribute('aria-label'), tid: e.getAttribute('data-testid'), ce: e.getAttribute('contenteditable') }));
-      return { btns: btns.slice(0, 20), editors: editors.slice(0, 8) };
-    });
-    const before = await dumpControls();
-    // Click the most likely "Comment" action trigger to open the composer.
-    let opened = null;
-    for (const sel of ['button[aria-label^="Comment"]', 'button[aria-label*="omment"]', '[role="button"][aria-label*="omment"]']) {
-      const loc = page.locator(sel).first();
-      if (await loc.count() > 0) { await loc.click().catch(() => {}); opened = sel; break; }
-    }
-    await page.waitForTimeout(2500);
-    const after = await dumpControls();
-    // Playwright locators pierce open shadow DOM (unlike document.query*).
-    // Probe whether the editor is reachable + typeable WITHOUT submitting.
-    const probe = {};
-    // List every reachable textbox + its aria-label so we can pick the
-    // comment one (NOT the search bar at the top of the page).
-    probe.textboxes = await page.getByRole('textbox').evaluateAll(
-      (els) => els.map((e) => ({ al: e.getAttribute('aria-label') || e.getAttribute('placeholder'), ce: e.getAttribute('contenteditable') }))
-    ).catch(() => 'ERR');
-    // Target the comment editor specifically by its label.
-    let typed = null, editorLabel = null;
-    try {
-      const ed = page.getByRole('textbox', { name: /comment|add a comment/i }).first();
-      if (await ed.count() > 0) {
-        editorLabel = await ed.getAttribute('aria-label').catch(() => null);
-        await ed.click({ timeout: 4000 }).catch(() => {});
-        await ed.pressSequentially('selector probe', { delay: 25 }).catch(() => {});
-        await page.waitForTimeout(700);
-        typed = (await ed.textContent().catch(() => null)) || (await ed.inputValue().catch(() => null));
-      } else {
-        typed = 'NO_COMMENT_TEXTBOX';
-      }
-    } catch (e) { typed = 'TYPE_ERR:' + e.message.slice(0, 70); }
-    probe.editorLabel = editorLabel;
-    probe.typedReadback = typed;
-    // Find the submit control reachable via Playwright (pierces shadow).
-    probe.submitPost = await page.getByRole('button', { name: /^post$/i }).count().catch(() => 'ERR');
-    probe.submitComment = await page.getByRole('button', { name: /^comment$/i }).count().catch(() => 'ERR');
-    emit({ ok: true, openedVia: opened, probe });
-  } catch (e) {
-    if (e.message && /process.exit/.test(e.message)) throw e;
-    die('debug_composer_failed', e.message);
-  } finally {
-    await browser.close();
-  }
-}
-
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1217,10 +814,6 @@ async function main() {
     case 'read-post':      await cmdReadPost(args._[0]); break;
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
-    case 'debug-feed':     await cmdDebugFeed(); break;
-    case 'debug-post':     await cmdDebugPost(args._[0]); break;
-    case 'capture-comment': await cmdCaptureComment(); break;
-    case 'debug-composer': await cmdDebugComposer(args._[0]); break;
     default:
       emit({
         ok: false,
