@@ -813,20 +813,24 @@ async function cmdDebugProfile() {
     await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
     const me = await voyagerGet(page, '/voyager/api/me');
-    let pub = null;
-    try { pub = (me.text.match(/"publicIdentifier":"([^"]+)"/) || [])[1] || null; } catch { /* */ }
-    const out = { me: { status: me.status, publicIdentifier: pub } };
-    const candidates = pub ? [
-      `/voyager/api/identity/profiles/${pub}/profileView`,
-      `/voyager/api/identity/profiles/${pub}`,
-    ] : [];
-    out.tests = [];
-    for (const c of candidates) {
-      const r = await voyagerGet(page, c);
-      let topKeys = null, dataKeys = null;
-      try { const j = JSON.parse(r.text); topKeys = Object.keys(j); dataKeys = j.data ? Object.keys(j.data) : null; } catch { /* */ }
-      try { if (/profileView/.test(c) && r.status === 200) fs.writeFileSync('/tmp/profileView.json', r.text); } catch { /* */ }
-      out.tests.push({ path: c.slice(0, 70), status: r.status, len: r.text.length, hasSummary: /"summary"/.test(r.text), hasPositions: /position|experience/i.test(r.text), topKeys, dataKeys });
+    const pub = (me.text.match(/"publicIdentifier":"([^"]+)"/) || [])[1] || null;
+    const out = { me: { status: me.status, publicIdentifier: pub }, pages: {} };
+    // Profile is SDUI/dash now (old profileView is 410). Extract the
+    // About + Experience as rendered TEXT instead, which the agent can
+    // reason over. Probe the main profile page + the experience detail.
+    const grab = async (url, label) => {
+      await gotoWithRetry(page, url).catch(() => {});
+      await page.waitForTimeout(3500);
+      // expand any "see more" toggles to get full text
+      const mores = page.getByRole('button', { name: /see more|…more|show more/i });
+      const n = Math.min(await mores.count().catch(() => 0), 8);
+      for (let i = 0; i < n; i++) { await mores.nth(i).click().catch(() => {}); await page.waitForTimeout(200); }
+      const txt = await page.evaluate(() => (document.querySelector('main')?.innerText || document.body.innerText || '')).catch(() => '');
+      out.pages[label] = { url, len: txt.length, sample: txt.replace(/\n{2,}/g, '\n').slice(0, 500) };
+    };
+    if (pub) {
+      await grab(`${BASE}/in/${pub}/`, 'profile');
+      await grab(`${BASE}/in/${pub}/details/experience/`, 'experience');
     }
     emit(out);
   } catch (e) {
