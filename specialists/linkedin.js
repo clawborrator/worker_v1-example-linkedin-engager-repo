@@ -803,39 +803,64 @@ async function cmdLogin() {
   }
 }
 
-// ─── Subcommand: debug-profile (diagnostic) ───────────────────
-// Probes voyager endpoints for the logged-in member's own profile
-// (publicIdentifier, About/summary, Experience) to design my-profile.
-async function cmdDebugProfile() {
+// ─── Subcommand: my-profile ───────────────────────────────────
+// Returns the logged-in member's own name, headline, full About text,
+// and full Experience text, so the agent can derive a target audience.
+// The old voyager profileView endpoint is gone (410) and the new dash
+// endpoints need versioned queryIds, so About/Experience are read as
+// rendered page text (robust, and the agent reasons over text anyway).
+async function cmdMyProfile() {
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
   try {
     await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
+
     const me = await voyagerGet(page, '/voyager/api/me');
     const pub = (me.text.match(/"publicIdentifier":"([^"]+)"/) || [])[1] || null;
-    const out = { me: { status: me.status, publicIdentifier: pub }, pages: {} };
-    // Profile is SDUI/dash now (old profileView is 410). Extract the
-    // About + Experience as rendered TEXT instead, which the agent can
-    // reason over. Probe the main profile page + the experience detail.
-    const grab = async (url, label) => {
-      await gotoWithRetry(page, url).catch(() => {});
-      await page.waitForTimeout(3500);
-      // expand any "see more" toggles to get full text
-      const mores = page.getByRole('button', { name: /see more|…more|show more/i });
-      const n = Math.min(await mores.count().catch(() => 0), 8);
-      for (let i = 0; i < n; i++) { await mores.nth(i).click().catch(() => {}); await page.waitForTimeout(200); }
-      const txt = await page.evaluate(() => (document.querySelector('main')?.innerText || document.body.innerText || '')).catch(() => '');
-      out.pages[label] = { url, len: txt.length, sample: txt.replace(/\n{2,}/g, '\n').slice(0, 500) };
+    const firstName = (me.text.match(/"firstName":"([^"]*)"/) || [])[1] || '';
+    const lastName = (me.text.match(/"lastName":"([^"]*)"/) || [])[1] || '';
+    const occupation = (me.text.match(/"occupation":"([^"]*)"/) || [])[1] || '';
+    if (!pub) die('my_profile_failed', 'could not resolve own publicIdentifier from /voyager/api/me');
+
+    const expandSeeMore = async () => {
+      const mores = page.getByRole('button', { name: /see more|…more|show more|see full/i });
+      const n = Math.min(await mores.count().catch(() => 0), 12);
+      for (let i = 0; i < n; i++) { await mores.nth(i).click().catch(() => {}); await page.waitForTimeout(150); }
     };
-    if (pub) {
-      await grab(`${BASE}/in/${pub}/`, 'profile');
-      await grab(`${BASE}/in/${pub}/details/experience/`, 'experience');
-    }
-    emit(out);
+
+    // About: the section anchored by #about on the main profile page.
+    await gotoWithRetry(page, `${BASE}/in/${pub}/`);
+    await assertNotChallenged(page);
+    await page.waitForTimeout(3_000);
+    await expandSeeMore();
+    const about = await page.evaluate(() => {
+      const a = document.querySelector('#about');
+      const sec = a ? a.closest('section') : null;
+      return (sec ? sec.innerText : '').replace(/^About\s*/i, '').trim();
+    }).catch(() => '');
+
+    // Experience: the dedicated details page lists every position in full.
+    await gotoWithRetry(page, `${BASE}/in/${pub}/details/experience/`);
+    await assertNotChallenged(page);
+    await page.waitForTimeout(3_000);
+    await expandSeeMore();
+    const experience = await page.evaluate(
+      () => (document.querySelector('main')?.innerText || '').replace(/^\s*Experience\s*/i, '').trim()
+    ).catch(() => '');
+
+    emit({
+      ok: true,
+      name: `${firstName} ${lastName}`.trim(),
+      headline: occupation,
+      public_id: pub,
+      profile_url: `${BASE}/in/${pub}/`,
+      about,
+      experience,
+    });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
-    die('debug_profile_failed', e.message);
+    die('my_profile_failed', e.message);
   } finally {
     await browser.close();
   }
@@ -851,7 +876,7 @@ async function main() {
     case 'read-post':      await cmdReadPost(args._[0]); break;
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
-    case 'debug-profile':  await cmdDebugProfile(); break;
+    case 'my-profile':     await cmdMyProfile(); break;
     default:
       emit({
         ok: false,
@@ -859,6 +884,7 @@ async function main() {
         usage: [
           'linkedin.js login   (one-time human login via VNC into the persistent profile)',
           'linkedin.js auth-check',
+          'linkedin.js my-profile   (own name, headline, About, Experience -- for target-audience derivation)',
           'linkedin.js scroll-feed --count 15 --feed home|hashtag:<name>',
           'linkedin.js read-post <post-url>',
           'linkedin.js comment-post <post-url> --text "..."',
