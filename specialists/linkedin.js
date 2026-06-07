@@ -397,13 +397,63 @@ function parseUpdatesV2(json) {
       urn: activityUrn,
       author: tvmText(actor.name),
       author_headline: tvmText(actor.description),
+      // body_excerpt is what the feed listing exposes; body (full) is
+      // kept for read-post and stripped by scroll-feed before emit.
       body_excerpt: body.slice(0, 500),
+      body,
       post_url: postUrl,
       reaction_count: reactionCount,
       comment_count: commentCount,
       age_hours: parseRelativeAge(tvmText(actor.subDescription)),
       is_promoted: /sponsoredContentV2|sponsored/i.test(String(elUrn)),
       is_repost: !!(u.resharedUpdate || u['*resharedUpdate']),
+    });
+  }
+  return out;
+}
+
+// Flatten a voyager AnnotatedText / TextViewModel comment body to text.
+function annotatedText(at) {
+  if (!at) return '';
+  if (typeof at.text === 'string') return at.text;
+  if (Array.isArray(at.values)) return at.values.map((v) => (v && v.value) || '').join('');
+  return '';
+}
+
+function ageHoursFromMs(ms) {
+  if (!ms) return null;
+  return Math.round((Date.now() - ms) / 3_600_000);
+}
+
+// Parse a /feed/comments normalized response into the comment shape the
+// playbook expects.
+function parseComments(json) {
+  const elements = (json.data && json.data['*elements']) || [];
+  const idx = indexIncluded(json.included);
+  const out = [];
+  for (const elUrn of elements) {
+    const c = idx.get(elUrn);
+    if (!c || !String(c['$type'] || '').endsWith('.Comment')) continue;
+    const commenter = c.commenter || {};
+    const mp = commenter['*miniProfile'] ? idx.get(commenter['*miniProfile']) : null;
+    const author = mp ? [mp.firstName, mp.lastName].filter(Boolean).join(' ').trim() : null;
+    const headline = (mp && mp.occupation) || tvmText(c.headline) || null;
+    let reactionCount = null;
+    const sd = c['*socialDetail'] ? idx.get(c['*socialDetail']) : null;
+    if (sd) {
+      const sc = sd['*totalSocialActivityCounts'] ? idx.get(sd['*totalSocialActivityCounts']) : null;
+      if (sc && typeof sc.numLikes === 'number') reactionCount = sc.numLikes;
+    }
+    out.push({
+      id: c.urn || null,
+      author: author || null,
+      author_headline: headline,
+      body: annotatedText(c.comment || c.commentV2),
+      reaction_count: reactionCount,
+      age_hours: ageHoursFromMs(c.createdTime),
+      permalink: c.permalink || null,
+      depth: c.parentCommentUrn ? 1 : 0,
+      parent_id: c.parentCommentUrn || null,
     });
   }
   return out;
@@ -604,6 +654,7 @@ async function cmdScrollFeed(args) {
     catch (e) { die('scroll_feed_failed', `feed JSON parse failed: ${e.message}`); }
 
     const posts = parseUpdatesV2(json).filter((p) => p.urn).slice(0, count);
+    posts.forEach((p) => { delete p.body; }); // feed listing uses body_excerpt only
     emit({ ok: true, feed: feedArg, posts });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
@@ -617,100 +668,44 @@ async function cmdScrollFeed(args) {
 
 async function cmdReadPost(postUrl) {
   if (!postUrl) die('missing_arg', 'read-post requires a post URL');
+  const activityUrn = (String(postUrl).match(/urn:li:activity:\d+/) || [])[0] || null;
+  if (!activityUrn) die('read_post_failed', `could not extract an activity URN from ${postUrl}`);
 
   const { browser, ctx } = await newContext();
   const page = await ctx.newPage();
   try {
-    await gotoWithRetry(page, postUrl);
+    // Land on /feed/ so the voyager fetches run in an authenticated,
+    // initialized page context (cookies + csrf available).
+    await gotoWithRetry(page, BASE + '/feed/');
     await assertNotChallenged(page);
 
-    // The single-post view renders the same post-thing as the
-    // feed; find the first.
-    const postThing = page.locator(SELECTORS.feedPostThing).first();
-    await postThing.waitFor({ state: 'visible', timeout: 15_000 }).catch(() => {});
+    // Post detail via the voyager JSON API (the DOM is SDUI with no URNs).
+    const detailResp = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${encodeURIComponent(activityUrn)}`);
+    if (detailResp.status !== 200) die('read_post_failed', `voyager post detail returned status ${detailResp.status}`);
+    let detailJson;
+    try { detailJson = JSON.parse(detailResp.text); }
+    catch (e) { die('read_post_failed', `post JSON parse failed: ${e.message}`); }
+    const parsed = parseUpdatesV2(detailJson);
+    const post = parsed[0] || {};
 
-    const urn = await postThing.getAttribute('data-id');
-    const author = (await postThing.locator(SELECTORS.postHeaderAuthor).first().textContent().catch(() => null))?.trim()?.replace(/\s+/g, ' ');
-    const headline = (await postThing.locator(SELECTORS.postHeaderHeadline).first().textContent().catch(() => null))?.trim()?.replace(/\s+/g, ' ');
-
-    // Click "see more" if present, then read the full body.
-    const seeMore = postThing.locator(SELECTORS.postSeeMoreButton).first();
-    if (await seeMore.count() > 0) {
-      await seeMore.click().catch(() => {});
-      await page.waitForTimeout(500);
-    }
-    const body = (await postThing.locator(SELECTORS.postBodyContainer).first().textContent().catch(() => ''))?.trim();
-
-    const reactionText = (await postThing.locator(SELECTORS.reactionCountSpan).first().textContent().catch(() => null))?.trim();
-    const commentText = (await postThing.locator(SELECTORS.commentCountButton).first().getAttribute('aria-label').catch(() => null));
-    const reactionCount = reactionText ? (parseInt(reactionText.replace(/[^0-9]/g, ''), 10) || null) : null;
-    const commentCount = commentText ? (parseInt(commentText.replace(/[^0-9]/g, ''), 10) || null) : null;
-
-    // Expand comments. Click "Load more comments" up to 3 times.
-    for (let i = 0; i < 3; i++) {
-      const more = page.locator(SELECTORS.loadMoreCommentsButton).first();
-      if (await more.count() === 0) break;
-      await more.click().catch(() => {});
-      await page.waitForTimeout(1_200);
-    }
-
-    const commentThings = await page.locator(SELECTORS.commentArticle).all();
-    const comments = [];
-    for (const c of commentThings.slice(0, 60)) {
-      try {
-        const cAuthor = (await c.locator(SELECTORS.commentAuthorName).first().textContent().catch(() => null))?.trim()?.replace(/\s+/g, ' ');
-        const cHeadline = (await c.locator(SELECTORS.commentAuthorHeadline).first().textContent().catch(() => null))?.trim()?.replace(/\s+/g, ' ');
-        const cBody = (await c.locator(SELECTORS.commentBody).first().textContent().catch(() => ''))?.trim();
-        const cReactRaw = (await c.locator(SELECTORS.commentReactionCount).first().textContent().catch(() => null))?.trim();
-        const cReact = cReactRaw ? (parseInt(cReactRaw.replace(/[^0-9]/g, ''), 10) || null) : null;
-        const cAgeRaw = await c.locator('time').first().textContent().catch(() => null);
-        const cAge = parseRelativeAge((cAgeRaw || '').trim());
-        // Permalink. LinkedIn comments embed their URN in an
-        // element with the comment URN; the cleanest stable
-        // identifier is data-id on the article itself.
-        const cId = await c.getAttribute('data-id');
-        const cPermalink = cId && urn
-          ? `${BASE}/feed/update/${encodeURIComponent(urn)}/?commentUrn=${encodeURIComponent(cId)}`
-          : null;
-        // Depth: nested replies live inside .comments-comment-item
-        // ancestors; first-level is depth 0. Best-effort via
-        // class-name walk.
-        const depth = await c.evaluate((el) => {
-          let n = 0;
-          let cur = el.parentElement;
-          while (cur && n < 5) {
-            if (cur.matches?.('article.comments-comment-item, .comments-comment-entity')) n++;
-            cur = cur.parentElement;
-          }
-          return n;
-        }).catch(() => 0);
-        if (!cAuthor && !cBody) continue;
-        comments.push({
-          id: cId,
-          author: cAuthor || null,
-          author_headline: cHeadline || null,
-          body: cBody,
-          reaction_count: cReact,
-          age_hours: cAge,
-          permalink: cPermalink,
-          depth,
-          parent_id: null,
-        });
-      } catch (e) {
-        continue;
-      }
+    // Comments via the voyager comments endpoint.
+    const commentsResp = await voyagerGet(page, `/voyager/api/feed/comments?count=60&q=comments&sortOrder=RELEVANCE&start=0&updateId=${encodeURIComponent(activityUrn)}`);
+    let comments = [];
+    if (commentsResp.status === 200) {
+      try { comments = parseComments(JSON.parse(commentsResp.text)).slice(0, 60); }
+      catch { comments = []; }
     }
 
     emit({
       ok: true,
       post: {
-        urn,
-        author: author || null,
-        author_headline: headline || null,
-        body,
-        post_url: postUrl,
-        reaction_count: reactionCount,
-        comment_count: commentCount,
+        urn: post.urn || activityUrn,
+        author: post.author || null,
+        author_headline: post.author_headline || null,
+        body: post.body || '',
+        post_url: post.post_url || postUrl,
+        reaction_count: post.reaction_count ?? null,
+        comment_count: post.comment_count ?? null,
       },
       comments,
     });
