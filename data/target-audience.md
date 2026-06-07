@@ -1,31 +1,30 @@
 # Target audience (derived 2026-06-07 from Chris Misztur's profile)
 
 ## Who the operator is
-Chris Misztur is a practitioner-turned-founder in industrial IoT and smart manufacturing: 20 years hands-on at automotive/metal parts suppliers, architect of the 5C IIoT framework, inventor of the SHARC sensor adapter, and now running Mr. IIoT, Data In Motion Enterprise (industrial transformation software), and Angel Parts (supply chain software). His credibility is operational, not theoretical.
+Chris Misztur is the founder of Mr. IIoT and co-founder of Data In Motion Enterprise and Angel Parts. He spent two decades at a major automotive supplier (MacLean-Fogg) leading digital transformation, built the SHARC IIoT sensor adapter (MQTT/OPC-UA/SparkplugB/MTConnect), and developed the 5C IIoT framework. His credibility is hands-on: sensors wired to shop floors, data pipelines built from scratch, patents held.
 
 ## Engage with
-- **Roles / titles:** controls engineers, automation engineers, plant IT and OT leads, manufacturing engineers, operations managers, digital transformation leads, MES/SCADA architects, industrial system integrators, IIoT product managers, supply chain engineers
-- **Industries / company types:** discrete and process manufacturing (automotive, metal fabrication, food & bev, plastics), OEMs building connected equipment, system integrators implementing Industry 4.0, industrial software vendors (MES, SCADA, ERP/MOM connectors), supply chain tech
-- **Seniority:** individual contributors who get their hands dirty (engineers, technicians) AND plant-level decision-makers (ops managers, VP manufacturing, CTO/CIO at mid-market manufacturers); skip pure C-suite at large enterprises where comments never reach the right person
+- **Roles / titles:** controls engineers, automation engineers, plant IT/OT leads, digital transformation managers, industrial data engineers, IIoT architects, MES/SCADA engineers, manufacturing/process engineers, plant managers and operations managers
+- **Industries / company types:** discrete manufacturing (automotive, metal fabrication, stamping, machining), process manufacturing, system integrators (SIs), industrial OEMs, industrial software/hardware vendors, supply chain tech
+- **Seniority:** hands-on practitioners (engineers, technicians) and mid-level plant/ops managers who own the OT/IT integration problem; skip pure C-suite executives at large enterprises
 - **Topics where Chris can add real signal:**
-  - Machine connectivity and sensor retrofitting on legacy equipment
-  - MQTT / OPC-UA / SparkplugB / MTConnect protocol choices and trade-offs
-  - IIoT architecture patterns (edge compute, data historian, cloud tie-in)
-  - OT/IT convergence: practical obstacles, not abstract frameworks
-  - Industry 4.0 ROI and "where to start" questions for small/mid manufacturers
-  - Supply chain visibility and MRP/scheduling software for job shops
-  - Real-world PLC/SCADA integration pain points
-  - Smart factory design and greenfield vs. brownfield approaches
+  - IIoT sensor connectivity and edge data acquisition (especially legacy/brownfield equipment)
+  - MQTT, SparkplugB, OPC-UA, MTConnect protocol choices and trade-offs
+  - OT/IT convergence: pitfalls, architecture decisions, organizational friction
+  - Machine connectivity without replacing equipment (retrofitting, SHARC-style adapters)
+  - Production monitoring, OEE, machine utilization, downtime analysis
+  - Industry 4.0 / smart factory implementations: what actually works vs. hype
+  - Supply chain visibility and scheduling software for job shops and mid-market manufacturers
+  - Data model design for manufacturing (contextualization, historian vs. streaming)
 
 ## Skip
-- Generic leadership/motivational content with no manufacturing angle
-- Enterprise software posts (ERP, CRM, HR tech) with no OT/manufacturing connection
-- AI hype posts not grounded in industrial use cases
-- Recruiting and job-posting content
-- Finance, M&A, VC/startup content unrelated to industrial tech
-- Pure IT/cloud posts with no factory floor relevance
-- Thought-leader bait ("What do you think?", emoji bullet lists, "Agree?")
-- Posts by analysts or consultants who have never worked a factory floor (low credibility match)
+- Generic leadership, career, and personal-development content with no manufacturing angle
+- Finance, M&A, venture capital, and executive hiring posts
+- HR, recruiting, and "we're hiring" posts
+- Consumer technology and non-industrial IoT (smart home, wearables)
+- Healthcare, fintech, and other verticals unrelated to industrial operations
+- Motivational quotes, listicles, and "agree?" engagement bait
+- Pure product promotion posts with no technical substance
 
 ## Voice fit
-Speak like a veteran factory-floor engineer who now builds the tools they always wished existed: direct, specific, skeptical of buzzwords, comfortable with protocol names and hardware part numbers.
+Speak as a practitioner who has personally wired sensors on a shop floor and traced data all the way through to the ERP: concrete, direct, and skeptical of hype, never abstract or consultant-speak.
