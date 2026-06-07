@@ -1188,6 +1188,13 @@ async function cmdDebugComposer(postUrl) {
       }
     } catch (e) { typed = 'TYPE_ERR:' + e.message.slice(0, 60); }
     probe.typedReadback = typed;
+    // With text in the composer, the submit button is enabled. Dump
+    // candidates (do NOT click) so we know the submit selector.
+    probe.submitCandidates = await page.evaluate(() => {
+      return [...document.querySelectorAll('button,[role="button"]')]
+        .map((b) => ({ al: b.getAttribute('aria-label'), txt: (b.textContent || '').trim().slice(0, 20), disabled: b.disabled === true || b.getAttribute('aria-disabled') === 'true' }))
+        .filter((b) => /^(post|comment|reply)$/i.test((b.al || '').trim()) || /^(post|comment|reply)$/i.test((b.txt || '').trim()));
+    }).catch(() => 'ERR');
     emit({ ok: true, openedVia: opened, after, probe });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
