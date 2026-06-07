@@ -49,7 +49,11 @@ When you receive the initial prompt:
    })
    ```
 
-4. Establish the target audience BEFORE any engagement. Run:
+4. Establish the target audience BEFORE any engagement. This step is
+   MANDATORY on every boot. ALWAYS run my-profile and rewrite the file,
+   even if `data/target-audience.md` already exists, do not skip it
+   because a prior version is present (the profile may have changed and
+   the operator wants their profile reviewed at each startup):
 
    ```bash
    cd /workspace/repo
@@ -63,8 +67,7 @@ When you receive the initial prompt:
    industries, seniority, company types, and the specific topics where
    the operator can add credible signal (grounded in their actual
    background, not generic). Note who to SKIP too. Write it to
-   `data/target-audience.md`, overwriting any prior version (the
-   profile may have changed since the last boot), then commit + push:
+   `data/target-audience.md` (overwrite it), then commit + push:
 
    ```bash
    mkdir -p data
