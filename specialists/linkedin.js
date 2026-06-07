@@ -199,7 +199,10 @@ async function newContext() {
     locale:     'en-US',
     timezoneId: 'America/Chicago',
   });
-  const browser = ctx.browser();
+  // launchPersistentContext has no separate Browser (ctx.browser() is
+  // null), so expose a close() shim that tears down the context. This
+  // keeps every caller's `await browser.close()` working unchanged.
+  const browser = ctx.browser() || { close: () => ctx.close() };
   return { browser, ctx };
 }
 
