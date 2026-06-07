@@ -877,6 +877,12 @@ async function cmdDebugFeed() {
       if (fsd === 0 && act === 0) return;
       const qid = (url.match(/queryId=([^&]+)/) || [])[1] || null;
       const firstAct = (body.match(/urn:li:activity:\d+/) || [])[0] || null;
+      // Persist the two big feed-bearing payloads (initial doc + the
+      // SDUI mainFeed pagination) for offline parser design.
+      try {
+        if (/rsc-action.*mainFeed/.test(url)) fs.writeFileSync('/tmp/feed-pagination.txt', body);
+        else if (/\/feed\/?$/.test(url) && resp.frame() === page.mainFrame()) fs.writeFileSync('/tmp/feed-document.txt', body);
+      } catch { /* ignore */ }
       apiHits.push({ url: url.slice(0, 120), queryId: qid, frame: resp.frame() === page.mainFrame() ? 'main' : 'subframe', len: body.length, fsdUpdateCount: fsd, activityCount: act, firstActivity: firstAct });
     } catch { /* ignore */ }
   });
