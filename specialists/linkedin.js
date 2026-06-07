@@ -55,6 +55,12 @@ const path = require('path');
 const COOKIES_PATH = process.env.LINKEDIN_COOKIES_PATH
   || '/secrets/linkedin.cookies.json';
 
+// Persistent browser profile. The LinkedIn session is established once
+// by a human login (the `login` subcommand) and persists here across
+// runs, so the worker reuses a native session instead of importing
+// cookies (which LinkedIn rejects). Mounted as a volume in compose.
+const PROFILE_DIR = process.env.LINKEDIN_PROFILE_DIR || '/profile';
+
 const BASE = 'https://www.linkedin.com';
 
 const SELECTORS = {
@@ -176,21 +182,24 @@ async function newContext() {
   // common tells (navigator.webdriver, chrome.runtime, plugins,
   // WebGL, canvas, languages). Requires DISPLAY env to be set,
   // which xvfb-run does automatically.
-  const browser = await chromium.launch({
+  // Persistent profile: the session was established once by a human
+  // login (see the `login` subcommand) and lives on disk in
+  // PROFILE_DIR. No cookie import, so there is no "replayed session"
+  // for LinkedIn to reject. UA is a plain Linux Chrome to match the
+  // actual browser (no Windows/Linux fingerprint mismatch).
+  const ctx = await chromium.launchPersistentContext(PROFILE_DIR, {
     headless: false,
     args: [
       '--disable-blink-features=AutomationControlled',
       '--no-sandbox',
       '--disable-dev-shm-usage',
     ],
-  });
-  const ctx = await browser.newContext({
     viewport:   { width: 1366, height: 900 },
-    userAgent:  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36',
+    userAgent:  'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
     locale:     'en-US',
     timezoneId: 'America/Chicago',
   });
-  await ctx.addCookies(loadCookies());
+  const browser = ctx.browser();
   return { browser, ctx };
 }
 
@@ -808,10 +817,43 @@ function parseArgs(argv) {
   return out;
 }
 
+// ─── Subcommand: login (one-time, human-driven via VNC) ───────
+// Opens the persistent-profile browser on the current display and
+// waits for a human to sign into LinkedIn by hand (VNC into the
+// x11vnc session that the operator starts on this display). Once the
+// feed is reached, the session is saved into PROFILE_DIR and every
+// later cycle reuses it. No credentials are entered by this script.
+async function cmdLogin() {
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  await gotoWithRetry(page, BASE + '/login').catch(() => {});
+  process.stderr.write('[login] Browser is open. VNC in and sign into LinkedIn by hand.\n');
+  process.stderr.write('[login] Handle any 2FA or captcha yourself. Waiting up to 15 min for you to reach /feed/...\n');
+  const deadline = Date.now() + 15 * 60 * 1000;
+  let loggedIn = false;
+  while (Date.now() < deadline) {
+    await page.waitForTimeout(3000);
+    let url = '';
+    try { url = page.url(); } catch { continue; }
+    if (/\/feed\/?(\?|$)/.test(url) && !/\/login|\/uas|\/checkpoint|\/signup/i.test(url)) {
+      loggedIn = true;
+      break;
+    }
+  }
+  // Closing flushes the persistent profile to disk either way.
+  await browser.close().catch(() => {});
+  if (loggedIn) {
+    emit({ ok: true, logged_in: true, profile: PROFILE_DIR, note: 'session saved to persistent profile; cycles will reuse it' });
+  } else {
+    emit({ ok: false, error: 'login_timeout', profile: PROFILE_DIR, note: 'did not detect /feed within 15 min; whatever state you reached was still saved to the profile' });
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
   switch (cmd) {
+    case 'login':          await cmdLogin(); break;
     case 'auth-check':     await cmdAuthCheck(); break;
     case 'scroll-feed':    await cmdScrollFeed(args); break;
     case 'read-post':      await cmdReadPost(args._[0]); break;
@@ -822,6 +864,7 @@ async function main() {
         ok: false,
         error: 'unknown_command',
         usage: [
+          'linkedin.js login   (one-time human login via VNC into the persistent profile)',
           'linkedin.js auth-check',
           'linkedin.js scroll-feed --count 15 --feed home|hashtag:<name>',
           'linkedin.js read-post <post-url>',
