@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-07T16:32:42Z",
+  "post": {
+    "urn": "urn:li:activity:7469424524992598016",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469424524992598016/",
+    "author": "Flexxbotics Inc.",
+    "topic_summary": "PLC changes are risky because non-deterministic logic is deeply embedded in controllers, so organizations rationally avoid all change."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Flexxbotics Inc.",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469424524992598016/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7466111600391770112?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7466111600391770112%2C7469426062397972480%29",
+    "comment_text": "The avoidance Flexxbotics describes is rational, not a culture problem. Most brownfield PLCs have been patched in place for a decade or more by people who no longer work there, and the documentation for what each function block actually does is incomplete or gone. So nobody touches it.\n\nThe practical way out for a lot of plants is to bypass the PLC program entirely: read signal-level inputs at the machine, proximity sensors or current loops, push data over MQTT, and never open the ladder logic. You still capture cycle state, counts, and utilization. It is slower to stand up than a proper PLC refactor, but it does not put a running line at risk."
+  },
+  "skip_reason": null
+}
