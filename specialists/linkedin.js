@@ -905,19 +905,33 @@ async function cmdDebugFeed() {
         return { len: t.length, around: i >= 0 ? t.slice(Math.max(0, i - 40), i + 90) : t.slice(0, 120) };
       });
       // 2. Per-card DOM extraction probe under mainFeed.
-      const cards = [...document.querySelectorAll('[data-testid="mainFeed"] [role="listitem"]')].slice(0, 4).map(card => {
-        const body = card.querySelector('[data-testid="expandable-text-box"]');
-        // any link that looks like a post permalink or member/company
-        const links = [...card.querySelectorAll('a[href]')].map(a => a.getAttribute('href')).filter(h => h && (h.includes('/feed/update/') || h.includes('/posts/'))).slice(0, 3);
-        // hunt any attribute on any descendant carrying an activity urn
-        let urnAttr = null;
+      const recoverUrn = (card) => {
+        // 1. plain activity urn anywhere in a descendant attribute
         for (const el of card.querySelectorAll('*')) {
           for (const a of el.attributes) {
-            if (a.value && a.value.includes('urn:li:activity')) { urnAttr = a.name + '=' + a.value.slice(0, 60); break; }
+            const m = a.value && a.value.match(/urn:li:activity:\d+/);
+            if (m) return { via: 'plain:' + a.name, urn: m[0] };
           }
-          if (urnAttr) break;
         }
-        return { bodyText: (body?.textContent || '').trim().slice(0, 60), permalinks: links, urnAttr };
+        // 2. base64-encoded urn inside id / data-testid tokens
+        for (const el of card.querySelectorAll('[id],[data-testid]')) {
+          for (const attr of ['id', 'data-testid']) {
+            const v = el.getAttribute(attr); if (!v) continue;
+            for (const tok of v.split(/[^A-Za-z0-9+/=_-]+/)) {
+              if (tok.length < 16) continue;
+              try {
+                const dec = atob(tok.replace(/-/g, '+').replace(/_/g, '/'));
+                const m = dec.match(/urn:li:activity:\d+/);
+                if (m) return { via: 'b64:' + attr, urn: m[0] };
+              } catch { /* not b64 */ }
+            }
+          }
+        }
+        return null;
+      };
+      const cards = [...document.querySelectorAll('[data-testid="mainFeed"] [role="listitem"]')].slice(0, 6).map(card => {
+        const body = card.querySelector('[data-testid="expandable-text-box"]');
+        return { bodyText: (body?.textContent || '').trim().slice(0, 50), urn: recoverUrn(card) };
       });
       const testids = {};
       for (const el of document.querySelectorAll('[data-testid]')) {
