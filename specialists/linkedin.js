@@ -680,7 +680,9 @@ async function cmdReadPost(postUrl) {
     await assertNotChallenged(page);
 
     // Post detail via the voyager JSON API (the DOM is SDUI with no URNs).
-    const detailResp = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${encodeURIComponent(activityUrn)}`);
+    // q=backendUrnOrNss returns the requested update; moduleKey=feed-update-by-urn
+    // does NOT (it returns an unrelated feed item).
+    const detailResp = await voyagerGet(page, `/voyager/api/feed/updatesV2?q=backendUrnOrNss&urnOrNss=${encodeURIComponent(activityUrn)}`);
     if (detailResp.status !== 200) die('read_post_failed', `voyager post detail returned status ${detailResp.status}`);
     let detailJson;
     try { detailJson = JSON.parse(detailResp.text); }
