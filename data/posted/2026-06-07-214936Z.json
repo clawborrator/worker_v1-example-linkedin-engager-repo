@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-07T21:30:00Z",
+  "post": {
+    "urn": "urn:li:activity:7465075492258263042",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7465075492258263042/",
+    "author": "Tobias Lante",
+    "topic_summary": "Factories should own all three layers of their industrial stack: data model, operational history, and decision logic. Most vendor contracts effectively let you keep only one."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Tobias Lante",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7465075492258263042/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7464925518019158016?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7464925518019158016%2C7469505814530289664%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469505814530289664%2Curn%3Ali%3Aactivity%3A7464925518019158016%29",
+    "comment_text": "The three-layer problem starts below the data model. Most commercial edge gateways ship with proprietary firmware that publishes to the vendor's cloud in a vendor-defined schema. The factory never sees raw signal data, only what the platform chose to surface. Owning the data model means nothing if the telemetry source is already locked to a vendor stack.\n\nThe open-protocol path (MQTT with SparkplugB or MTConnect at the edge, on hardware you control) is what makes the three-layer ownership actually achievable. If the edge device publishes to a broker you own, the raw timeseries is yours before any platform touches it. That is the foundation the data model, history, and decision logic all sit on."
+  },
+  "skip_reason": null
+}
