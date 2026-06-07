@@ -1036,6 +1036,47 @@ async function cmdDebugFeed() {
   }
 }
 
+// ─── Subcommand: debug-post (diagnostic) ──────────────────────
+// Loads a post and captures which voyager call returns its comments,
+// to find the comments endpoint for the read-post rewrite.
+async function cmdDebugPost(postUrl) {
+  if (!postUrl) die('missing_arg', 'debug-post requires a post URL');
+  const activityUrn = (String(postUrl).match(/urn:li:activity:\d+/) || [])[0] || null;
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  const hits = [];
+  ctx.on('response', async (resp) => {
+    try {
+      const url = resp.url();
+      if (!/voyager\/api/.test(url)) return;
+      let body = ''; try { body = await resp.text(); } catch { return; }
+      if (!/urn:li:comment|Comment/.test(body)) return;
+      const qid = (url.match(/queryId=([^&]+)/) || [])[1] || null;
+      const nComments = (body.match(/urn:li:comment:/g) || []).length;
+      if (nComments === 0) return;
+      try { fs.writeFileSync('/tmp/voyager-comments.json', body); } catch { /* */ }
+      hits.push({ url: url.slice(0, 150), queryId: qid, len: body.length, commentRefs: nComments });
+    } catch { /* */ }
+  });
+  try {
+    await gotoWithRetry(page, postUrl);
+    await assertNotChallenged(page);
+    for (let i = 0; i < 4; i++) { await page.mouse.wheel(0, 1800).catch(() => {}); await page.waitForTimeout(1500); }
+    // also try fetching post detail by urn via updatesV2
+    let detail = null;
+    if (activityUrn) {
+      const r = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=1&q=feed&moduleKey=feed-update-by-urn&urn=${encodeURIComponent(activityUrn)}`);
+      detail = { status: r.status, len: r.text.length, hasActivity: r.text.includes('urn:li:activity') };
+    }
+    emit({ ok: true, activityUrn, detailFetch: detail, commentHits: hits.slice(0, 12) });
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('debug_post_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1047,6 +1088,7 @@ async function main() {
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'debug-feed':     await cmdDebugFeed(); break;
+    case 'debug-post':     await cmdDebugPost(args._[0]); break;
     default:
       emit({
         ok: false,
