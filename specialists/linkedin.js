@@ -834,8 +834,19 @@ async function cmdMyProfile() {
     await assertNotChallenged(page);
     await page.waitForTimeout(3_000);
     await expandSeeMore();
+    // Click the About section's own "…more" toggle to get the FULL text.
+    await page.evaluate(() => {
+      for (const sec of document.querySelectorAll('section')) {
+        const h = sec.querySelector('h2, [role="heading"]');
+        if (h && /^about\b/i.test(h.innerText.trim())) {
+          const btn = [...sec.querySelectorAll('button')].find((b) => /\bmore\b/i.test(b.innerText || ''));
+          if (btn) btn.click();
+        }
+      }
+    }).catch(() => {});
+    await page.waitForTimeout(800);
     const about = await page.evaluate(() => {
-      const clean = (t) => (t || '').replace(/^(About\s*)+/i, '').replace(/\s*…?\s*see more\s*$/i, '').trim();
+      const clean = (t) => (t || '').replace(/^(About\s*)+/i, '').replace(/\s*…?\s*\bsee more\b\s*$/i, '').replace(/\s*…\s*more\s*$/i, '').trim();
       // Prefer the section whose heading is exactly "About".
       for (const sec of document.querySelectorAll('section')) {
         const h = sec.querySelector('h2, h3, [role="heading"]');
