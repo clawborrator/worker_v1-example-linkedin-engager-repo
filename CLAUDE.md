@@ -60,23 +60,38 @@ execute one cycle, return.
 
 ---
 
+## On-demand cycle (operator wants to watch)
+
+The operator can watch a cycle render live over VNC, but cycles are
+8 hours apart, so they will usually dispatch one on demand. If you
+receive a prompt asking to "run a cycle now" (or any rephrasing:
+"run one now", "do a cycle", "trigger a cycle"), treat it exactly
+like a cron fire: execute one full cycle immediately per the steps
+below, then return. Do not change the cron; the next scheduled fire
+is unaffected. Do not run more than one cycle per such request.
+
+---
+
 ## One cycle
 
 Each step is one or more tool calls. Bash subprocesses for
 browser work, your turn for judgment, MCP for the notification.
 
-Every `node specialists/linkedin.js ...` call is prefixed with
-`xvfb-run -a`. The wrapper runs Chromium with `headless: false`
-under a virtual display, which removes the headless-chromium
-fingerprint signal that LinkedIn's anti-bot stack checks. Without
-the `xvfb-run` prefix, Chromium has no display to render into
-and crashes immediately. Don't drop the prefix.
+The container starts a persistent virtual display `:99` at boot and
+serves it over VNC, so `DISPLAY=:99` is already in your environment.
+Run `node specialists/linkedin.js ...` directly. Do NOT add an
+`xvfb-run` prefix: that would spawn a throwaway display the VNC
+server isn't attached to, so the operator could not watch the run.
+The wrapper runs Chromium with `headless: false` on `:99`, which
+removes the headless-chromium fingerprint signal LinkedIn's anti-bot
+stack checks. The operator points a VNC viewer at the container's
+published port to watch any cycle live.
 
 ### Step 1. Auth check (bash)
 
 ```bash
 cd /workspace/repo
-xvfb-run -a node specialists/linkedin.js auth-check
+node specialists/linkedin.js auth-check
 ```
 
 Expected on success:
@@ -105,7 +120,7 @@ If `{ok: false}` with `error: "not logged in"` or `error:
 ### Step 2. Scroll feed (bash)
 
 ```bash
-xvfb-run -a node specialists/linkedin.js scroll-feed --count 15
+node specialists/linkedin.js scroll-feed --count 15
 ```
 
 Returns JSON:
@@ -170,7 +185,7 @@ If NO post in the list meets the bar, skip this cycle:
 ### Step 4. Read the post (bash)
 
 ```bash
-xvfb-run -a node specialists/linkedin.js read-post '<post-url-from-step-3>'
+node specialists/linkedin.js read-post '<post-url-from-step-3>'
 ```
 
 Returns JSON:
@@ -268,7 +283,7 @@ Voice:
 If commenting on the post itself:
 
 ```bash
-xvfb-run -a node specialists/linkedin.js comment-post '<post-url>' \
+node specialists/linkedin.js comment-post '<post-url>' \
   --text "$(cat <<'COMMENT_EOF'
 <your drafted comment, multi-line OK, COMMENT_EOF as terminator>
 COMMENT_EOF
@@ -278,7 +293,7 @@ COMMENT_EOF
 If replying to a specific comment:
 
 ```bash
-xvfb-run -a node specialists/linkedin.js reply-comment '<comment-permalink>' \
+node specialists/linkedin.js reply-comment '<comment-permalink>' \
   --text "$(cat <<'COMMENT_EOF'
 <your drafted reply, multi-line OK>
 COMMENT_EOF
