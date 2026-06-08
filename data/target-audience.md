@@ -1,47 +1,53 @@
 # Target audience (derived 2026-06-08 from Chris Misztur's profile)
 
 ## Who the operator is
-Chris Misztur co-founded Data In Motion Enterprise (an edge connector speaking 50+ industrial protocols: Allen-Bradley, Siemens S7, Fanuc, Modbus, OPC-UA, MQTT/SparkplugB) and Mr. IIoT (SHARC sensor adapter for brownfield machine connectivity). He spent 20 years inside manufacturing (8+ years as Digital Transformation Manager at an automotive supplier, 11 as IT Manager at a metal-parts shop) before productizing the work. His credibility is practitioner-level: he has personally done the brownfield connectivity work his tools now automate.
+
+Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized APIs, and Tracebook for AI-powered OEM tech support. 25 years inside manufacturing IT/OT before going independent.
 
 ## Engage with
 
 **Roles / titles**
-- Controls engineers, automation engineers, PLC programmers
-- Plant IT / OT managers, OT network engineers
-- Digital transformation leads, Industry 4.0 / smart manufacturing managers
-- Plant managers, VP/Director of Operations at discrete manufacturers
-- Systems integrators (SIs) and automation consultants deploying connectivity projects
-- Manufacturing engineers troubleshooting data extraction from legacy equipment
-- MES/SCADA engineers, reliability/maintenance engineers
+- Controls engineers, automation engineers, electrical engineers on the plant floor
+- Plant IT managers and OT/IT convergence leads
+- Manufacturing engineers, process engineers who are actually connecting machines
+- Operations managers, plant managers who own uptime and utilization numbers
+- Digital transformation leads / Industry 4.0 program managers inside manufacturers
+- Machine OEM founders / product engineers (Tracebook audience)
+- Systems integrators (SIs) and automation consultants who deploy IIoT for manufacturers
+- Supply chain and procurement ops leads (Angel Parts angle)
 
 **Industries / company types**
-- Discrete manufacturers: automotive Tier 1/2/3, metal fabrication, plastics, food and beverage, pharma, electronics, consumer goods
-- Industrial automation SIs and OEMs
-- Edge computing / industrial IoT vendors and practitioners
+- Discrete manufacturers: automotive and auto suppliers, aerospace, metal fabrication, CNC job shops, plastics, consumer goods, electronics assembly
+- Process-adjacent discrete: food and beverage, bakeries, packaging, fluid systems
+- Machine OEMs and capital equipment builders who support equipment in the field
+- SIs and automation consultancies doing brownfield IIoT deployments
 
 **Seniority band**
-- Individual contributors doing the actual connectivity work (engineers, technicians)
-- Middle management (plant-level) making buy-vs-build decisions on small capital projects
-- Senior leaders at SMB/mid-market manufacturers evaluating Industry 4.0 investment
+- Individual contributors (engineers, technicians) who evaluate and implement
+- Mid-level operations and IT managers who own the problem and approve spend
+- Owners/founders of small-to-mid manufacturers (the "growing faster than I can hire" buyer)
 
 **Topics where Chris adds credible signal**
-- Brownfield PLC/CNC/robot data extraction without touching ladder logic
-- MQTT, SparkplugB, and edge broker architecture
-- OPC-UA vs. proprietary protocol trade-offs in practice
-- 4-20mA / discrete sensor wiring and signal-level data capture
-- Machine utilization, OEE, and cycle counting from raw signals
-- IT/OT network segmentation and integration
-- Industry 4.0 ROI and where pilots stall in practice
-- Supply chain visibility tied to production data
+- PLC connectivity and brownfield machine data collection (especially non-invasive / signal-level approaches)
+- Protocol translation: Fanuc, Siemens S7, Allen-Bradley/EtherNet-IP, Modbus, OPC-UA, MTConnect, SparkplugB
+- MQTT and industrial data pipelines
+- OEE, machine utilization, and real-time floor visibility
+- IT/OT convergence and network architecture for manufacturers
+- EDI and business system integration (ERP, WMS)
+- Sensor selection and industrial sensor connectivity
+- Data ownership and avoiding proprietary lock-in in IIoT deployments
+- AI applied to manufacturing: predictive maintenance, AI tech support for OEMs
+- Industry 4.0 / digital transformation strategy grounded in implementation reality
 
 ## Skip
-- Generic leadership motivation / mindset posts with no manufacturing content
-- Finance, M&A, HR, and recruiting posts
-- Pure enterprise SaaS (CRM, ERP without a manufacturing angle)
-- Unrelated verticals (healthcare IT, fintech, retail)
-- Thought-leader bait: emoji bullet lists, "what do you think?", hook-and-reveal storytelling
+- Pure enterprise software / SaaS with no manufacturing floor exposure
+- Generic leadership and management content with no manufacturing angle
+- Financial services, healthcare, retail, logistics, professional services
+- Recruiting and HR content
+- Motivational quote posts and thought-leader-bait with no specific technical or operational content
+- M&A announcements and investment news unrelated to industrial tech
 - Sponsored / promoted posts
 - Posts authored by Chris himself
 
 ## Voice fit
-Peer practitioner who has personally run cable, commissioned MQTT brokers, and negotiated IT/OT VLAN topology inside a running plant: speak as that person, not as a vendor.
+Sound like a practitioner who has stood on the plant floor and connected the machine, not a vendor who sells platforms. Specific over general: name the protocol, the sensor type, the architecture decision. The audience distrusts hype and respects people who know what actually fails in brownfield environments.
