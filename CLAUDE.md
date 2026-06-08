@@ -40,12 +40,17 @@ When you receive the initial prompt:
 1. State one line: `Starting LinkedIn engager. Installing cron.`
 2. `CronList` to see if an entry targeting this playbook already
    exists from a prior boot. If yes, skip to step 4.
-3. Install the cycle cron:
+3. Install two crons (skip either that `CronList` shows already
+   exists): the engagement cycle, and the daily contacts run.
 
    ```
    CronCreate({
      schedule: "0 */8 * * *",
      prompt:   "Execute one LinkedIn engagement cycle per CLAUDE.md."
+   })
+   CronCreate({
+     schedule: "0 13 * * *",
+     prompt:   "Produce today's contact shortlist per CLAUDE.md (Daily contacts)."
    })
    ```
 
@@ -98,6 +103,10 @@ receive a prompt asking to "run a cycle now" (or any rephrasing:
 like a cron fire: execute one full cycle immediately per the steps
 below, then return. Do not change the cron; the next scheduled fire
 is unaffected. Do not run more than one cycle per such request.
+
+If instead the prompt asks "who should I contact today" / "contacts"
+/ "who to reach out to", run the **Daily contacts** flow (below) once,
+then return.
 
 ---
 
@@ -516,6 +525,68 @@ fires the next cycle in 8 hours.
 
 A one-line stdout summary is welcome. The operator follows
 along via `docker logs -f linkedin-engager`.
+
+---
+
+## Daily contacts (who should I contact today)
+
+A separate flow from engagement. Once a day, and on demand when the
+operator asks "who should I contact today" / "contacts", produce a
+short list of specific people worth reaching out to, drawn from who is
+engaging around the operator's space. You IDENTIFY and DRAFT only. You
+never send a connection request, message, or InMail, and you never
+follow or endorse. The operator does the actual outreach.
+
+Steps:
+
+1. `cat data/target-audience.md` for who matters.
+2. `node specialists/linkedin.js scroll-feed --count 25`, then pick
+   the 3 to 5 most on-target posts (same judgment as the engagement
+   cycle, but here you may use several, not one).
+3. For each chosen post, harvest the people engaging on it:
+
+   ```bash
+   node specialists/linkedin.js harvest-people '<post-url>'
+   ```
+
+   Returns the author plus every commenter with: `name`, `headline`,
+   `profile_url`, `network_distance` (`DISTANCE_2` = 2nd degree /
+   warm, `OUT_OF_NETWORK` = cold), and `signal` (what they said, or
+   "authored this post").
+4. Pool everyone. Keep only people who fit `data/target-audience.md`
+   (judge by headline + signal). Drop the operator and obvious
+   vendors who are just pitching in the comments.
+5. Dedup against the surfaced log so you don't resurface the same
+   people across days:
+
+   ```bash
+   mkdir -p data/contacts
+   cat data/contacts/surfaced.json 2>/dev/null || echo '[]'
+   ```
+
+   Skip anyone whose `profile_url` is already in that list.
+6. Rank the remainder by: audience fit first, then warmth
+   (`DISTANCE_2` before `OUT_OF_NETWORK`), then signal quality (a
+   substantive on-topic comment beats a one-liner; an on-target post
+   author is a strong lead).
+7. Take the top 3 to 5. For each, write:
+   - name, headline, profile_url
+   - distance and the warm path if any ("2nd degree")
+   - why now: their relevance plus what they actually said
+   - a suggested opener, 2 to 4 sentences, grounded in their signal
+     and the operator's relevant expertise, in the same matter-of-fact
+     voice as comments. No flattery. It should read like a peer
+     reaching out with a specific reason, not a pitch.
+8. Record: append each surfaced `profile_url` to
+   `data/contacts/surfaced.json`, write the full shortlist to
+   `data/contacts/<date>.json`, then commit + push (same as the audit
+   step).
+9. Send the shortlist to `@clauderemote` via `route_to_peer` mode
+   `tell`: a compact who / why / opener list. The operator reviews
+   and reaches out manually.
+
+If nothing new clears the bar, send a brief "no new contacts worth
+surfacing today" tell and record nothing.
 
 ---
 
