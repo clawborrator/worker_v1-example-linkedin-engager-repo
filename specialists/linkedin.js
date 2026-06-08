@@ -1031,43 +1031,6 @@ async function cmdHarvestPeople(postUrl) {
   }
 }
 
-// ─── Subcommand: my-posts ─────────────────────────────────────
-// The operator's own recent posts (URN, excerpt, comment count), via
-// the voyager member-share feed. For the contacts flow: people engaging
-// on YOUR posts are warm, high-intent leads. harvest-people then runs on
-// each of these.
-async function cmdMyPosts(args) {
-  const count = parseInt(args.count || '10', 10);
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  try {
-    await gotoWithRetry(page, BASE + '/feed/');
-    await assertNotChallenged(page);
-    const me = await voyagerGet(page, '/voyager/api/me');
-    const profileUrn = (me.text.match(/urn:li:fsd_profile:[A-Za-z0-9_-]+/) || [])[0]
-      || (me.text.match(/urn:li:fs_miniProfile:[A-Za-z0-9_-]+/) || [])[0] || null;
-    const memberUrn = (me.text.match(/urn:li:member:\d+/) || [])[0] || null;
-    const candidates = [profileUrn, memberUrn].filter(Boolean);
-    if (!candidates.length) die('my_posts_failed', 'could not resolve own profile urn from /voyager/api/me');
-    for (const u of candidates) {
-      const r = await voyagerGet(page, `/voyager/api/feed/updatesV2?count=${count}&q=memberShareFeed&moduleKey=member_share_feed&profileUrn=${encodeURIComponent(u)}`);
-      if (r.status !== 200 || !/urn:li:activity/.test(r.text)) continue;
-      let json;
-      try { json = JSON.parse(r.text); } catch { continue; }
-      const posts = parseUpdatesV2(json).filter((p) => p.urn).slice(0, count);
-      posts.forEach((p) => { delete p.body; });
-      emit({ ok: true, profile_urn: u, posts });
-      return;
-    }
-    die('my_posts_failed', 'memberShareFeed returned no posts for any profile urn variant');
-  } catch (e) {
-    if (e.message && /process.exit/.test(e.message)) throw e;
-    die('my_posts_failed', e.message);
-  } finally {
-    await browser.close();
-  }
-}
-
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1079,7 +1042,6 @@ async function main() {
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'my-profile':     await cmdMyProfile(); break;
-    case 'my-posts':       await cmdMyPosts(args); break;
     case 'harvest-people': await cmdHarvestPeople(args._[0]); break;
     default:
       emit({
@@ -1093,7 +1055,6 @@ async function main() {
           'linkedin.js read-post <post-url>',
           'linkedin.js comment-post <post-url> --text "..."',
           'linkedin.js reply-comment <comment-permalink> --text "..."',
-          'linkedin.js my-posts --count 10   (your own recent posts -- harvest their engagers as warm leads)',
           'linkedin.js harvest-people <post-url>   (people engaging on a post -- for the contact shortlist)',
         ],
       });
