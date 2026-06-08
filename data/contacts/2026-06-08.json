@@ -1,50 +1,35 @@
-{
-  "date": "2026-06-08",
-  "shortlist": [
-    {
-      "name": "Paul Godines",
-      "headline": "Automation Engineer | Building Tested, Trusted & Trained Maintenance, Operations & Automation Engineering Teams Using Interactive Simulation Training",
-      "profile_url": "https://www.linkedin.com/in/paul-godines/",
-      "distance": "DISTANCE_1 (already connected)",
-      "why_now": "Commented on Alicia Lomas's post about software standing in for missing mechanical protection. His line — 'Should this problem be solved in code at all?' — is the exact frame Chris uses when plants ask for IIoT monitoring on mechanically compromised equipment. He builds simulation training for automation/maintenance teams, which is directly adjacent to IIoT adoption bottlenecks.",
-      "signal": "This is such a classic controls war story. Software can monitor, alarm, trend, interlock, and shut things down, but it should not be the only thing standing between a bad mechanical design and self-destruction.",
-      "opener": "Your comment on Alicia's post landed on the right question. We hit a version of it constantly on the IIoT side: plants asking for monitoring data from machines that have underlying mechanical problems, and having to be clear about what a current-signature alarm can catch versus what it cannot replace. The simulation training work you are doing is interesting to me — the bottleneck on IIoT rollouts in our experience is rarely the hardware or protocol; it is the maintenance and ops teams knowing what to do with the signal. Curious whether you are seeing that same gap from your side."
-    },
-    {
-      "name": "Abhisek Chakrabarti",
-      "headline": "Smart Operations, Intelligent Assets & Scalable Digital Ecosystems | Smart Plant, AI, IIoT & ESG | Delivering £100M+ ROI in Manufacturing | Views My Own",
-      "profile_url": "https://www.linkedin.com/in/abhisekc/",
-      "distance": "DISTANCE_2 (2nd degree / warm)",
-      "why_now": "Engaged on David Schultz's knowledge-graph post with a specific number: 20-30% of data value lost on industrial deployments that lack ISA-95 ontology anchor. Shows he has real deployment experience, not just advisory framing. IIoT + Smart Plant + manufacturing ROI is a direct match.",
-      "signal": "The real issue isn't graph vs database — it's semantic alignment. In many industrial deployments, 20-30% of data value is lost because models aren't anchored to shared ontologies like ISA-95.",
-      "opener": "Your ISA-95 anchor point on David Schultz's post matches what we see on brownfield deployments. The standard gets agreed in the architecture phase and then the MQTT topic trees end up bespoke anyway because the SI adapted to the existing PLC naming scheme. We build edge hardware that publishes SparkplugB, so the naming discipline conversation is practical for us on every installation. Happy to compare notes on where that breakdown actually happens — the 20-30% number you cited is consistent with what we observe."
-    },
-    {
-      "name": "Wenhui Zhang, PhD",
-      "headline": "Shaping Industrial AI & Digital Manufacturing Platform | Guiding System Architecture from Shopfloor to Data & AI | Germany-China Industry Experience",
-      "profile_url": "https://www.linkedin.com/in/zhangwh/",
-      "distance": "DISTANCE_2 (2nd degree / warm)",
-      "why_now": "Made the ISA-95 connection explicit on Schultz's post and asked a precise technical question about knowledge vs. data graph distinction. 'Shopfloor to Data & AI' architecture is exactly Chris's stack direction. Germany-China manufacturing background suggests real brownfield exposure.",
-      "signal": "If I understand correctly, you refer data graph to data with bespoke naming conventions and bespoke relationships, and knowledge graph to standard data model such as ISA-95.",
-      "opener": "Your ISA-95 framing on David's post is the right lens. The gap between a data graph and a knowledge graph shows up clearly at the edge layer: you can publish every machine signal over MQTT with a disciplined SparkplugB schema and still end up with a data graph if the asset model is not shared upstream. We see it on brownfield installs where the PLC naming predates any standard. Your work on shopfloor-to-AI architecture sits in that same territory — curious what you are finding as the hardest layer to get right."
-    },
-    {
-      "name": "Bastien Carel",
-      "headline": "Smart Manufacturing & Digital Transformation | IIoT · MES · Digital Twin | 20 Years Bridging Operations & Technology | CM2(C) | Bias for Action",
-      "profile_url": "https://www.linkedin.com/in/bastien-carel/",
-      "distance": "DISTANCE_2 (2nd degree / warm)",
-      "why_now": "20 years bridging operations and technology, explicitly IIoT + MES. The MES integration layer is where most of Chris's customers are right now: machine data flowing, but connecting it to production order context is the next step. Engaging on the Schultz knowledge-graph post signals he is thinking about data modeling, not just connectivity.",
-      "signal": "Great analogy with the family tree. (on Schultz's knowledge graph post)",
-      "opener": "Your background bridging operations and IIoT over 20 years maps closely to what we work on. We build edge hardware for signal-level machine connectivity on brownfield equipment, publishing over MQTT and SparkplugB. The MES integration question is where most of our customers are right now: machine data is flowing, but connecting it to the production order context is the step that unlocks scheduling and OEE. Curious whether you are seeing a consistent pattern for how plants approach that connection, or whether it is bespoke every time."
-    },
-    {
-      "name": "Michele Brami",
-      "headline": "Autopiloting the boring work. System Integrator & Architect",
-      "profile_url": "https://www.linkedin.com/in/michelebrami/",
-      "distance": "DISTANCE_2 (2nd degree / warm)",
-      "why_now": "Specifically mentioned writing a series on ontologies and ISA-95 modeled UNS (Unified Namespace). That is directly Chris's territory: SparkplugB, MQTT topic discipline, brownfield asset modeling. An SI who is writing publicly about UNS is worth talking to.",
-      "signal": "It's incredible how much your post is near my upcoming series of articles about ontologies and ISA-95 modeled UNS.",
-      "opener": "Your upcoming series on ISA-95 UNS is timely. Most implementations I see are still bespoke MQTT topic trees rather than a properly anchored Unified Namespace — the discipline tends to get traded away during brownfield deployment when the SI has to adapt to whatever the existing PLC naming scheme is. We publish SparkplugB from edge hardware on brownfield machines, so the topic-model discipline question is practical for us, not theoretical. Would be interested to read your framing on where the ISA-95 model actually helps versus where it becomes a compliance exercise."
-    }
-  ]
-}
+[
+  {
+    "name": "Geoffrey Jackson",
+    "headline": "Founder & CEO at Jackson Consulting Group | Author of The Tyranny of Two Percent | I help mid-market manufacturers bridge the IT/OT gap and ensure technology investments actually deliver ROI.",
+    "profile_url": "https://www.linkedin.com/in/geoffrey-jackson-a640b98/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665",
+    "distance": "DISTANCE_2",
+    "company": "Jackson Consulting Group, LLC AZ — Manufacturing consulting (solo), Phoenix AZ",
+    "icp_read": "Serves mid-market manufacturers on IT/OT integration and digital transformation — exactly Chris's buyer and co-deployable partner territory. Former multi-plant director with 30+ years in high-volume manufacturing.",
+    "why_now": "Commented substantively on Jeff Winter's 12 Laws post, calling out Operational Scar Tissue and Precision Mirage Paradox as real multi-plant failure modes — language that maps directly to the brownfield deployment friction Chris knows from MacLean-Fogg and Mr. IIoT.",
+    "suggested_opener": "Saw your comment on Jeff Winter's 12 Laws post — you specifically named Operational Scar Tissue and Precision Mirage as failure modes in multi-plant rollouts, which matches the pattern we ran into at MacLean-Fogg before building the 5C framework. I'm Chris Misztur, I build hardware and software for brownfield machine connectivity (the SHARC device, Mr. IIoT), and I suspect there is overlap between your advisory practice and the sensor-to-MQTT layer where our deployments start."
+  },
+  {
+    "name": "Pyry Grönholm",
+    "headline": "CEO @ Prosys OPC | IT/OT Integration, AI for OT, OT Security, OPC UA, UNS, MQTT, i3X",
+    "profile_url": "https://www.linkedin.com/in/pyrygronholm/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665",
+    "distance": "DISTANCE_2",
+    "company": "Prosys OPC Ltd — Software Development, 11-50 employees, Espoo Finland. 30-year OPC UA/MQTT industrial integration vendor.",
+    "icp_read": "Builds developer tools and OPC UA infrastructure; his customers are the same SIs and industrial software companies that would also deploy SHARC for sensor acquisition. Directly adjacent tech stack.",
+    "why_now": "Commented on the Jeff Winter 12 Laws post from an IT/OT integration angle, specifically noting Lock Effect and Coherence Debt from practical deployments. Has 25+ years in OPC UA/MQTT and mentioned his platform, Prosys OPC UA Forge, for industrial DataOps. His tool stack and Chris's hardware are complementary.",
+    "suggested_opener": "Your work at Prosys OPC is directly adjacent to what we build at Mr. IIoT. The SHARC reads 4-20mA, 0-10V, and discrete inputs from legacy machines and publishes over MQTT, and we get pulled into OPC UA deployments where customers want to bridge analog sensors into a UNS. Curious what the sensor-side picture usually looks like for your customers before the OPC UA layer starts. I'm Chris Misztur."
+  },
+  {
+    "name": "Alissa Daly",
+    "headline": "Sales Leader @ Grantek | MES · AI Analytics · Industry 4.0 | Translating manufacturing complexity into business outcomes",
+    "profile_url": "https://www.linkedin.com/in/alissa-daly-00998888/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665",
+    "distance": "DISTANCE_2",
+    "company": "Grantek — Automation/Systems Integration, 201-500 employees, Oak Brook IL. One of the larger manufacturing SIs in North America; MES, analytics, SCADA, PLC.",
+    "icp_read": "Owns the sales practice for Grantek's MES and digital transformation consulting. Brownfield machine connectivity is the layer that Grantek customers often need before MES deployment is viable — SHARC is exactly that gap-filler.",
+    "why_now": "Active on the Jeff Winter 12 Laws post while pursuing her CESMII Smart Manufacturing certification, noting the C-suite vs. floor-level disconnect she sees across customers. Grantek is a channel target for Mr. IIoT and Data In Motion: they deploy MES projects where SHARC could handle the sensor-acquisition layer.",
+    "suggested_opener": "Grantek is exactly the type of SI whose MES projects run into brownfield machine connectivity as a prerequisite before the data layer is viable. I'm Chris Misztur at Mr. IIoT — we make the SHARC, a sensor-level adapter that captures analog and discrete signals from legacy machines and publishes over MQTT without touching PLC programs. Curious whether your consulting practice regularly hits that gap and how it is currently being solved."
+  }
+]
