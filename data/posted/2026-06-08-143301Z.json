@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469757024126476290",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469757024126476290/",
+    "author": "Vatsal Shah",
+    "topic_summary": "Legacy data historians were not designed for millisecond-level industrial telemetry or modern OT-to-IT pipelines, and downsampling data to fit them causes loss of insights."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Vatsal Shah",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469757024126476290/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469757024126476290?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469757024126476290%2C7469758323077210112%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469758323077210112%2Curn%3Ali%3Aactivity%3A7469757024126476290%29",
+    "comment_text": "The downsampling problem is worse than it looks when you're inside a historian. A 60-second scan period was fine when operators needed the last known value on a dashboard. It misses the 200ms current spike that precedes a drive fault and the cycle-time variance that separates a good part from scrap.\n\nThe historian sits between those signals and your analytics layer and averages them into noise. The fix is to move the capture point to the edge, before the historian ever sees the data: native protocol at PLC cycle rate or faster, pushed directly into a time-series store that was built for high-frequency industrial telemetry. The historian still has a job: last known value and operator trend history. The AI and analytics pipeline should not run on historian output if you actually want to see what the machine is doing."
+  },
+  "skip_reason": null
+}
