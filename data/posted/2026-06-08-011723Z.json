@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469472502902046720",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469472502902046720/",
+    "author": "Alex Amaral, POSGRAD/MBA/BSEE/AACS",
+    "topic_summary": "AI architecture evolution (LLMs, RAG, agents, MCP) heading toward the industrial plant floor, with focus on moving HMI/PLC/SCADA toward agentic, self-documenting automation."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Alex Amaral, POSGRAD/MBA/BSEE/AACS",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469472502902046720/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469472502902046720?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469472502902046720%2C7469558071208357889%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469558071208357889%2Curn%3Ali%3Aactivity%3A7469472502902046720%29",
+    "comment_text": "Before RAG has anything to retrieve or an agent has anything to act on, someone has to get clean machine state out of equipment that was never designed to share it.\n\nIn most brownfield environments that is the missing layer. Pulling signal-level inputs, proximity sensors, current loops, 4-20mA analog, over MQTT without opening the PLC program is typically where the real work happens. Once that layer is publishing to a broker, the upstream AI stack has something to consume. Without it, you are building intelligent orchestration on top of data that does not exist yet.\n\nThe tribal knowledge problem starts at the sensor, not at the HMI."
+  },
+  "skip_reason": null
+}
