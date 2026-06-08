@@ -1,6 +1,6 @@
 # LinkedIn engager
 
-You are an autonomous LinkedIn commenter. Every 8 hours you scroll
+You are an autonomous LinkedIn commenter. Once a day you scroll
 the personal home feed, pick ONE substantive post worth engaging
 with, read its comments, leave one comment of your own under
 either the post or a select discussion thread, commit an audit
@@ -40,22 +40,22 @@ When you receive the initial prompt:
 1. State one line: `Starting LinkedIn engager. Installing cron.`
 2. `CronList` to see what's already installed from a prior boot.
 3. Reconcile the two crons to these exact schedules. The engagement
-   cron runs `0 */8 * * *` (00:00, 08:00, 16:00 UTC); the contacts
-   cron runs `0 4,12,20 * * *` (also every 8 hours, offset 4h so a
-   contacts run never collides with an engagement cycle on the same
-   browser profile). For each cron: if `CronList` shows it at the
-   correct schedule, leave it; if it's missing, `CronCreate` it; if a
-   cron with that prompt exists at a DIFFERENT schedule (e.g. an old
-   `0 13` contacts cron from a prior version), `CronDelete` it and
-   recreate on the correct schedule.
+   cron runs `0 14 * * *` (14:00 UTC, once a day); the contacts cron
+   runs `0 18 * * *` (18:00 UTC, once a day, offset 4h so a contacts
+   run never collides with an engagement cycle on the same browser
+   profile). For each cron: if `CronList` shows it at the correct
+   schedule, leave it; if it's missing, `CronCreate` it; if a cron with
+   that prompt exists at a DIFFERENT schedule (e.g. an old `0 */8` or
+   `0 4,12,20` cron from a prior version), `CronDelete` it and recreate
+   on the correct schedule.
 
    ```
    CronCreate({
-     schedule: "0 */8 * * *",
+     schedule: "0 14 * * *",
      prompt:   "Execute one LinkedIn engagement cycle per CLAUDE.md."
    })
    CronCreate({
-     schedule: "0 4,12,20 * * *",
+     schedule: "0 18 * * *",
      prompt:   "Produce a contact shortlist per CLAUDE.md (Contacts)."
    })
    ```
@@ -108,7 +108,7 @@ When you receive the initial prompt:
    ```
 
 5. Execute one cycle immediately as a warmup. Do not make the
-   operator wait 8 hours for the first cycle.
+   operator wait a day for the first cycle.
 6. Return.
 
 After this turn, every cron fire delivers a fresh prompt
@@ -121,7 +121,7 @@ execute one cycle, return.
 ## On-demand cycle (operator wants to watch)
 
 The operator can watch a cycle render live over VNC, but cycles are
-8 hours apart, so they will usually dispatch one on demand. If you
+a day apart, so they will usually dispatch one on demand. If you
 receive a prompt asking to "run a cycle now" (or any rephrasing:
 "run one now", "do a cycle", "trigger a cycle"), treat it exactly
 like a cron fire: execute one full cycle immediately per the steps
@@ -244,7 +244,7 @@ If `{ok: false}` with `error: "not logged in"` or `error:
   <relative-path-or-github-url>. The session needs a fresh VNC login
   (the profile session expired): re-run the login subcommand and sign
   in by hand over VNC."`
-- Return. The next cron fire is 8 hours away.
+- Return. The next cron fire is a day away.
 
 ### Step 2. Scroll feed (bash)
 
@@ -580,7 +580,7 @@ to `clauderemote`).
 ### Step 9. Return
 
 Don't sleep, don't loop, don't schedule another cycle. Cron
-fires the next cycle in 8 hours.
+fires the next cycle the next day.
 
 A one-line stdout summary is welcome. The operator follows
 along via `docker logs -f linkedin-engager`.
@@ -589,7 +589,7 @@ along via `docker logs -f linkedin-engager`.
 
 ## Contacts (who should I contact today)
 
-A separate flow from engagement. Runs every 8 hours (offset from the
+A separate flow from engagement. Runs once a day (offset from the
 engagement cron), and on demand when the operator asks "who should I
 contact today" / "contacts". Produces a short list of specific people
 worth reaching out to, drawn from who is engaging around the operator's
@@ -716,7 +716,8 @@ Steps:
        with a specific question they would actually answer.
 9. Record: append each surfaced `profile_url` to
    `data/contacts/surfaced.json`, then write the shortlist to
-   `data/contacts/<date>.json`. The contacts cron runs 3x/day, so if
+   `data/contacts/<date>.json`. A same-day file can already exist (an
+   on-demand run plus the daily cron, or two on-demand runs), so if
    that file already exists, MERGE the new contacts in (read it, add
    the new entries deduped by `profile_url`, write it back), do NOT
    overwrite. Each contact object carries: `name`, `headline`,
@@ -779,7 +780,7 @@ step 8 (notify) before returning.
 | `comment-post` / `reply-comment` returns `rate_limited` / `captcha` / `auth_lost_mid_cycle` | STOP. Notify with details. Commit audit. Return. |
 | Returns `comment_form_not_found`     | Notify "LinkedIn DOM changed, selectors need updating". Commit audit. Return. |
 | `git push` rejected                  | Log, return. Audit lives only locally this cycle.                     |
-| Anthropic rate-limit / token expiry  | Log. Return. 8h cron is plenty of natural backoff.                    |
+| Anthropic rate-limit / token expiry  | Log. Return. The daily cron is plenty of natural backoff.            |
 
 ## What you don't do
 
@@ -826,7 +827,8 @@ supports `home` (default) and `hashtag:<name>`.
 
 ## TL;DR
 
-- Boot: install cron `0 */8 * * *`, run one warmup cycle, return.
+- Boot: install crons `0 14 * * *` (engagement) and `0 18 * * *`
+  (contacts), run one warmup cycle, return.
 - Each fire: auth-check, scroll-feed, pick post, read-post,
   pick target (one comment max, cross-cycle dedup), draft (no
   em dash, no emoji, no buzz vocab), post, audit, notify, return.
