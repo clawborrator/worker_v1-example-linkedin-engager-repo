@@ -663,17 +663,57 @@ Steps:
    (put every buyer in before filling with channel, then vendor). Do
    not let it come back all-SI/vendor again; if you have buyers, they
    go at the top. Tag each entry with its `bucket`.
+
    For each entry write:
    - name, headline, profile_url, photo_url
    - distance and the warm path if any ("2nd degree")
    - `bucket` (buyer / channel / vendor)
    - their current company + a one-line ICP read (industry, size, and
      why they're a buyer vs channel vs vendor)
-   - why now: their relevance plus what they actually said
-   - a suggested opener, 2 to 4 sentences, grounded in their signal,
-     role/company, and the operator's expertise, in the matter-of-fact
-     comment voice. No flattery. A peer reaching out with a specific
-     reason, not a pitch.
+   - **why now**: their relevance plus what they actually said. This is
+     your PRIVATE operator-facing context, not message text. Put the
+     full reasoning here, the company situation, the inferred pain, the
+     product fit, so the opener itself can stay short and doesn't have
+     to carry the rationale.
+   - **a suggested opener.** This is a first-touch DM to a stranger.
+     It is NOT a comment and NOT a pitch. The comment voice from step
+     6a applies for register only (matter-of-fact, no flattery, no
+     emoji, no buzz vocab, no em or en dashes); its length and
+     completeness targets do NOT apply here. A DM that lands a
+     complete, substantive point reads as a pitch deck, which is the
+     opposite of what gets a reply. Rules:
+
+     - **1 to 2 sentences. Hard cap.** The goal is a reply, not a sale.
+       If the opener reads as complete and self-contained, it is too
+       long. Cut it.
+     - **Match weight to signal strength.** A throwaway signal ("nice
+       post", "very informative, thank you", "solid list") earns a
+       light, curious one-liner, NOT a diagnosis or a pitch. Only a
+       substantive signal (they asked a real question, described a real
+       problem, took a real position) earns a substantive opener. Never
+       build a pitch off a "thanks for sharing" comment.
+     - **React to what they actually said.** Anchor on their literal
+       signal, quoted or closely paraphrased, not a restatement of
+       their company's general situation. "You asked who owns the
+       connectivity layer" beats "You're at a manufacturer running
+       legacy equipment."
+     - **No product pitch in the opener.** Do NOT name SHARC, DIME, i3X
+       (or any product) unless their signal names the exact problem
+       that product solves. Even then, name it in a few words, not a
+       mechanism explainer. The opener earns a reply; the product comes
+       later, from the operator, by hand. persona.md grounds what the
+       operator credibly KNOWS, not what to sell. The opener proves you
+       understood them, not that you have a product.
+     - **No fixed structure.** Vary the opening move across contacts:
+       sometimes a question, sometimes a single observation, sometimes
+       a shared reference. If two openers in the same shortlist share a
+       skeleton (diagnose -> name product -> explain mechanism ->
+       close), rewrite them. Identical structure across people is the
+       single biggest tell that these were machine-written.
+     - **Ban the universal closer.** Never end with "worth a
+       conversation", "happy to show you", "worth a chat", "happy to
+       walk you through it", or any variant. If you close at all, close
+       with a specific question they would actually answer.
 9. Record: append each surfaced `profile_url` to
    `data/contacts/surfaced.json`, then write the shortlist to
    `data/contacts/<date>.json`. The contacts cron runs 3x/day, so if
