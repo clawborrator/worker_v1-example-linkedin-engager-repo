@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7468262861572739072",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468262861572739072/",
+    "author": "Vincent Anderson",
+    "topic_summary": "Deploying iPads integrated with ERP on forklifts at a brick manufacturer to eliminate manual picking errors and inventory lag"
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Vincent Anderson",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468262861572739072/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468262861572739072?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7468262861572739072%2C7469674086739152896%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469674086739152896%2Curn%3Ali%3Aactivity%3A7468262861572739072%29",
+    "comment_text": "The picking floor is the easy case: the person holds the device, and WMS/ERP interfaces on ruggedized Android hardware are mature. The harder version of the same problem is the production floor, where machines cannot interact with software. Most manufacturers who solve the warehouse side find that the inventory counts feeding the ERP are still coming from manual production logs or operator entries, not from the equipment. That discrepancy is where data quality falls apart.\n\nThe path on the machine side: read signal-level inputs, proximity sensors for production counts, current clamps for utilization, push over MQTT without touching the PLC program. Same live data flow into the ERP. It scales to brownfield equipment because you never need access to the ladder logic."
+  },
+  "skip_reason": null
+}
