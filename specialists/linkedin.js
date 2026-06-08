@@ -264,6 +264,19 @@ function tvmText(tvm) {
   return tvm && typeof tvm.text === 'string' ? tvm.text.trim() : null;
 }
 
+// Look up a member's network distance (DISTANCE_1/2/3, OUT_OF_NETWORK,
+// SELF) by publicIdentifier. The old networkinfo endpoint is gone (410);
+// the dash profile WITH the WebTopCard decoration carries the
+// memberRelationship/distance. Returns null on any failure.
+async function lookupDistance(page, publicId) {
+  if (!publicId) return null;
+  try {
+    const r = await voyagerGet(page, `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${encodeURIComponent(publicId)}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`);
+    if (r.status !== 200) return null;
+    return (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0] || null;
+  } catch { return null; }
+}
+
 // Index a normalized `included` array by every URN it can be referenced
 // under (entityUrn + dashEntityUrn), for resolving `*`-prefixed refs.
 function indexIncluded(included) {
@@ -992,67 +1005,20 @@ async function cmdHarvestPeople(postUrl) {
       seen.add(k);
       return true;
     });
+    // Enrich network distance for anyone missing it (authors don't carry
+    // it in the post data the way commenters do), so warmth ranking
+    // applies to everyone. One lookup per such person; cap to be polite.
+    let lookups = 0;
+    for (const p of deduped) {
+      if (!p.network_distance && p.public_id && lookups < 12) {
+        p.network_distance = await lookupDistance(page, p.public_id);
+        lookups++;
+      }
+    }
     emit({ ok: true, post_url: `${BASE}/feed/update/${activityUrn}/`, activity_urn: activityUrn, people: deduped });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('harvest_people_failed', e.message);
-  } finally {
-    await browser.close();
-  }
-}
-
-// ─── Subcommand: debug-network (diagnostic) ───────────────────
-// Probes voyager endpoints for People You May Know + per-profile
-// network distance, for the v2 contacts sources.
-async function cmdDebugNetwork(targetPub) {
-  const { browser, ctx } = await newContext();
-  const page = await ctx.newPage();
-  try {
-    await gotoWithRetry(page, BASE + '/feed/');
-    await assertNotChallenged(page);
-    const out = { pymk: [], distance: [] };
-    const pymkCandidates = [
-      '/voyager/api/relationships/peopleYouMayKnow?count=8',
-      '/voyager/api/relationships/peopleYouMayKnow?count=8&q=neptuneFeedRanking',
-      '/voyager/api/relationships/dash/peopleYouMayKnow?count=8',
-    ];
-    for (const c of pymkCandidates) {
-      const r = await voyagerGet(page, c);
-      out.pymk.push({ path: c.slice(0, 70), status: r.status, len: r.text.length, hasMiniProfile: /miniProfile|MiniProfile/.test(r.text), sample: r.status === 200 ? r.text.slice(0, 120) : null });
-      if (r.status === 200 && /miniProfile/i.test(r.text)) { try { fs.writeFileSync('/tmp/pymk.json', r.text); } catch { /* */ } }
-    }
-    const pub = targetPub || 'amprather';
-    const distCandidates = [
-      `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${pub}`,
-      `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${pub}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`,
-    ];
-    for (const c of distCandidates) {
-      const r = await voyagerGet(page, c);
-      const dist = (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0] || null;
-      const hasRel = /memberRelationship|MemberRelationship/.test(r.text);
-      out.distance.push({ path: c.slice(0, 60), status: r.status, len: r.text.length, distanceFound: dist, hasMemberRelationship: hasRel });
-    }
-    // Find the real PYMK call by loading the network page + capturing.
-    out.pymkCaptured = [];
-    ctx.on('response', async (resp) => {
-      try {
-        const url = resp.url();
-        if (!/voyager|graphql|rsc-action/.test(url)) return;
-        let body = ''; try { body = await resp.text(); } catch { return; }
-        if (!/MayKnow|peopleYouMayKnow|pymk|FollowRecommend|cohort/i.test(url + body)) return;
-        if (!/miniProfile|fsd_profile|"firstName"/.test(body)) return;
-        out.pymkCaptured.push({ url: url.slice(0, 110), len: body.length, miniProfiles: (body.match(/firstName/g) || []).length });
-        try { fs.writeFileSync('/tmp/pymk.json', body); } catch { /* */ }
-      } catch { /* */ }
-    });
-    await gotoWithRetry(page, BASE + '/mynetwork/grow/').catch(() => {});
-    await page.waitForTimeout(4000);
-    await page.mouse.wheel(0, 2000).catch(() => {});
-    await page.waitForTimeout(3000);
-    emit(out);
-  } catch (e) {
-    if (e.message && /process.exit/.test(e.message)) throw e;
-    die('debug_network_failed', e.message);
   } finally {
     await browser.close();
   }
@@ -1070,7 +1036,6 @@ async function main() {
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'my-profile':     await cmdMyProfile(); break;
     case 'harvest-people': await cmdHarvestPeople(args._[0]); break;
-    case 'debug-network':  await cmdDebugNetwork(args._[0]); break;
     default:
       emit({
         ok: false,
