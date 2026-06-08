@@ -71,13 +71,19 @@ When you receive the initial prompt:
    node specialists/linkedin.js my-profile
    ```
 
-   This returns the operator's `name`, `headline`, full `about`, and
-   full `experience` as JSON. Read all of it. From it, derive a
-   concrete TARGET AUDIENCE: the people worth engaging with
-   constructively to build the operator's reach, expressed as roles,
-   industries, seniority, company types, and the specific topics where
-   the operator can add credible signal (grounded in their actual
-   background, not generic). Note who to SKIP too. Write it to
+   This returns the operator's `name`, `headline`, full `about`,
+   full `experience`, AND `supplements`: an array of extra sources
+   (from `PROFILE_SUPPLEMENT_URLS` in the env, e.g. the operator's
+   company and personal `llms.txt` files) each with `url` and
+   `content`. Read ALL of it, the LinkedIn profile AND every
+   supplement, the supplements describe the operator's business, what
+   they build, and how they position it, often in more depth than the
+   LinkedIn headline. From all of it, derive a concrete TARGET
+   AUDIENCE: the people worth engaging with constructively to build the
+   operator's reach, expressed as roles, industries, seniority, company
+   types, and the specific topics where the operator can add credible
+   signal (grounded in their actual background + what their sites say,
+   not generic). Note who to SKIP too. Write it to
    `data/target-audience.md` (overwrite it), then commit + push:
 
    ```bash

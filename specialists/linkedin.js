@@ -958,6 +958,20 @@ async function cmdMyProfile() {
       () => (document.querySelector('main')?.innerText || '').replace(/^\s*Experience\s*/i, '').trim()
     ).catch(() => '');
 
+    // Supplement sources: extra URLs (e.g. llms.txt) from
+    // PROFILE_SUPPLEMENT_URLS that enrich the persona + audience beyond
+    // the LinkedIn profile. Public URLs, fetched directly (no browser).
+    const supplements = [];
+    const urls = (process.env.PROFILE_SUPPLEMENT_URLS || '').split(',').map((u) => u.trim()).filter(Boolean);
+    for (const url of urls) {
+      try {
+        const r = await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; linkedin-engager/1.0)' }, signal: AbortSignal.timeout(15_000) });
+        supplements.push({ url, ok: r.ok, status: r.status, content: r.ok ? (await r.text()).slice(0, 20_000) : '' });
+      } catch (e) {
+        supplements.push({ url, ok: false, error: String(e && e.message || e).slice(0, 140), content: '' });
+      }
+    }
+
     emit({
       ok: true,
       name: `${firstName} ${lastName}`.trim(),
@@ -966,6 +980,7 @@ async function cmdMyProfile() {
       profile_url: `${BASE}/in/${pub}/`,
       about,
       experience,
+      supplements,
     });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
