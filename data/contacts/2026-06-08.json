@@ -10,7 +10,7 @@
     "icp_read": "150-year-old manufacturer of hand tools, industrial blades, and surface preparation tools (Consumer Goods, 51-200 employees, Southbridge MA). End-user manufacturer — makes physical product, uses CNC and grinding equipment. Buyer.",
     "why_now": "Process Engineer actively engaged on Industry 4.0 frameworks. Hands-on implementer who would evaluate and champion SHARC or DIME for production monitoring on grinding and CNC equipment.",
     "signal": "Commented on Jeff Winter's 12 Laws of Industry 4.0 post: 'Very informative, thank you for putting this together and sharing this!'",
-    "suggested_opener": "You're at a manufacturer that's been running production equipment since 1875 — the brownfield connectivity challenge is real. We build SHARC, a sensor adapter that gets production counts, utilization, and pressure off legacy machines over MQTT without touching the PLC program, and DIME, an edge connector that speaks 50+ native protocols including the ones on grinding and CNC equipment. If you're dealing with that gap, happy to show you what the data layer looks like before you start building dashboards."
+    "suggested_opener": "What drew you to Jeff's Industry 4.0 post: are you actively mapping where your plant sits against those frameworks, or more at the learning stage?"
   },
   {
     "name": "Ryan Knox",
@@ -23,7 +23,7 @@
     "icp_read": "Defense and space manufacturing, 1,001-5,000 employees, Orange County CA. Builds autonomous defense systems (Ghost, Bolt, Anvil drone platforms). End-user manufacturer in defense. Buyer.",
     "why_now": "25+ years in defense and aerospace manufacturing ops. Running drone production lines with real-time cycle state requirements. Defense plants require strict OT network segmentation — SHARC's one-way data diode mode is the direct angle.",
     "signal": "Commented on Jeff Winter's 12 Laws of Industry 4.0 post: 'Solid list. Sad to say it's 100% aligned to majority of businesses.'",
-    "suggested_opener": "Defense production lines have the hardest brownfield connectivity problem: strict network segmentation, no internet, and OEM quotes that don't fit program budgets. We built the SHARC specifically to work as a one-way data diode — sensor-level data capture with no new attack surface — so you can get machine state off production equipment into your OT network without opening PLC programs or violating the air gap. If you're running drone assembly with visibility gaps, worth a conversation."
+    "suggested_opener": "Which of the twelve laws hit closest to home at Anduril: is it more about getting data off the production line, or the cultural side of getting ops teams to act on what they see?"
   },
   {
     "name": "Ben Hoffmann",
@@ -36,7 +36,7 @@
     "icp_read": "STIHL USA is a major manufacturer of outdoor power equipment (chainsaws, trimmers, blowers), Machinery Manufacturing, 1,001-5,000 employees, Virginia Beach VA. Ben is VP Production since Jan 2025, running all production ops: assembly, plastic parts, trimmer line, piston, crankshaft, guide bar, mold design, tool and die. 22+ years at STIHL. Buyer.",
     "why_now": "VP of Production at a high-volume discrete manufacturer already engaged in automation projects. He runs injection molding, CNC machining, and assembly lines — all brownfield connectivity territory. Just congratulated a direct report on promotion, showing active engagement with the team.",
     "signal": "Commented on Lauren Bannon's promotion post at STIHL: 'Congratulations!' — active in the STIHL manufacturing network.",
-    "suggested_opener": "You're running injection molding, CNC machining, and assembly lines under one VP umbrella — that's a broad machine connectivity surface. We build SHARC, a sensor adapter that captures production counts, utilization, and pressure off legacy equipment over MQTT without touching PLC programs, and DIME, an edge connector that speaks native protocols across Fanuc, Siemens, Allen-Bradley, and Modbus equipment. If you're still dealing with visibility gaps between the floor and your analytics layer, worth a short conversation."
+    "suggested_opener": "STIHL has been running high-volume production for a long time: what's the biggest floor visibility gap you're still working through?"
   },
   {
     "name": "Daniel Rubalcava",
@@ -49,7 +49,7 @@
     "icp_read": "Scotts Miracle-Gro is a major Consumer Goods manufacturer (lawn and garden products, 1,001-5,000 employees, Marysville OH, founded 1868). Daniel just started as Plant Manager in June 2026. Prior background: 15+ years in food and beverage plant ops (BlueTriton Brands water, The Wine Group, O'Neill Vintners). Buyer.",
     "why_now": "Just started a new Plant Manager role (June 2026, 1 month in). New plant managers in the first 90 days are actively auditing the equipment, systems, and visibility gaps they inherited — the highest-intent moment to surface a brownfield connectivity solution. Scotts Miracle-Gro plants run packaging, granule processing, and chemical blending lines.",
     "signal": "Commented on Lauren Bannon's promotion post. Shares STIHL network connections.",
-    "suggested_opener": "A new plant manager role is usually when you find out exactly what you can and can't see on the floor. If you're inheriting a Scotts Miracle-Gro plant with packaging, blending, or granule lines and you've got gaps in machine utilization or cycle data, that's the problem SHARC was built for: sensor-level data off production equipment over MQTT, no PLC program access required, five-minute install. Happy to show you what the data layer looks like before you start building anything on top of it."
+    "suggested_opener": "One month into a new plant manager role is usually when you find out exactly what data you actually have: how is the floor visibility looking at the Scotts Miracle-Gro plant so far?"
   },
   {
     "name": "Vijayaraghavan Sundara Rajan",
@@ -62,7 +62,7 @@
     "icp_read": "MRF is a major Indian tire manufacturer (Motor Vehicle Parts Manufacturing, 10,001+ employees, Chennai). Vijayaraghavan leads digital technology strategy across multiple tire manufacturing facilities: MES implementation with SAP integration, IIoT/Industry 4.0, predictive maintenance, GenAI for R&D. 30+ years in digital transformation. Buyer at scale. 1st degree connection.",
     "why_now": "Actively implementing IIoT and MES at tire manufacturing plants, deploying GenAI/Co-Pilot for R&D. Commented on Michael Finocchiaro's MES ownership post — engaged on the exact MES/connectivity/context question. DIME's 50+ protocol support and SHARC's sensor capture are relevant for tire plant equipment; i3X is directly relevant to the MES/data layer he's building.",
     "signal": "Commented on Michael Finocchiaro's 'Who owns execution/connectivity/context/intelligence?' MES evaluation post.",
-    "suggested_opener": "You're implementing MES and IIoT across multiple tire manufacturing facilities — the protocol diversity on that floor (mixing legacy presses, cure equipment, and newer machinery) is exactly the problem DIME was built for: 50+ native industrial protocols, sub-millisecond latency, no custom code, routes to SQL/Postgres/MQTT. For the semantic layer between raw data and your MES/SAP stack, i3X builds standardized APIs with schema auto-discovery on top of OPC-UA, MTConnect, and SQL sources. Given what you're building at MRF, worth a conversation."
+    "suggested_opener": "The MES ownership question you engaged on, who owns execution versus connectivity versus context versus intelligence, is where most multi-site rollouts actually stall: how are you currently drawing those lines across MRF's tire plants?"
   },
   {
     "name": "Kerem Kurtulmaz",
@@ -75,7 +75,7 @@
     "icp_read": "Methode Electronics is an Appliances, Electrical, and Electronics Manufacturing company (5,001-10,000 employees, Chicago IL HQ). Kerem is an automation engineer with 13+ years of PLC programming, SCADA/HMI, robotics, and commissioning across automotive, energy, and beverage industries. Siemens TIA Portal specialist. Currently in Malta. Buyer-side practitioner.",
     "why_now": "Deep Siemens TIA Portal expertise plus cross-industry commissioning background (automotive, beverage, energy) makes him an ideal evaluator and implementer of DIME or SHARC. Chicago-HQ'd company, 2nd degree. His SCADA/OT work spans the exact industries where DIME's protocol support and SHARC's sensor capture are deployed.",
     "signal": "Commented on Omar Jalel's departure post from Methode Electronics: 'Good luck Omar.' — connected to the Methode Electronics OT/automation team.",
-    "suggested_opener": "Your background spans PLC commissioning across automotive, beverage, and energy plants — that's the same equipment diversity DIME was built to handle natively: Siemens S7/TIA Portal, Allen-Bradley, Beckhoff, Modbus, OPC-UA, all without custom code. If you're dealing with the protocol translation and data routing layer at Methode Electronics, happy to show you what DIME's configuration looks like against a mixed-protocol line."
+    "suggested_opener": "Are the clients you commission asking about machine data visibility before the project handover, or does that question usually come up after the system is running?"
   },
   {
     "name": "Emily Constantinou",
@@ -88,7 +88,7 @@
     "icp_read": "MxD (Manufacturing x Digital) is a DOD-funded public-private national institute in Chicago focused on digital manufacturing, cybersecurity, and workforce development. Member network includes Boeing, RTX, Northrop Grumman, Lockheed Martin, Rolls-Royce, Oshkosh Defense, Siemens Digital Software, and hundreds of SMB manufacturers. Emily manages the industry member network. Chicago-local.",
     "why_now": "She runs the industry member engagement for a network that includes the exact manufacturers Chris serves. A MxD membership or partnership would give access to hundreds of manufacturers in one network.",
     "signal": "Commented on Federico Sciammarella's post about the AI & Data Transformation in Manufacturing Conference in Chicago: 'sounds like an amazing event with some really great speakers.'",
-    "suggested_opener": "We're based in the Greater Chicago Area and build industrial IoT connectivity and data infrastructure for manufacturers — the SHARC sensor adapter, DIME (50+ protocol edge connector), and i3X for turning plant data into AI-ready APIs. Given MxD's member base in discrete manufacturing and defense, I'd be curious whether there's a fit — either as a member or as a solution provider your members are trying to evaluate. Happy to connect if it makes sense."
+    "suggested_opener": "The AI and data transformation in manufacturing event you commented on: what's the question MxD members are asking most right now about AI on the plant floor?"
   },
   {
     "name": "Santos N. Garcia",
@@ -101,7 +101,7 @@
     "icp_read": "Capgemini Engineering is a global engineering services firm (10,000+ employees). Santos is a SCADA/MES specialist deploying Ignition-based solutions across manufacturing, oil & gas, and aerospace. Channel/SI role. SpaceX background.",
     "why_now": "Chris commented on his Ignition+AI+MCP integration post — warm entry. The semantic layer point in that comment is exactly what i3X addresses.",
     "signal": "Posted a video demo of integrating Claude Desktop with Ignition SCADA via Inductive Automation's MCP Module. Chris commented on the semantic/historian model challenge.",
-    "suggested_opener": "I left a comment on your Ignition MCP integration post — the semantic layer problem over Ignition historians is something we've been building around directly with i3X, which creates standardized queryable APIs with semantic models on top of industrial data sources including MTConnect and OPC-UA. Given your SCADA/MES work at Capgemini, curious whether you're running into the tag-naming and context gap in practice, and whether a conversation about the data model layer would be useful."
+    "suggested_opener": "Following up from my comment on your Ignition MCP demo: is the semantic and historian tag-naming challenge the blocker you're hitting most in practice, or is there a different layer of the integration that's harder?"
   },
   {
     "name": "David Turner",
@@ -114,7 +114,7 @@
     "icp_read": "Forberg Smith is an Endress+Hauser distributor and automation machinery company (1,001-5,000 employees, Clinton Township MI). Specializes in process instrumentation, measurement and controls, valves, filtration, panel fabrication for sanitary and industrial industries. David has 20+ years of engineering and automation background, founder of Turner Process Solutions. 1st degree connection. Channel.",
     "why_now": "Forberg Smith deploys Endress+Hauser instrumentation into food, beverage, pharma, and industrial plants — the same plants where SHARC connects sensors to MQTT. A referral or co-sell relationship is natural: their instrumentation goes in, SHARC publishes that instrument's data over MQTT to the analytics layer. 1st degree = can reach out directly.",
     "signal": "Commented on Lauren Bannon's STIHL promotion post: 'Congratulations! Best wishes in your new role!' — engaged in manufacturing network.",
-    "suggested_opener": "You're selling Endress+Hauser instrumentation into food, bev, and industrial plants — the layer above that instrumentation is where SHARC fits: it connects directly to the sensor signal (4-20mA, 0-10V, discrete) and publishes over MQTT/JSON to any analytics or SCADA platform. No PLC program changes, no IT ticket required. For plants that want to get instrument data into a dashboard without a custom integration, the two products are complementary. Happy to show you what the data flow looks like."
+    "suggested_opener": "After the Endress+Hauser instrumentation goes into a plant, do your clients typically ask how to get that signal data into their analytics or reporting layer, or is that a separate conversation that comes later?"
   },
   {
     "name": "Francisco Almada Lobo",
@@ -127,7 +127,7 @@
     "icp_read": "Critical Manufacturing is a MES software company (501-1000 employees, Porto Portugal). Serves semiconductors, electronics, automotive, medical devices, aerospace. Software vendor. Potential integration partner: their MES sits above DIME/SHARC/i3X.",
     "why_now": "1st-degree connection. Challenged Jeff Winter's Industry 4.0 framework on 'absence of structured operational context' — the exact i3X thesis.",
     "signal": "Commented on Jeff Winter's Industry 4.0 post: 'most of these dynamics are not caused by data itself, but by the absence of structured operational context.'",
-    "suggested_opener": "Your comment on structured operational context being the real problem resonated — that's the design thesis behind i3X, which we built to put semantic models on top of industrial data sources (SQL, OPC-UA, MTConnect) before anything downstream tries to reason over them. Critical Manufacturing sits above the connectivity layer; DIME and i3X sit below it. Might be worth a conversation about where the stacks interact, especially in semiconductor and electronics environments where you're already deployed."
+    "suggested_opener": "Your comment about structured operational context being the real problem rather than the data itself: does Critical Manufacturing handle that context modeling inside the MES, or do you see it sitting below the MES stack in the connectivity layer?"
   },
   {
     "name": "Sujata Tilak",
@@ -140,7 +140,7 @@
     "icp_read": "Ascent Intellimation is an IIoT platform company (PlantConnect) in India (11-50 employees, Pune). 26 years in industrial IoT. ISA Executive Board Member. Vendor with global network access.",
     "why_now": "ISA board membership gives access to the global industrial automation community. Potential partner for North American distribution or integration.",
     "signal": "Commented on Jeff Winter's 12 Laws post: 'The Inheritance Trap and the Skill Hollow stood out — by transferring authority of decisions to systems, we risk losing the ability to make those decisions ourselves.'",
-    "suggested_opener": "Your comment on the Inheritance Trap — the risk of losing decision-making capacity when you transfer it to systems — is a real operational tension we see in every IIoT deployment. PlantConnect and our stack (SHARC, DIME, i3X) are solving the same layer of the problem in different geographies. Given your ISA board role, I'd be curious whether there's an overlap worth exploring, either as integration partners or in terms of customer introductions."
+    "suggested_opener": "The tension you named between automating decisions and preserving the capacity to make them: how do you advise manufacturers on where that line should sit in practice?"
   },
   {
     "name": "Keith Rice",
@@ -153,7 +153,7 @@
     "icp_read": "Manufacturers rep firm for custom HVAC/VFD/controls equipment (11-50 employees, Lenexa KS). Keith is Technical Support Supervisor building AI knowledge-engineering solutions for OEM HVAC equipment. Warm 1st degree. Channel.",
     "why_now": "Actively evaluating AI support tools for OEM equipment -- asked a purchasing question on Carl Tolbert VFD Mentor post about dataset vs. LLM behavior pricing. That is the exact problem Tracebook solves.",
     "signal": "Asked on VFD Mentor post: For the kit, we are paying for the dataset in addition to the specific LLM behavior settings?",
-    "suggested_opener": "Your question on VFD Mentor about whether the pricing covers the dataset or the LLM behavior gets at the right problem. The expensive part of building reliable AI support for OEM equipment is scoping the knowledge base to the specific machine in front of the technician, not just the product family. We built Tracebook to do this for HVAC and capital equipment OEMs: per-serial-number knowledge bases, cited answers from specific source documents, and closed-loop escalation when it cannot answer. Worth a conversation if you are deciding whether to build or buy something similar."
+    "suggested_opener": "Your question about whether the dataset is priced separately from the LLM behavior settings gets at the real issue: the knowledge base scope determines answer quality, not the model access. Are you planning to build that layer in-house or evaluating what is already available?"
   },
   {
     "name": "Raul V.",
@@ -166,7 +166,7 @@
     "icp_read": "SI/consultant restoring PLC/HMI automation reliability for manufacturers in MI/OH/FL/TX/KY/IN (Ann Arbor MI, 2-10 employees, founded 2016). Stabilize-Standardize-Scale model for brownfield manufacturer automation. Channel.",
     "why_now": "His clients are manufacturers with brownfield PLCs that underperform after installs. After he stabilizes the automation, the plant asks about visibility. SHARC and DIME answer that next question.",
     "signal": "Commented on Jake Hall additive manufacturing post about production and logistics shifts.",
-    "suggested_opener": "You stabilize PLC and HMI systems for manufacturers after installs, which means you regularly inherit brownfield equipment where the original integrator is gone and the documentation is incomplete. The next question after stabilization is visibility: SHARC gets signal-level data off those assets over MQTT without touching the PLC program, and DIME handles native protocol translation for Fanuc, Siemens S7, Allen-Bradley, and Modbus equipment. If your clients are asking what comes after reliability, that is the layer we bridge."
+    "suggested_opener": "After you stabilize the PLC and HMI systems for a manufacturer, what is the next question they typically ask: is it about data visibility, or something else entirely?"
   },
   {
     "name": "Fernando Balseca",
@@ -179,7 +179,7 @@
     "icp_read": "SI building SCADA/DCS/PLC for pharma, food and bev, manufacturing, water, energy (Woodside NY, 2-10 employees). Owner with 21 years experience on Ignition, AVEVA, Rockwell, Siemens, Schneider. Channel/SI.",
     "why_now": "Deploys Ignition and AVEVA SCADA for food and bev and pharma clients -- the exact plants where i3X fits for turning SCADA data into standardized queryable APIs for the AI layer.",
     "signal": "Commented on Ali Ahmed IIoT/SCADA student project post: Excellent job! Making projects is for me the best way to learn.",
-    "suggested_opener": "You deploy SCADA and MES on Ignition and AVEVA for pharma and food and bev, which means you are frequently working the OPC UA and MQTT integration layer. We built i3X to turn those data sources into queryable REST APIs with semantic models, so the AI and reporting layer can reason over the data rather than hitting raw tags. If your clients are asking for AI access on top of their Ignition deployments, i3X is a faster path than building that layer from scratch."
+    "suggested_opener": "You deploy SCADA on Ignition and AVEVA for pharma and food and bev clients: are they asking about AI access on top of the historian data yet, or is that still a future conversation?"
   },
   {
     "name": "Andreas Heine",
@@ -192,7 +192,7 @@
     "icp_read": "Industry 4.0 and OPC UA solutions company (Lahnau Germany, 2-10 employees). Andreas is Senior Software Developer and OPC UA specialist building FactoryNexus. Active i3X Beta API user implementing OPC UA subscription lifecycle. Vendor.",
     "why_now": "Currently implementing i3X Beta API with full OPC UA subscription lifecycle: create/register/unregister, SSE delivery, sequence-based acknowledge handling, automatic fallback to polling when server subscription limits are hit. Found real edge cases in interoperability.",
     "signal": "Posted about i3x2ua project: implemented full subscription lifecycle in i3X Beta API including automatic fallback to polling. Biggest learning: interoperability is less about happy-path endpoints and more about edge cases.",
-    "suggested_opener": "Your work on i3X subscription lifecycle, especially the fallback to polling when OPC UA server subscription limits are hit, is exactly the kind of edge case that matters in production. I am Chris Misztur, co-founder of i3X. If the fallback behavior or SSE delivery implementation is creating friction, worth a direct conversation with the team. Also curious what you are building on top of i3X at konzeptpark."
+    "suggested_opener": "I am Chris Misztur, co-founder of i3X. The OPC UA subscription limit fallback you implemented in i3x2ua: is the timing working correctly in your deployment, or have you had to adjust how SSE delivery behaves during the fallback period?"
   },
   {
     "name": "Sean Slavin",
@@ -205,7 +205,7 @@
     "icp_read": "AVEVA (5,001-10,000 employees, SCADA/MES/historian software). Sean is 30-year SCADA/MES veteran building natural language interfaces for AVEVA System Platform using Claude and MCP. Built Recon (NL interface via MCP). Vendor building AI layers over industrial SCADA data. Vendor.",
     "why_now": "His MQTT broker topology builder (inferring equipment types and process areas from 38 topics at 95% confidence, no YAML) directly parallels i3X work from the semantic side. Direct technical alignment on giving AI reliable grounding over plant data.",
     "signal": "Posted MQTT topology builder teaser: AI scans MQTT broker, infers equipment types and process areas, builds plant model. 10 instances across 3 areas at 95% confidence from 38 topics. No YAML. No Python.",
-    "suggested_opener": "Your topology builder scanning the MQTT broker and inferring equipment types and process areas from 38 topics at 95% confidence is solving the same underlying problem i3X addresses from the schema side. We map industrial data sources into standardized semantic REST APIs so the agent layer has a clean model rather than raw MQTT topics. If you are testing whether the topic-scan inference holds up across varied plant configurations, worth comparing notes on what we have seen work and break."
+    "suggested_opener": "Your topology builder inferring equipment types and process areas from 38 MQTT topics at 95% confidence: does the inference hold up when topic naming conventions are inconsistent across sites, or does it require some baseline naming discipline to work reliably?"
   },
   {
     "name": "Nils Kanevad",
@@ -218,19 +218,19 @@
     "icp_read": "Sandvik (Stockholm, 10,001+ employees, mining and machining equipment OEM). Nils heads Digital Product Platform for Machining: AI, data, Digital Twin, tool lifecycle management. Sandvik makes machining tools sold to manufacturers. Vendor building digital connectivity for machining products.",
     "why_now": "His comment about the gap between machine connectivity APIs and AI in the tooling side matches exactly what DIME and i3X address. Building the API and connectivity layer for Sandvik machining tools used in manufacturing plants worldwide.",
     "signal": "Commented on Kin Lane industrial manufacturing API catalog post: getting deeper into machine connectivity on the tooling side, there is a huge gap right now not only between APIs and AI.",
-    "suggested_opener": "Your comment about the gap between machine connectivity APIs and AI in the tooling space is the exact problem DIME and i3X are designed to close. DIME handles the protocol side (50+ native industrial protocols including MTConnect for machining equipment), and i3X turns those data sources into standardized semantic REST APIs that AI agents can reason over without hitting raw SCADA tags. Given you are building the digital product platform for Sandvik machining tools, there may be a fit for modeling tool lifecycle and condition data as an i3X-compliant API layer."
+    "suggested_opener": "The gap you described between machine connectivity APIs and AI on the tooling side: is the main blocker the semantic model, the protocol access layer, or the API surface that downstream tools consume?"
   },
   {
     "name": "Mark Cianciosa",
     "headline": "Business Development Manager - Automation at Integrion Automation",
     "profile_url": "https://www.linkedin.com/in/markcianciosa/",
-    "photo_url": "https://media.licdn.com/dms/image/v2/D5603AQFf5j1UhElN0g/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697247910638?e=1782345600&v=beta&t=uapqVn1Uf8Bsq5wJissXcihXZc71MsF1OBo0gQ4ri2g",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D5603AQFf5j1UhElN0g/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1697247910638?e=1782345600&v=beta&t=uapqVm1Uf8Bsq5wJissXcihXZc71MsF1OBo0gQ4ri2g",
     "distance": "DISTANCE_2",
     "bucket": "channel",
     "company": "Integrion Automation",
     "icp_read": "Integrion Automation (Wauseon OH, 51-200 employees, automation machinery). Builds robotic integration and custom automated solutions for manufacturers. Mark handles business development in Charlotte NC. Channel/SI.",
     "why_now": "Sells robotic integration to manufacturers. After the robotic cell is installed, clients ask about machine data. DIME speaks native robot controller protocols (Fanuc, Yaskawa) and SHARC handles legacy sensor-level monitoring on the same line.",
     "signal": "Commented on Jake Hall smart manufacturing post: Can not wait to hear this entire interview! Move the manufacturing not the product.",
-    "suggested_opener": "You sell robotic integration for manufacturers, which means your clients regularly ask how to get data off the equipment after it is installed. DIME handles native protocol translation for Fanuc, Yaskawa, and other robot controllers (50+ protocols, zero custom code), and SHARC connects legacy sensor signals to MQTT for non-robot equipment on the same line. If clients are asking about machine data after the robotic cell goes in, that is the layer we provide."
+    "suggested_opener": "The 'move the manufacturing, not the product' framing: after your robotic cells go in, are clients asking for machine data off the robot controllers, or does that question usually come up during the sales process?"
   }
 ]
