@@ -1,49 +1,47 @@
 # Target audience (derived 2026-06-08 from Chris Misztur's profile)
 
 ## Who the operator is
-Chris Misztur is a hands-on IIoT/Industry 4.0 builder with 25+ years on factory floors. He founded Mr. IIoT (SHARC sensor-to-MQTT hardware for brownfield machine connectivity), co-founded Data In Motion Enterprise (industrial transformation software/services) and Angel Parts (supply chain software). His credibility is practitioner-level: he did digital transformation from inside an auto-parts supplier before productizing it.
+Chris Misztur co-founded Data In Motion Enterprise (an edge connector speaking 50+ industrial protocols: Allen-Bradley, Siemens S7, Fanuc, Modbus, OPC-UA, MQTT/SparkplugB) and Mr. IIoT (SHARC sensor adapter for brownfield machine connectivity). He spent 20 years inside manufacturing (8+ years as Digital Transformation Manager at an automotive supplier, 11 as IT Manager at a metal-parts shop) before productizing the work. His credibility is practitioner-level: he has personally done the brownfield connectivity work his tools now automate.
 
 ## Engage with
 
 **Roles / titles**
-- Controls engineers, automation engineers, electrical engineers on plant floors
-- Manufacturing engineers, process engineers, production managers
-- IT/OT managers, plant IT leads, operational technology managers
-- VP/Director of Operations, VP/Director of Manufacturing (SMB to mid-market)
-- Maintenance managers, reliability engineers
-- IIoT/Industry 4.0 project leads at manufacturers
-- Systems Integrators (SIs) serving discrete manufacturers
-- IoT solution architects and product managers at industrial platform vendors
+- Controls engineers, automation engineers, PLC programmers
+- Plant IT / OT managers, OT network engineers
+- Digital transformation leads, Industry 4.0 / smart manufacturing managers
+- Plant managers, VP/Director of Operations at discrete manufacturers
+- Systems integrators (SIs) and automation consultants deploying connectivity projects
+- Manufacturing engineers troubleshooting data extraction from legacy equipment
+- MES/SCADA engineers, reliability/maintenance engineers
 
 **Industries / company types**
-- Discrete manufacturing: automotive Tier 1/2/3, metal fabrication, stamping, machining, plastics, electronics assembly
-- Contract manufacturers and job shops
-- OEMs with factory operations
-- Industrial SIs and value-added resellers serving manufacturers
-- Industrial IoT hardware/software vendors
+- Discrete manufacturers: automotive Tier 1/2/3, metal fabrication, plastics, food and beverage, pharma, electronics, consumer goods
+- Industrial automation SIs and OEMs
+- Edge computing / industrial IoT vendors and practitioners
 
 **Seniority band**
-- Practitioners to senior managers (the people who actually deploy or approve small capital projects)
-- C-suite at smaller manufacturers (50-500 employees) who wear many hats
+- Individual contributors doing the actual connectivity work (engineers, technicians)
+- Middle management (plant-level) making buy-vs-build decisions on small capital projects
+- Senior leaders at SMB/mid-market manufacturers evaluating Industry 4.0 investment
 
 **Topics where Chris adds credible signal**
-- Brownfield machine connectivity: legacy PLCs, sensors, bypassing ladder logic, MQTT-over-Ethernet/WiFi
-- IIoT sensor hardware: 4-20mA, 0-10V, discrete I/O, SHARC-class adapters
-- Machine utilization and OEE data collection without PLC access or integration
-- Industry 4.0 / digital transformation practicalities in discrete manufacturing
-- Manufacturing data architecture: ERP-MES-machine-floor integration
-- The gap between IIoT hype and plant-floor reality (implementation friction, brownfield constraints)
-- Supply chain visibility and parts/inventory management
-- The 5C IIoT framework (Connect, Collect, Combine, Compute, Convey) from real deployments
+- Brownfield PLC/CNC/robot data extraction without touching ladder logic
+- MQTT, SparkplugB, and edge broker architecture
+- OPC-UA vs. proprietary protocol trade-offs in practice
+- 4-20mA / discrete sensor wiring and signal-level data capture
+- Machine utilization, OEE, and cycle counting from raw signals
+- IT/OT network segmentation and integration
+- Industry 4.0 ROI and where pilots stall in practice
+- Supply chain visibility tied to production data
 
 ## Skip
-- Generic leadership, career advice, motivational content
-- Pure enterprise software (SaaS, cloud-first, digital marketing) with no manufacturing angle
-- Process industries (oil and gas, pharma, chemical) unless directly relevant to discrete mfg parallels
-- Finance, HR, recruiting posts
-- High-follower "thought leader" engagement bait (emoji lists, hook-and-reveal, "agree?" posts)
+- Generic leadership motivation / mindset posts with no manufacturing content
+- Finance, M&A, HR, and recruiting posts
+- Pure enterprise SaaS (CRM, ERP without a manufacturing angle)
+- Unrelated verticals (healthcare IT, fintech, retail)
+- Thought-leader bait: emoji bullet lists, "what do you think?", hook-and-reveal storytelling
 - Sponsored / promoted posts
 - Posts authored by Chris himself
 
 ## Voice fit
-Sound like a practitioner who has wired sensors to brownfield machines and pushed the data upstream, not a consultant selling a transformation roadmap.
+Peer practitioner who has personally run cable, commissioned MQTT brokers, and negotiated IT/OT VLAN topology inside a running plant: speak as that person, not as a vendor.
