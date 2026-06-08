@@ -365,6 +365,62 @@ function parseComments(json) {
   return out;
 }
 
+// Extract the PEOPLE engaging on a post from its comments response: each
+// commenter with their profile handle, headline, network distance, and
+// what they said (a relevance signal). For the "who should I contact"
+// flow. Deduped by person.
+function harvestCommenters(json) {
+  const elements = (json.data && json.data['*elements']) || [];
+  const idx = indexIncluded(json.included);
+  const seen = new Set();
+  const out = [];
+  for (const elUrn of elements) {
+    const c = idx.get(elUrn);
+    if (!c || !String(c['$type'] || '').endsWith('.Comment')) continue;
+    const commenter = c.commenter || {};
+    const mp = commenter['*miniProfile'] ? idx.get(commenter['*miniProfile']) : null;
+    if (!mp) continue;
+    const publicId = mp.publicIdentifier || null;
+    const key = publicId || commenter.urn || `${mp.firstName} ${mp.lastName}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({
+      role: 'commenter',
+      name: [mp.firstName, mp.lastName].filter(Boolean).join(' ').trim() || null,
+      headline: mp.occupation || null,
+      public_id: publicId,
+      profile_url: publicId ? `${BASE}/in/${publicId}/` : null,
+      member_urn: commenter.urn || null,
+      network_distance: (commenter.distance && commenter.distance.value) || null,
+      signal: annotatedText(c.comment || c.commentV2).replace(/\s+/g, ' ').slice(0, 220),
+    });
+  }
+  return out;
+}
+
+// Pull the post author as a person record (from a detail updatesV2 json).
+function harvestAuthor(detailJson) {
+  const idx = indexIncluded(detailJson.included);
+  for (const el of (detailJson.data && detailJson.data['*elements']) || []) {
+    const u = idx.get(el);
+    if (!u || !String(u['$type'] || '').endsWith('render.UpdateV2')) continue;
+    const a = u.actor || {};
+    const target = (a.navigationContext && a.navigationContext.actionTarget) || '';
+    const pub = (target.match(/\/in\/([^/?]+)/) || [])[1] || null;
+    return {
+      role: 'author',
+      name: tvmText(a.name),
+      headline: tvmText(a.description),
+      public_id: pub,
+      profile_url: pub ? `${BASE}/in/${pub}/` : (target || null),
+      member_urn: a.urn || null,
+      network_distance: null,
+      signal: 'authored this post',
+    };
+  }
+  return null;
+}
+
 // ─── Subcommand: auth-check ───────────────────────────────────
 
 async function cmdAuthCheck() {
@@ -899,6 +955,52 @@ async function cmdMyProfile() {
   }
 }
 
+// ─── Subcommand: harvest-people ───────────────────────────────
+// For the "who should I contact today" flow. Given a post URL, returns
+// the people engaging on it (the author + everyone who commented) with
+// their profile handle, headline, network distance, and what they said
+// (a relevance signal). The agent ranks these against the target
+// audience and dedupes against a contacted-log; it does NOT contact
+// anyone. Reading data only; no connection requests, no messages.
+async function cmdHarvestPeople(postUrl) {
+  if (!postUrl) die('missing_arg', 'harvest-people requires a post URL');
+  const activityUrn = (String(postUrl).match(/urn:li:activity:\d+/) || [])[0] || null;
+  if (!activityUrn) die('harvest_people_failed', `could not extract an activity URN from ${postUrl}`);
+
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  try {
+    await gotoWithRetry(page, BASE + '/feed/');
+    await assertNotChallenged(page);
+
+    const people = [];
+    // Author (from post detail).
+    const detailResp = await voyagerGet(page, `/voyager/api/feed/updatesV2?q=backendUrnOrNss&urnOrNss=${encodeURIComponent(activityUrn)}`);
+    if (detailResp.status === 200) {
+      try { const a = harvestAuthor(JSON.parse(detailResp.text)); if (a) people.push(a); } catch { /* */ }
+    }
+    // Commenters (from comments).
+    const commentsResp = await voyagerGet(page, `/voyager/api/feed/comments?count=100&q=comments&sortOrder=RELEVANCE&start=0&updateId=${encodeURIComponent(activityUrn)}`);
+    if (commentsResp.status === 200) {
+      try { people.push(...harvestCommenters(JSON.parse(commentsResp.text))); } catch { /* */ }
+    }
+    // Drop self (the operator) and dedupe author-vs-commenter overlap.
+    const seen = new Set();
+    const deduped = people.filter((p) => {
+      const k = p.public_id || p.member_urn || p.name;
+      if (!k || seen.has(k)) return false;
+      seen.add(k);
+      return true;
+    });
+    emit({ ok: true, post_url: `${BASE}/feed/update/${activityUrn}/`, activity_urn: activityUrn, people: deduped });
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('harvest_people_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -910,6 +1012,7 @@ async function main() {
     case 'comment-post':   await cmdCommentPost(args._[0], args); break;
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'my-profile':     await cmdMyProfile(); break;
+    case 'harvest-people': await cmdHarvestPeople(args._[0]); break;
     default:
       emit({
         ok: false,
@@ -922,6 +1025,7 @@ async function main() {
           'linkedin.js read-post <post-url>',
           'linkedin.js comment-post <post-url> --text "..."',
           'linkedin.js reply-comment <comment-permalink> --text "..."',
+          'linkedin.js harvest-people <post-url>   (people engaging on a post -- for the contact shortlist)',
         ],
       });
       process.exit(1);
