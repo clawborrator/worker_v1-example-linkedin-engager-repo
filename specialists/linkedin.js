@@ -814,10 +814,17 @@ async function cmdCommentPost(postUrl, args) {
     // Open the composer (action-bar Comment button), then target the
     // comment editor by its label so we never type into the search box.
     const openBtn = page.locator('button[aria-label^="Comment"]').first();
-    if (await openBtn.count() > 0) { await openBtn.click().catch(() => {}); await page.waitForTimeout(1_500); }
+    if (await openBtn.count() > 0) { await openBtn.click().catch(() => {}); }
+    // The editor is now a TipTap/ProseMirror component that mounts slower
+    // than the old one, especially on a throttled session, so WAIT for it
+    // to appear rather than snapshotting once after a fixed delay (that
+    // race is what produced intermittent comment_form_not_found). The
+    // textbox carries aria-label "Text editor for creating comment".
     const editor = page.getByRole('textbox', { name: /comment/i }).first();
-    if (await editor.count() === 0) {
-      die('comment_form_not_found', 'comment editor not found (post locked, challenge, or DOM changed)');
+    try {
+      await editor.waitFor({ state: 'visible', timeout: 12_000 });
+    } catch {
+      die('comment_form_not_found', 'comment editor did not appear within 12s of opening the composer (post locked, comments restricted, challenge, or DOM changed)');
     }
     await fillAndSubmitComment(page, editor, text);
     await assertNotChallenged(page);
@@ -858,12 +865,15 @@ async function cmdReplyComment(permalink, args) {
       die('comment_form_not_found', 'no Reply control found (locked, challenge, or DOM changed)');
     }
     await replyBtn.click().catch(() => {});
-    await page.waitForTimeout(1_500);
 
-    // The reply composer is a comment editor; target by label.
+    // The reply composer is a comment editor; target by label. Same
+    // slower-mounting TipTap editor, so wait for it rather than checking
+    // once after a fixed delay.
     const editor = page.getByRole('textbox', { name: /reply|comment/i }).first();
-    if (await editor.count() === 0) {
-      die('comment_form_not_found', 'reply editor did not appear after clicking Reply');
+    try {
+      await editor.waitFor({ state: 'visible', timeout: 12_000 });
+    } catch {
+      die('comment_form_not_found', 'reply editor did not appear within 12s of clicking Reply (locked, challenge, or DOM changed)');
     }
     await fillAndSubmitComment(page, editor, text);
     await assertNotChallenged(page);
