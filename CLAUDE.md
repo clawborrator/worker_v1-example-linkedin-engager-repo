@@ -596,8 +596,15 @@ Steps:
      like a peer reaching out with a specific reason, not a pitch.
 9. Record: append each surfaced `profile_url` to
    `data/contacts/surfaced.json`, write the full shortlist to
-   `data/contacts/<date>.json`, then commit + push (same as the audit
-   step).
+   `data/contacts/<date>.json`. If that file already exists from an
+   earlier run today, MERGE the new contacts in (don't overwrite, so a
+   re-run doesn't drop the morning's list). Each contact object should
+   carry: `name`, `headline`, `profile_url`, `photo_url`, `distance`,
+   `company`, `icp_read`, `why_now`, `signal`, `suggested_opener` (these
+   are what `contacts.html` renders). Refresh the manifest
+   `data/contacts/index.json` (a JSON array of every `<date>.json`
+   filename) so the GitHub Pages viewer finds the file. Then commit +
+   push (same as the audit step).
 10. Send the shortlist to `@clauderemote` via `route_to_peer` mode
    `tell`: a compact who / company / why / opener list. The operator
    reviews and reaches out manually.

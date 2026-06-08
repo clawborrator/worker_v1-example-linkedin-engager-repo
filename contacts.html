@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LinkedIn Contacts</title>
+<style>
+  :root{
+    --bg:#0f1115; --card:#171a21; --card2:#1d212b; --line:#2a2f3a;
+    --txt:#e7e9ee; --dim:#9aa3b2; --accent:#0a66c2; --accent2:#378fe9;
+    --warm1:#3fb950; --warm2:#d29922; --cold:#6e7681;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+    font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  header{position:sticky;top:0;z-index:5;background:rgba(15,17,21,.92);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:14px 20px}
+  .row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  h1{font-size:18px;margin:0;font-weight:650}
+  .stat{color:var(--dim);font-size:13px}
+  .spacer{flex:1}
+  .filters{display:flex;gap:6px;flex-wrap:wrap}
+  .filters button{background:var(--card2);color:var(--txt);border:1px solid var(--line);
+    border-radius:999px;padding:5px 12px;cursor:pointer;font-size:13px}
+  .filters button.on{background:var(--accent);border-color:var(--accent)}
+  .companies{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+  .chip{background:var(--card2);border:1px solid var(--line);border-radius:6px;
+    padding:3px 9px;font-size:12px;color:var(--dim);cursor:pointer}
+  .chip.on{color:var(--txt);border-color:var(--accent2)}
+  .chip b{color:var(--txt);font-weight:600}
+  #loader{margin:60px auto;max-width:520px;text-align:center;padding:40px;
+    border:2px dashed var(--line);border-radius:14px;background:var(--card)}
+  #loader.drag{border-color:var(--accent2);background:var(--card2)}
+  #loader h2{margin:0 0 6px;font-size:17px}
+  #loader p{color:var(--dim);margin:6px 0 18px}
+  .btn{background:var(--accent);color:#fff;border:none;border-radius:8px;
+    padding:10px 18px;font-size:14px;cursor:pointer}
+  .btn:hover{background:#0959aa}
+  #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));
+    gap:16px;padding:18px 20px;max-width:1500px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:16px;display:flex;flex-direction:column;gap:10px}
+  .top{display:flex;gap:13px;align-items:flex-start}
+  .avatar{width:60px;height:60px;border-radius:50%;flex:0 0 60px;object-fit:cover;
+    background:var(--card2);display:flex;align-items:center;justify-content:center;
+    font-weight:600;color:var(--accent2);font-size:20px;border:1px solid var(--line)}
+  .nm{font-size:16px;font-weight:650;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .nm a{color:var(--txt);text-decoration:none}
+  .nm a:hover{text-decoration:underline}
+  .badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+  .b1{background:rgba(63,185,80,.16);color:var(--warm1)}
+  .b2{background:rgba(210,153,34,.16);color:var(--warm2)}
+  .bc{background:rgba(110,118,129,.18);color:var(--cold)}
+  .headline{color:var(--dim);font-size:13px}
+  .company{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+  .company .cn{font-weight:600;display:flex;align-items:center;gap:7px}
+  .company .meta{color:var(--dim);font-size:12px;margin-top:2px}
+  .icp{margin-left:auto;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;
+    background:rgba(10,102,194,.18);color:var(--accent2)}
+  .sec{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);
+    margin:2px 0 -4px}
+  .body{font-size:13px}
+  .quote{border-left:2px solid var(--line);padding-left:10px;color:var(--dim);font-style:italic}
+  .opener{position:relative;background:var(--card2);border:1px solid var(--line);
+    border-radius:9px;padding:10px 12px;font-size:13px}
+  .copy{position:absolute;top:8px;right:8px;background:var(--accent);color:#fff;border:none;
+    border-radius:6px;padding:3px 9px;font-size:11px;cursor:pointer}
+  .copy.done{background:var(--warm1)}
+  .link{color:var(--accent2);text-decoration:none;font-size:13px;font-weight:600}
+  .hidden{display:none}
+  .seen{color:var(--dim);font-size:11px}
+</style>
+</head>
+<body>
+<header>
+  <div class="row">
+    <h1>LinkedIn Contacts</h1>
+    <span class="stat" id="counts"></span>
+    <span class="spacer"></span>
+    <div class="filters" id="filters">
+      <button data-f="all" class="on">All</button>
+      <button data-f="1">1st degree</button>
+      <button data-f="2">2nd degree</button>
+      <button data-f="cold">Cold</button>
+      <button class="btn" id="reload" style="display:none">Load folder</button>
+    </div>
+  </div>
+  <div class="companies" id="companies"></div>
+</header>
+
+<div id="loader">
+  <h2>Load your contacts</h2>
+  <p>Drop the <code>data</code> folder here, or pick it. The page reads
+     every <code>data/contacts/*.json</code> shortlist.</p>
+  <button class="btn" id="pick">Choose data folder</button>
+  <input id="dir" type="file" webkitdirectory directory multiple class="hidden">
+</div>
+
+<div id="grid"></div>
+
+<script>
+const $ = (s,el=document)=>el.querySelector(s);
+const grid = $('#grid'), loader = $('#loader');
+let CONTACTS = [], FILTER = 'all', COMPANY = null;
+
+const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function degree(d){ d=String(d||''); if(/DISTANCE_1|1st/i.test(d))return 1;
+  if(/DISTANCE_2|2nd/i.test(d))return 2; if(/DISTANCE_3|OUT_OF_NETWORK|cold|3rd/i.test(d))return 3; return 0; }
+function degLabel(n){ return n===1?'1st degree':n===2?'2nd degree':n===3?'cold':'—'; }
+function degClass(n){ return n===1?'b1':n===2?'b2':'bc'; }
+function initials(name){ return (name||'?').split(/\s+/).map(w=>w[0]).filter(Boolean).slice(0,2).join('').toUpperCase(); }
+
+// company can be a structured object or a descriptive string.
+function companyName(c){ if(!c) return null; if(typeof c==='string') return c.split(/\s+[—–-]\s+/)[0].trim()||c; return c.name||c.company||null; }
+function companyFull(c){ if(!c) return null; if(typeof c==='string') return c; return c.name||c.company||null; }
+function companyMeta(c){ if(!c||typeof c==='string') return ''; return [c.industry,c.size,c.headquarters||c.location].filter(Boolean).join(' · '); }
+
+// Pull a contact's fields tolerant of field-name drift across runs.
+function norm(entry, date){
+  const c = entry.company || entry.company_profile || null;
+  return {
+    name: entry.name || null,
+    headline: entry.headline || entry.title || '',
+    url: entry.profile_url || entry.url || null,
+    photo: entry.photo_url || entry.photo || null,
+    deg: degree(entry.distance),
+    distanceRaw: entry.distance || '',
+    companyKey: companyName(c),
+    company: companyFull(c), companyMeta: companyMeta(c),
+    icp: entry.icp || entry.icp_read || entry.icp_fit || (c && (c.icp||c.icp_read)) || null,
+    why: entry.why_now || entry.why || '',
+    signal: entry.signal || entry.their_comment || '',
+    opener: entry.suggested_opener || entry.opener || '',
+    date: date || entry.date || ''
+  };
+}
+
+function ingest(files){
+  const byUrl = new Map();
+  for(const f of files){
+    let j; try{ j = JSON.parse(f.text); }catch(e){ continue; }
+    const date = j.date || (f.name.match(/(\d{4}-\d{2}-\d{2})/)||[])[1] || '';
+    const list = Array.isArray(j) ? j : (j.shortlist || j.contacts || j.people || []);
+    for(const e of list){
+      const n = norm(e, date);
+      const key = (n.url||n.name||'').toLowerCase();
+      if(!key) continue;
+      // keep the richest version (prefer one with a company/photo)
+      const prev = byUrl.get(key);
+      const score = (n.company?2:0)+(n.photo?1:0);
+      const pscore = prev ? (prev.company?2:0)+(prev.photo?1:0) : -1;
+      if(!prev || score>pscore) byUrl.set(key, n);
+    }
+  }
+  CONTACTS = [...byUrl.values()].sort((a,b)=> (a.deg||9)-(b.deg||9) || (b.date>a.date?1:-1));
+  render();
+}
+
+function render(){
+  loader.classList.add('hidden');
+  $('#reload').style.display='inline-block';
+  const shown = CONTACTS.filter(c=>{
+    if(COMPANY && c.companyKey!==COMPANY) return false;
+    if(FILTER==='all') return true;
+    if(FILTER==='1') return c.deg===1;
+    if(FILTER==='2') return c.deg===2;
+    if(FILTER==='cold') return c.deg===3;
+    return true;
+  });
+  const companies = [...new Set(CONTACTS.map(c=>c.companyKey).filter(Boolean))];
+  $('#counts').textContent = `${CONTACTS.length} contacts · ${companies.length} companies`;
+  // company chips
+  const counts = {};
+  CONTACTS.forEach(c=>{ if(c.companyKey) counts[c.companyKey]=(counts[c.companyKey]||0)+1; });
+  $('#companies').innerHTML = companies
+    .sort((a,b)=>counts[b]-counts[a])
+    .map(co=>`<span class="chip ${COMPANY===co?'on':''}" data-co="${esc(co)}"><b>${esc(co)}</b> ${counts[co]}</span>`).join('');
+  // cards
+  grid.innerHTML = shown.map(card).join('') || `<p class="stat" style="padding:20px">No contacts match this filter.</p>`;
+}
+
+function card(c){
+  const av = c.photo
+    ? `<img class="avatar" src="${esc(c.photo)}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'avatar',textContent:'${esc(initials(c.name))}'}))">`
+    : `<div class="avatar">${esc(initials(c.name))}</div>`;
+  const nameHtml = c.url ? `<a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.name)}</a>` : esc(c.name);
+  const comp = c.company ? `
+    <div class="company">
+      <div class="cn">🏢 ${esc(c.company)} ${c.icp?`<span class="icp">ICP: ${esc(c.icp)}</span>`:''}</div>
+      ${c.companyMeta?`<div class="meta">${esc(c.companyMeta)}</div>`:''}
+    </div>` : '';
+  const why = c.why ? `<div><div class="sec">Why now</div><div class="body">${esc(c.why)}</div></div>` : '';
+  const sig = c.signal ? `<div><div class="sec">Their comment</div><div class="quote">${esc(c.signal)}</div></div>` : '';
+  const op = c.opener ? `<div><div class="sec">Suggested opener</div>
+      <div class="opener"><button class="copy" data-t="${esc(c.opener)}">copy</button>${esc(c.opener)}</div></div>` : '';
+  const link = c.url ? `<a class="link" href="${esc(c.url)}" target="_blank" rel="noopener">View profile →</a>` : '';
+  return `<div class="card">
+    <div class="top">${av}
+      <div style="min-width:0">
+        <div class="nm">${nameHtml}<span class="badge ${degClass(c.deg)}">${degLabel(c.deg)}</span></div>
+        <div class="headline">${esc(c.headline)}</div>
+      </div></div>
+    ${comp}${why}${sig}${op}
+    <div class="row" style="justify-content:space-between">${link}<span class="seen">${esc(c.date)}</span></div>
+  </div>`;
+}
+
+// ---- interactions ----
+$('#filters').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-f]'); if(!b) return;
+  FILTER = b.dataset.f; [...$('#filters').querySelectorAll('button[data-f]')].forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+$('#companies').addEventListener('click', e=>{
+  const ch = e.target.closest('.chip'); if(!ch) return;
+  COMPANY = COMPANY===ch.dataset.co ? null : ch.dataset.co; render();
+});
+grid.addEventListener('click', async e=>{
+  const b = e.target.closest('.copy'); if(!b) return;
+  try{ await navigator.clipboard.writeText(b.dataset.t); }catch(_){}
+  b.textContent='copied'; b.classList.add('done'); setTimeout(()=>{b.textContent='copy';b.classList.remove('done')},1400);
+});
+$('#reload').addEventListener('click',()=>$('#dir').click());
+
+// ---- data loading ----
+async function readFileList(fileList){
+  const out = [];
+  for(const f of fileList){
+    const path = f.webkitRelativePath || f.name;
+    if(!/contacts\/.*\.json$/i.test(path) && !/contacts.*\.json$/i.test(f.name)) continue;
+    if(/surfaced/i.test(f.name)) continue;
+    out.push({ name:f.name, text: await f.text() });
+  }
+  return out;
+}
+$('#pick').addEventListener('click',()=>$('#dir').click());
+$('#dir').addEventListener('change', async e=>{
+  const files = await readFileList(e.target.files);
+  if(files.length) ingest(files); else alert('No data/contacts/*.json files found in that folder.');
+});
+
+// drag + drop of files or a folder
+async function walk(entry, acc){
+  if(entry.isFile){ await new Promise(r=>entry.file(async f=>{
+    if(/\.json$/i.test(f.name) && /contact/i.test(entry.fullPath) && !/surfaced/i.test(f.name))
+      acc.push({name:f.name, text:await f.text()}); r();
+  })); }
+  else if(entry.isDirectory){ const rd=entry.createReader();
+    await new Promise(r=>rd.readEntries(async ents=>{ for(const en of ents) await walk(en,acc); r(); })); }
+}
+['dragover','dragenter'].forEach(ev=>loader.addEventListener(ev,e=>{e.preventDefault();loader.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>loader.addEventListener(ev,e=>{e.preventDefault();loader.classList.remove('drag')}));
+loader.addEventListener('drop', async e=>{
+  const items=[...e.dataTransfer.items].map(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()).filter(Boolean);
+  const acc=[]; for(const it of items) await walk(it,acc);
+  if(acc.length) ingest(acc);
+  else { const acc2 = await readFileList(e.dataTransfer.files); if(acc2.length) ingest(acc2); else alert('Drop the data folder (or the contacts JSON files).'); }
+});
+
+// Auto-load when served (GitHub Pages / any http). file:// can't fetch,
+// so it falls through to the drop/pick loader. GitHub Pages can't list a
+// directory, so we try a manifest first, then probe recent dated files.
+(async()=>{
+  if(location.protocol==='file:') return;
+  const seen=new Set(), files=[];
+  const add=async fn=>{ if(seen.has(fn))return; seen.add(fn);
+    try{ const r=await fetch('data/contacts/'+fn,{cache:'no-store'}); if(r.ok) files.push({name:fn,text:await r.text()});}catch(_){}};
+  // Merge both sources so a stale manifest never hides new files:
+  // 1. manifest (data/contacts/index.json, complete history if maintained)
+  try{ const r=await fetch('data/contacts/index.json',{cache:'no-store'}); if(r.ok) for(const fn of await r.json()) await add(fn);}catch(_){}
+  // 2. probe the last 90 dated days (catches new files with no maintenance)
+  const t=Date.now(); for(let i=0;i<90;i++) await add(new Date(t-i*864e5).toISOString().slice(0,10)+'.json');
+  if(files.length) ingest(files);
+})();
+</script>
+</body>
+</html>
