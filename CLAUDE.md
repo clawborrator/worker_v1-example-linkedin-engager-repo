@@ -183,8 +183,9 @@ If `{ok: false}` with `error: "not logged in"` or `error:
   `route_to_peer` mode `tell` (include the screenshot path /
   GitHub URL if there is one):
   `"Cycle skipped: LinkedIn auth-check failed (<error>). Screenshot:
-  <relative-path-or-github-url>. Refresh ./secrets/linkedin.cookies.json
-  on the host and restart the container."`
+  <relative-path-or-github-url>. The session needs a fresh VNC login
+  (the profile session expired): re-run the login subcommand and sign
+  in by hand over VNC."`
 - Return. The next cron fire is 8 hours away.
 
 ### Step 2. Scroll feed (bash)
@@ -599,9 +600,11 @@ surfacing today" tell and record nothing.
   (captcha, auth challenge, rate limit, login redirect) and on
   the auth-check tertiary failure. The audit step commits +
   pushes these too so they show up in the GitHub file browser.
-- `/secrets/linkedin.cookies.json` is the Playwright cookies,
-  mounted read-only from the host. Don't try to write to this
-  path.
+- `/profile` is the persistent Chrome profile (a Docker volume)
+  holding the human-established LinkedIn session. There are no
+  imported cookies; auth comes from a one-time VNC login. When it
+  expires, a human re-logs in over VNC (do not try to refresh it
+  from a cycle).
 - `/workspace/repo/specialists/linkedin.js` is the Playwright
   wrapper. You call its CLI; you do not edit it during a cycle.
 
