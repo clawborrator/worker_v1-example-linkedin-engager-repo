@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T21:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469626580126969857",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469626580126969857/",
+    "author": "Patrick Theobald",
+    "topic_summary": "Peakboard 4.3 introduces Industrial Vibe Coding: describe a factory floor application in plain language and the platform generates it for you."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Patrick Theobald",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469626580126969857/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469614929151574016?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469614929151574016%2C7469784034638786560%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469784034638786560%2Curn%3Ali%3Aactivity%3A7469614929151574016%29",
+    "comment_text": "The UI layer has never been the bottleneck in industrial visualization. Peakboard, Grafana, Ignition — you can stand up a dashboard in days. The hard part is the six weeks before that: getting contextualized data out of the machine, mapping holding registers to engineering units, deciding whether the 4-20mA on input 3 means production count or pressure, and building the MQTT payload structure that makes sense downstream.\n\nIndustrial vibe coding is real progress on one half of the problem. The other half is still getting connected to the equipment and knowing what the data means before you visualize it."
+  },
+  "skip_reason": null
+}
