@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T02:52:00Z",
+  "post": {
+    "urn": "urn:li:activity:7468311830671831040",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468311830671831040/",
+    "author": "Alicia Lomas",
+    "topic_summary": "War story about being forced to use a motor amp rate-of-change alarm as software protection for a conveyor with no mechanical safety design, and what that experience taught her about controls vs. mechanical engineering responsibility."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Alicia Lomas",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468311830671831040/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468306958211792896?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7468306958211792896%2C7469667687451869184%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469667687451869184%2Curn%3Ali%3Aactivity%3A7468306958211792896%29",
+    "comment_text": "The motor amp rate-of-change approach is actually a legitimate monitoring technique when used as visibility, not as the only protection layer. Motor current is one of the cleanest electrical proxies for mechanical load: a jammed roller shows up as a current spike before the thermal overload trips, a worn bearing shows up as increased baseline draw, misalignment shows up in harmonic content. These are real signals worth capturing.\n\nThe problem in this story is not the technique. It is that someone used it as a replacement for hardware protection rather than as an additional sensing layer. A shear pin protects the line; a current signature alarm tells you the shear pin is about to trip and which segment is loading up. Both belong. Neither replaces the other."
+  },
+  "skip_reason": null
+}
