@@ -1,0 +1,41 @@
+{
+  "date": "2026-06-08",
+  "shortlist": [
+    {
+      "name": "Alex Amaral, POSGRAD/MBA/BSEE/AACS",
+      "headline": "Principal Controls Systems Engineer | Specializing in PLC/SCADA/HMI & Agentic AI Integration | AI & Automation Gap-Bridging Researcher",
+      "profile_url": "https://www.linkedin.com/in/alex-amaral-posgrad-mba-bsee-aacs-34431914/",
+      "network_distance": "unknown",
+      "warm_path": "Chris just commented on his post (controls/AI architecture + plant floor)",
+      "why_now": "Authored a post about agentic AI (LLMs, RAG, MCP) heading to the plant floor, working on integrating AI with HMI/PLC/SCADA at AB&C Controls Systems. Chris left a substantive comment about the signal-level data acquisition prerequisite. Direct conversation opener already exists in the thread.",
+      "suggested_opener": "Your post on agentic AI for SCADA is a problem I keep running into on the connectivity side. Most brownfield sites still cannot get clean machine state out without touching ladder logic nobody will touch. What is your approach when the PLC program is a black box the plant will not open? I am building around signal-level acquisition over MQTT as the prerequisite layer and would like to compare notes."
+    },
+    {
+      "name": "Srini J",
+      "headline": "Founder at Faultline Systems | OEM Market Analyst | EV & Supply Chain Strategy",
+      "profile_url": "https://www.linkedin.com/in/srinivasbjonnavithula/",
+      "network_distance": "DISTANCE_2",
+      "warm_path": "2nd degree",
+      "why_now": "OEM market analyst focused on EV and supply chain strategy. Commented on a manufacturing workforce post with a substantive take on commissioning and systems integration talent. The supply chain and OEM angle aligns with Angel Parts. Warm connection and a practitioner rather than a vendor.",
+      "suggested_opener": "Faultline's OEM market analysis on EV supply chain is close to a problem Angel Parts is working on: parts availability and scheduling visibility for manufacturing SMBs. Are the OEM procurement gaps you are tracking primarily at the tier-1 level or further down the supply chain? Would find it useful to compare what you are seeing on the market side with what surfaces in the procurement data."
+    },
+    {
+      "name": "Aaron Prather",
+      "headline": "Director, Robotics & Autonomous Systems Program at ASTM International",
+      "profile_url": "https://www.linkedin.com/in/amprather/",
+      "network_distance": "unknown",
+      "warm_path": "none identified",
+      "why_now": "Leads the robotics and autonomous systems standards program at ASTM International. ASTM sets standards that overlap with IIoT interoperability (adjacent to MTConnect, OPC-UA, SparkplugB territory). His post is about creating the manufacturing workforce pipeline. A standards-body director in autonomous systems is a useful connection for anyone selling into manufacturing automation.",
+      "suggested_opener": "Your work on ASTM's robotics and autonomous systems program is adjacent to where industrial connectivity standards intersect: MTConnect, SparkplugB, OPC-UA all land on the same plant floor. How is ASTM thinking about standardizing the data interface layer between autonomous systems and legacy control infrastructure? That gap is where most brownfield deployments get stuck."
+    },
+    {
+      "name": "Jamie Gleich Bryant",
+      "headline": "Founder & President, MFG.inc | Turning good manufacturing operators into strong teams and even better businesses",
+      "profile_url": "https://www.linkedin.com/in/jamie-gleich-bryant/",
+      "network_distance": "OUT_OF_NETWORK",
+      "warm_path": "none",
+      "why_now": "Founder helping manufacturing operators build stronger businesses. Adjacent to the transformation work Mr. IIoT does. Cold outreach but the framing (operational improvement for manufacturing businesses) is close enough to warrant a short note.",
+      "suggested_opener": "MFG.inc is working on the operator-to-business-leader transition, which is the same population Mr. IIoT sells into. Are the manufacturers you work with running into the same wall we see: they want machine utilization data but will not budget for anything that touches the PLC program? Curious what the blocker looks like from your side."
+    }
+  ]
+}
