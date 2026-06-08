@@ -49,10 +49,11 @@ header{
   border-bottom:1px solid var(--line);
 }
 .bar{height:2px;background:linear-gradient(90deg,var(--signal),var(--amber) 55%,transparent)}
-.head{max-width:1560px;margin:0 auto;padding:16px 26px 0}
-.toprow{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}
-.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.34em;color:var(--mute);
-  text-transform:uppercase;margin-bottom:2px}
+.head{max-width:1560px;margin:0 auto;padding:18px 26px 0}
+.toprow{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.kicker{font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:.28em;color:var(--dim);
+  text-transform:uppercase}
+.kicker .dot{color:var(--signal)}
 h1{font-family:var(--disp);font-weight:800;font-size:clamp(32px,5.4vw,58px);line-height:.92;
   letter-spacing:.01em;margin:0;text-transform:uppercase}
 h1 .dot{color:var(--signal)}
@@ -187,8 +188,7 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
   <div class="head">
     <div class="toprow">
       <div>
-        <div class="kicker">LinkedIn · engagement pipeline</div>
-        <h1>Contac<span class="dot">t</span>s</h1>
+        <div class="kicker">LinkedIn <span class="dot">·</span> engagement pipeline</div>
       </div>
       <div class="spacer"></div>
       <div class="readout" id="counts"><span class="live">STANDBY</span></div>
