@@ -1031,6 +1031,96 @@ async function cmdHarvestPeople(postUrl) {
   }
 }
 
+// ─── Subcommand: enrich-person ────────────────────────────────
+// Given a person's publicId (from harvest-people), returns their full
+// About, latest Experience, and their current company's profile
+// (industry, size, followers, HQ, specialties) for ICP qualification.
+// For 1st/2nd-degree people the whole profile is visible; out-of-network
+// people may be partial/hidden (fields come back null). Read-only.
+async function cmdEnrichPerson(publicId) {
+  if (!publicId) die('missing_arg', 'enrich-person requires a publicId');
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  try {
+    await gotoWithRetry(page, BASE + '/feed/');
+    await assertNotChallenged(page);
+
+    // Profile: name + About.
+    await gotoWithRetry(page, `${BASE}/in/${publicId}/`);
+    await assertNotChallenged(page);
+    await page.waitForTimeout(2800);
+    const name = await page.evaluate(() => {
+      const h1 = (document.querySelector('h1')?.innerText || '').trim();
+      if (h1) return h1;
+      const m = (document.title || '').replace(/^\(\d+\)\s*/, '').match(/^([^|]+?)\s*\|/);
+      return m ? m[1].trim() : null;
+    }).catch(() => null);
+    const about = await page.evaluate(() => {
+      for (const sec of document.querySelectorAll('section')) {
+        const h = sec.querySelector('h2,[role="heading"]');
+        if (h && /^about\b/i.test(h.innerText.trim())) return sec.innerText.replace(/^(About\s*)+/i, '').replace(/\s*…?\s*see more\s*$/i, '').trim();
+      }
+      return null;
+    }).catch(() => null);
+
+    // Experience: full text + latest company id.
+    await gotoWithRetry(page, `${BASE}/in/${publicId}/details/experience/`);
+    await assertNotChallenged(page);
+    await page.waitForTimeout(2800);
+    const exp = await page.evaluate(() => {
+      const text = (document.querySelector('main')?.innerText || '').replace(/^\s*Experience\s*/i, '').trim();
+      // Page is latest-first; the first two text lines are the current
+      // role's title and company (reliable, vs the SDUI DOM which mixes
+      // in footer listitems).
+      const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+      const latestRole = lines.length
+        ? { title: lines[0] || null, company: (lines[1] || '').split(' · ')[0].trim() || null }
+        : null;
+      // First company that has a LinkedIn page, for the ICP profile. May
+      // be the current employer or a recent one (small current employers
+      // often have no page); labeled accordingly downstream.
+      let companyId = null;
+      for (const a of document.querySelectorAll('a[href*="/company/"]')) {
+        const m = a.getAttribute('href').match(/\/company\/([^/?]+)/);
+        if (m) { companyId = m[1]; break; }
+      }
+      return { text: text.slice(0, 700), latestRole, companyId };
+    }).catch(() => ({ text: '', latestRole: null, companyId: null }));
+
+    // Company drilldown (current/latest employer).
+    let company = null;
+    if (exp.companyId) {
+      await gotoWithRetry(page, `${BASE}/company/${exp.companyId}/about/`).catch(() => {});
+      await page.waitForTimeout(2500);
+      company = await page.evaluate((id) => {
+        const t = document.querySelector('main')?.innerText || '';
+        const after = (label) => {
+          const m = t.match(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*\\n([^\\n]+)', 'i'));
+          return m ? m[1].trim() : null;
+        };
+        return {
+          id,
+          name: (document.querySelector('h1')?.innerText || '').trim() || null,
+          industry: after('Industry'),
+          size: after('Company size'),
+          headquarters: after('Headquarters'),
+          founded: after('Founded'),
+          specialties: after('Specialties'),
+          followers: (t.match(/([\d,]+)\s+followers/i) || [])[1] || null,
+          url: `https://www.linkedin.com/company/${id}/`,
+        };
+      }, exp.companyId).catch(() => null);
+    }
+
+    emit({ ok: true, public_id: publicId, profile_url: `${BASE}/in/${publicId}/`, name, about, latest_role: exp.latestRole, latest_experience: exp.text, company });
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('enrich_person_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1043,6 +1133,7 @@ async function main() {
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'my-profile':     await cmdMyProfile(); break;
     case 'harvest-people': await cmdHarvestPeople(args._[0]); break;
+    case 'enrich-person':  await cmdEnrichPerson(args._[0]); break;
     default:
       emit({
         ok: false,
@@ -1056,6 +1147,7 @@ async function main() {
           'linkedin.js comment-post <post-url> --text "..."',
           'linkedin.js reply-comment <comment-permalink> --text "..."',
           'linkedin.js harvest-people <post-url>   (people engaging on a post -- for the contact shortlist)',
+          'linkedin.js enrich-person <publicId>    (About + latest role + company profile -- ICP qualification)',
         ],
       });
       process.exit(1);

@@ -570,21 +570,37 @@ Steps:
    (`DISTANCE_2` before `OUT_OF_NETWORK`), then signal quality (a
    substantive on-topic comment beats a one-liner; an on-target post
    author is a strong lead).
-7. Take the top 3 to 5. For each, write:
+7. Enrich the top candidates. For each of the top 3 to 5, pull their
+   profile + company:
+
+   ```bash
+   node specialists/linkedin.js enrich-person '<public_id>'
+   ```
+
+   (the `public_id` is the slug in their `profile_url`, e.g.
+   `/in/<public_id>/`). Returns their full `about`, `latest_experience`,
+   and `company` (name, industry, size, followers, founded). For
+   out-of-network people some of this comes back null (LinkedIn hides
+   distant profiles), that's fine, use what you get. Use the company to
+   judge ICP fit: is it the kind of company (industry + size) the
+   operator sells into per `data/target-audience.md`?
+8. Take the top 3 to 5. For each, write:
    - name, headline, profile_url
    - distance and the warm path if any ("2nd degree")
+   - their current company + a one-line ICP read (industry, size, and
+     whether it fits the operator's accounts)
    - why now: their relevance plus what they actually said
-   - a suggested opener, 2 to 4 sentences, grounded in their signal
-     and the operator's relevant expertise, in the same matter-of-fact
-     voice as comments. No flattery. It should read like a peer
-     reaching out with a specific reason, not a pitch.
-8. Record: append each surfaced `profile_url` to
+   - a suggested opener, 2 to 4 sentences, grounded in their signal,
+     their role/company, and the operator's relevant expertise, in the
+     same matter-of-fact voice as comments. No flattery. It should read
+     like a peer reaching out with a specific reason, not a pitch.
+9. Record: append each surfaced `profile_url` to
    `data/contacts/surfaced.json`, write the full shortlist to
    `data/contacts/<date>.json`, then commit + push (same as the audit
    step).
-9. Send the shortlist to `@clauderemote` via `route_to_peer` mode
-   `tell`: a compact who / why / opener list. The operator reviews
-   and reaches out manually.
+10. Send the shortlist to `@clauderemote` via `route_to_peer` mode
+   `tell`: a compact who / company / why / opener list. The operator
+   reviews and reaches out manually.
 
 If nothing new clears the bar, send a brief "no new contacts worth
 surfacing today" tell and record nothing.
