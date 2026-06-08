@@ -284,6 +284,39 @@ async function lookupDistance(page, publicId) {
   return null;
 }
 
+// Pull a member's profile photo from the dash profile API. The DOM <img>
+// is lazy-loaded (its src is swapped in by LinkedIn's JS on render), so in
+// the headless engager it is usually still empty when we snapshot, leaving
+// photo_url null. The same WebTopCardCore decoration that carries the
+// network distance also carries profilePicture.displayImageReference, so we
+// build the URL straight from the API artifacts (largest one). The returned
+// CDN URL is time-signed and won't hotlink cross-origin, but it is correct
+// for record-keeping. Returns null on any failure.
+function vectorImageUrl(pic) {
+  const v = pic && pic.displayImageReference && pic.displayImageReference.vectorImage;
+  if (!v || !v.rootUrl || !Array.isArray(v.artifacts) || !v.artifacts.length) return null;
+  const a = [...v.artifacts].sort((x, y) => (y.width || 0) - (x.width || 0))[0];
+  return v.rootUrl + (a.fileIdentifyingUrlPathSegment || '');
+}
+async function lookupPhoto(page, publicId) {
+  if (!publicId) return null;
+  const url = `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${encodeURIComponent(publicId)}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const r = await voyagerGet(page, url);
+      if (r.status === 200) {
+        const j = JSON.parse(r.text);
+        for (const e of j.included || []) {
+          const u = e && e.profilePicture && vectorImageUrl(e.profilePicture);
+          if (u) return u;
+        }
+      }
+    } catch { /* retry */ }
+    await page.waitForTimeout(900); // ease off LinkedIn's per-call throttle
+  }
+  return null;
+}
+
 // Index a normalized `included` array by every URN it can be referenced
 // under (entityUrn + dashEntityUrn), for resolving `*`-prefixed refs.
 function indexIncluded(included) {
@@ -1107,11 +1140,14 @@ async function cmdEnrichPerson(publicId) {
       }
       // The profile photo is the first profile-displayphoto img on the
       // page (og:image isn't set on the logged-in view). The first one
-      // is the profile owner; later ones are "people also viewed".
+      // is the profile owner; later ones are "people also viewed". This is
+      // lazy-loaded and often empty in headless, so it is only a cheap
+      // first try; lookupPhoto (the API) is the reliable source below.
       const pimg = document.querySelector('img[src*="profile-displayphoto"]');
       return { name, photo_url: pimg ? pimg.src : null };
     }).catch(() => ({ name: null, photo_url: null }));
     const name = profileTop.name;
+    const photo_url = profileTop.photo_url || (await lookupPhoto(page, publicId));
     const about = await page.evaluate(() => {
       for (const sec of document.querySelectorAll('section')) {
         const h = sec.querySelector('h2,[role="heading"]');
@@ -1169,7 +1205,7 @@ async function cmdEnrichPerson(publicId) {
       }, exp.companyId).catch(() => null);
     }
 
-    emit({ ok: true, public_id: publicId, profile_url: `${BASE}/in/${publicId}/`, name, photo_url: profileTop.photo_url, about, latest_role: exp.latestRole, latest_experience: exp.text, company });
+    emit({ ok: true, public_id: publicId, profile_url: `${BASE}/in/${publicId}/`, name, photo_url, about, latest_role: exp.latestRole, latest_experience: exp.text, company });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('enrich_person_failed', e.message);
