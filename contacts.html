@@ -180,6 +180,27 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
 @keyframes scan{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
 #loadstatus{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--dim)}
 .hidden{display:none}
+
+/* mobile "Filters" toggle: hidden on desktop */
+.ftoggle{display:none;font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;background:var(--bg2);color:var(--dim);border:1px solid var(--line2);
+  border-radius:3px;padding:7px 12px;cursor:pointer}
+
+/* ── mobile ─────────────────────────────────────────── */
+@media (max-width:760px){
+  .head{padding:14px 15px 0}
+  .toprow{gap:10px}
+  .kicker{font-size:11px;letter-spacing:.18em}
+  .readout{font-size:11px;flex-basis:100%;text-align:left;order:3}
+  .ftoggle{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
+  /* collapse the filter controls + company chips behind the toggle */
+  .controls,.companies{display:none}
+  header.open .controls{display:flex;padding-top:12px}
+  header.open .companies{display:flex;padding:12px 0 14px;max-height:42vh;overflow-y:auto}
+  main{padding:16px 15px 60px}
+  #grid{grid-template-columns:1fr;gap:14px}
+  .card{padding:16px 15px 14px}
+}
 </style>
 </head>
 <body>
@@ -191,6 +212,7 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
         <div class="kicker">LinkedIn <span class="dot">·</span> engagement pipeline</div>
       </div>
       <div class="spacer"></div>
+      <button id="ftoggle" class="ftoggle" aria-expanded="false">Filters ▾</button>
       <div class="readout" id="counts"><span class="live">STANDBY</span></div>
     </div>
     <div class="controls">
@@ -338,6 +360,8 @@ function card(c, i){
 }
 
 // interactions
+$('#ftoggle').addEventListener('click', e=>{ const h=document.querySelector('header'); const open=h.classList.toggle('open');
+  e.currentTarget.setAttribute('aria-expanded', open); e.currentTarget.textContent='Filters '+(open?'▴':'▾'); });
 $('#filters').addEventListener('click', e=>{ const b=e.target.closest('button[data-f]'); if(!b) return;
   FILTER=b.dataset.f; [...$('#filters').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b)); render(); });
 $('#buckets').addEventListener('click', e=>{ const b=e.target.closest('button[data-b]'); if(!b) return;
