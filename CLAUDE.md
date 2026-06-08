@@ -74,24 +74,36 @@ When you receive the initial prompt:
    This returns the operator's `name`, `headline`, full `about`,
    full `experience`, AND `supplements`: an array of extra sources
    (from `PROFILE_SUPPLEMENT_URLS` in the env, e.g. the operator's
-   company and personal `llms.txt` files) each with `url` and
-   `content`. Read ALL of it, the LinkedIn profile AND every
-   supplement, the supplements describe the operator's business, what
-   they build, and how they position it, often in more depth than the
-   LinkedIn headline. From all of it, derive a concrete TARGET
-   AUDIENCE: the people worth engaging with constructively to build the
-   operator's reach, expressed as roles, industries, seniority, company
-   types, and the specific topics where the operator can add credible
-   signal (grounded in their actual background + what their sites say,
-   not generic). Note who to SKIP too. Write it to
-   `data/target-audience.md` (overwrite it), then commit + push:
+   company and personal sites). Each supplement has `content` (the
+   index, usually an llms.txt) and `crawled`: an array of the linked
+   pages it followed one level deep (`url` + `content`), the product
+   pages, case studies, and details that aren't in the LinkedIn
+   headline. Read ALL of it: the LinkedIn profile, each supplement
+   index, and every crawled page.
+
+   From all of it, write TWO files (overwrite both):
+
+   a. `data/persona.md` — WHO THE OPERATOR IS. Their professional
+      identity: background and expertise, what their company builds
+      and how it's positioned (e.g. the specific products, the SHARC,
+      the frameworks), the problems they solve, and the voice/POV they
+      bring. This is the engagement persona, what the operator stands
+      for and sounds like. Ground it in the sites, not just LinkedIn.
+      See the "Persona" structure below.
+
+   b. `data/target-audience.md` — WHO TO ENGAGE. The people worth
+      engaging constructively to build the operator's reach: roles,
+      industries, seniority, company types, the topics where the
+      operator can add credible signal, and who to SKIP. See the
+      "Target audience" structure below.
+
+   Then commit + push:
 
    ```bash
    mkdir -p data
-   # write your derived audience to data/target-audience.md (see the
-   # structure in "Target audience" below), then:
-   git add data/target-audience.md
-   git commit -m "target audience derived from profile" || true
+   # write data/persona.md and data/target-audience.md, then:
+   git add data/persona.md data/target-audience.md
+   git commit -m "persona + target audience derived from profile + sites" || true
    git push 2>&1 | tail -3
    ```
 
@@ -122,12 +134,46 @@ then return.
 
 ---
 
+## Persona
+
+`data/persona.md` is derived at boot (step 4) from the operator's
+LinkedIn profile + the crawled supplement sites, and is the source of
+truth for WHO THE OPERATOR IS and how they show up. Engagement comments
+and contact openers should sound like this person. Suggested structure:
+
+```markdown
+# Persona (derived <date>)
+
+## Who they are
+Name, role, the one-line of what they do and the credibility behind it.
+
+## What they build / sell
+The company and its products in specifics (e.g. the SHARC: what it is,
+what it connects, the problem it solves), the frameworks they use,
+their actual offering. Pull this from the sites, not the LinkedIn
+headline.
+
+## Point of view
+The handful of opinions/theses they hold and repeat (e.g. read at the
+signal level, don't touch the PLC program; data at the point of
+decision). This is what their comments should reinforce.
+
+## Voice
+How they sound: matter-of-fact, practitioner, specific, no hype. Match
+the comment voice in step 6a.
+```
+
+Re-derived every boot. The engagement and contacts flows may `cat`
+this for grounding.
+
+---
+
 ## Target audience
 
 `data/target-audience.md` is derived from the operator's own profile
-at boot (step 4) and is the source of truth for who to engage. Write
-it concrete and skimmable, so the pick-a-post step can apply it fast.
-Suggested structure:
++ supplement sites at boot (step 4) and is the source of truth for who
+to engage. Write it concrete and skimmable, so the pick-a-post step can
+apply it fast. Suggested structure:
 
 ```markdown
 # Target audience (derived <date> from <name>'s profile)

@@ -960,15 +960,43 @@ async function cmdMyProfile() {
 
     // Supplement sources: extra URLs (e.g. llms.txt) from
     // PROFILE_SUPPLEMENT_URLS that enrich the persona + audience beyond
-    // the LinkedIn profile. Public URLs, fetched directly (no browser).
+    // the LinkedIn profile. Each is an index; we crawl ONE level deep
+    // into its same-origin links (llms.txt is a list of content pages),
+    // bounded by per-page and total caps so it can't run away.
     const supplements = [];
     const urls = (process.env.PROFILE_SUPPLEMENT_URLS || '').split(',').map((u) => u.trim()).filter(Boolean);
+    const UA = { 'user-agent': 'Mozilla/5.0 (compatible; linkedin-engager/1.0)' };
+    const PER_PAGE = 5_000, MAX_LINKS = 12, PER_SOURCE_BUDGET = 40_000;
+    const getText = async (u, cap) => {
+      const r = await fetch(u, { headers: UA, signal: AbortSignal.timeout(12_000) });
+      return { ok: r.ok, status: r.status, text: r.ok ? (await r.text()).slice(0, cap) : '' };
+    };
     for (const url of urls) {
+      let crawlBudget = PER_SOURCE_BUDGET; // per-source, so one site can't starve another
       try {
-        const r = await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; linkedin-engager/1.0)' }, signal: AbortSignal.timeout(15_000) });
-        supplements.push({ url, ok: r.ok, status: r.status, content: r.ok ? (await r.text()).slice(0, 20_000) : '' });
+        const idx = await getText(url, 20_000);
+        const sup = { url, ok: idx.ok, status: idx.status, content: idx.text, crawled: [] };
+        if (idx.ok && idx.text) {
+          const origin = new URL(url).origin;
+          const set = new Set();
+          const addLink = (raw, base) => { try { const u = new URL(raw, base); u.hash = ''; set.add(u.href); } catch { /* */ } };
+          for (const m of idx.text.matchAll(/\]\(([^)\s]+)\)/g)) addLink(m[1].trim(), url);
+          for (const m of idx.text.matchAll(/https?:\/\/[^\s)\]"'<>]+/g)) addLink(m[0], url);
+          const links = [...set].filter((l) => {
+            try { return new URL(l).origin === origin && l.replace(/\/$/, '') !== url.replace(/\/$/, '') && !/\.(png|jpe?g|gif|svg|webp|ico|css|js|pdf|zip|mp4)$/i.test(l); }
+            catch { return false; }
+          }).slice(0, MAX_LINKS);
+          for (const link of links) {
+            if (crawlBudget <= 0) break;
+            try {
+              const p = await getText(link, Math.min(PER_PAGE, crawlBudget));
+              if (p.ok && p.text.trim()) { sup.crawled.push({ url: link, content: p.text }); crawlBudget -= p.text.length; }
+            } catch { /* skip a bad link */ }
+          }
+        }
+        supplements.push(sup);
       } catch (e) {
-        supplements.push({ url, ok: false, error: String(e && e.message || e).slice(0, 140), content: '' });
+        supplements.push({ url, ok: false, error: String(e && e.message || e).slice(0, 140), content: '', crawled: [] });
       }
     }
 
