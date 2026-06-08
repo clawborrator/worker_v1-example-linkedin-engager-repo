@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T06:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469542705321254912",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469542705321254912/",
+    "author": "Troy Richards",
+    "topic_summary": "The hardest part of onboarding maintenance techs is not technical skill but knowing where everything is on the floor; visual, connected, searchable systems eliminate that scavenger hunt."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Troy Richards",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469542705321254912/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468936818240040960?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7468936818240040960%2C7469546902548791297%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469546902548791297%2Curn%3Ali%3Aactivity%3A7468936818240040960%29",
+    "comment_text": "The floor map problem comes before the software can help. Most plants trying to stand up a CMMS hit the same wall first: nobody has an accurate, complete list of their equipment. The floor was never fully inventoried, assets were added and decommissioned without record updates, and the person who knew the full picture retired years ago.\n\nWalking the floor and tagging every machine is the prerequisite. Once each asset has a physical tag tied to a record and a live data connection, the new tech's question becomes a lookup. The bottleneck shifts from \"knowing where things are\" to \"knowing why things are configured that way,\" which is harder but at least tractable."
+  },
+  "skip_reason": null
+}
