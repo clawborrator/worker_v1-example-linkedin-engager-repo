@@ -1,0 +1,11 @@
+{
+  "ts": "2026-06-08T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469742410529611776",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469742410529611776/",
+    "author": "Nick Wojdyla",
+    "topic_summary": "Data governance requires organizational model change: named data owners and stewards must be dedicated roles, not side quests"
+  },
+  "comment_posted": null,
+  "skip_reason": "comment_form_not_found: comment editor not found on target post (post locked, challenge, or DOM changed); selectors in linkedin.js may need updating"
+}
