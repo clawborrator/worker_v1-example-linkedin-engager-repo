@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7467520245407191040",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7467520245407191040/",
+    "author": "Santos N. Garcia",
+    "topic_summary": "Demonstration of integrating Claude Desktop with Ignition SCADA using Inductive Automation's Early Access MCP Module to enable AI interaction with SCADA/MES environments."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Santos N. Garcia",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7467520245407191040/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7467211221767819265?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7467211221767819265%2C7469687550996025344%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469687550996025344%2Curn%3Ali%3AugcPost%3A7467211221767819265%29",
+    "comment_text": "The MCP connection is the easy part. Live tag reads give you current state, but most Ignition tag trees have grown organically over years: names that made sense to the controls engineer who built the project don't translate directly to an AI context window.\n\nBefore the time-series question is reliably answerable, you need a semantic layer that maps raw tag paths to process concepts, units, and normal operating ranges. Query the historian through that model, not through the raw tag tree. The demo is a solid proof of concept; the production path goes through the data model first."
+  },
+  "skip_reason": null
+}
