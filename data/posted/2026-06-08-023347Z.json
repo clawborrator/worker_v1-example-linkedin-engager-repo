@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T02:35:00Z",
+  "post": {
+    "urn": "urn:li:activity:7466323046354612224",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7466323046354612224/",
+    "author": "Marcus Scholle",
+    "topic_summary": "Photo of a 1980s Tenor drum sequencer still running in a US meat processing plant control cabinet, with discussion of wear, repairability, and eventual replacement."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Marcus Scholle",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7466323046354612224/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7466141619323527168?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7466141619323527168%2C7469577320853561344%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469577320853561344%2Curn%3Ali%3Aactivity%3A7466141619323527168%29",
+    "comment_text": "The replacement debate is secondary if the actual problem is getting production visibility. A drum sequencer like this one drives relay contacts or 24V outputs. You can tap those signals directly: attach a small edge device to the output rails, read the state transitions, and push count and cycle-position data over MQTT. No PLC modification, no ladder logic to open, no risk to the running process.\n\nThe output pattern tells you sequence step, cycle count, and dwell time per step. For a meat processing line, that is enough to calculate OEE, detect steps running long, and get the numbers to whoever needs them. The sequencer keeps running indefinitely. You get the visibility without waiting for the capital project."
+  },
+  "skip_reason": null
+}
