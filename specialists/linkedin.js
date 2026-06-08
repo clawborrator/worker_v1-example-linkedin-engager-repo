@@ -300,15 +300,22 @@ function vectorImageUrl(pic) {
 }
 async function lookupPhoto(page, publicId) {
   if (!publicId) return null;
+  const want = publicId.toLowerCase();
   const url = `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${encodeURIComponent(publicId)}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const r = await voyagerGet(page, url);
       if (r.status === 200) {
         const j = JSON.parse(r.text);
+        // `included` also carries the VIEWER's own profile (the logged-in
+        // engager account), so match the queried person by
+        // publicIdentifier. Taking the first profilePicture returns the
+        // engager's own photo for everyone.
         for (const e of j.included || []) {
-          const u = e && e.profilePicture && vectorImageUrl(e.profilePicture);
-          if (u) return u;
+          if (e && e.publicIdentifier && e.publicIdentifier.toLowerCase() === want && e.profilePicture) {
+            const u = vectorImageUrl(e.profilePicture);
+            if (u) return u;
+          }
         }
       }
     } catch { /* retry */ }
