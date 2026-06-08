@@ -1221,6 +1221,38 @@ async function cmdEnrichPerson(publicId) {
   }
 }
 
+// ─── Subcommand: photos ───────────────────────────────────────
+// Batch profile-photo lookup. Given one or more publicIds (passed
+// positionally and/or comma-separated), opens a SINGLE session and
+// returns { public_id: photo_url|null } for each via the dash-profile
+// API. Much lighter than enrich-person (one nav + one API call each),
+// for backfilling or refreshing photo_url across a contacts file
+// without re-running the full enrichment. Read-only.
+async function cmdPhotos(publicIds) {
+  const ids = (publicIds || [])
+    .flatMap((s) => String(s).split(','))
+    .map((s) => s.trim())
+    .filter(Boolean);
+  if (!ids.length) die('missing_arg', 'photos requires one or more publicIds');
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  try {
+    await gotoWithRetry(page, BASE + '/feed/');
+    await assertNotChallenged(page);
+    const photos = {};
+    for (const id of ids) {
+      photos[id] = await lookupPhoto(page, id);
+      await page.waitForTimeout(700); // ease off the per-call throttle
+    }
+    emit({ ok: true, photos });
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('photos_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1234,6 +1266,7 @@ async function main() {
     case 'my-profile':     await cmdMyProfile(); break;
     case 'harvest-people': await cmdHarvestPeople(args._[0]); break;
     case 'enrich-person':  await cmdEnrichPerson(args._[0]); break;
+    case 'photos':         await cmdPhotos(args._); break;
     default:
       emit({
         ok: false,
@@ -1248,6 +1281,7 @@ async function main() {
           'linkedin.js reply-comment <comment-permalink> --text "..."',
           'linkedin.js harvest-people <post-url>   (people engaging on a post -- for the contact shortlist)',
           'linkedin.js enrich-person <publicId>    (About + latest role + company profile -- ICP qualification)',
+          'linkedin.js photos <publicId>[,<publicId>...]   (batch profile-photo URLs -- backfill/refresh photo_url)',
         ],
       });
       process.exit(1);
