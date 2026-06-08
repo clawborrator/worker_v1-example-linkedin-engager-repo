@@ -270,11 +270,18 @@ function tvmText(tvm) {
 // memberRelationship/distance. Returns null on any failure.
 async function lookupDistance(page, publicId) {
   if (!publicId) return null;
-  try {
-    const r = await voyagerGet(page, `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${encodeURIComponent(publicId)}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`);
-    if (r.status !== 200) return null;
-    return (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0] || null;
-  } catch { return null; }
+  const url = `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${encodeURIComponent(publicId)}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const r = await voyagerGet(page, url);
+      if (r.status === 200) {
+        const d = (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0];
+        if (d) return d;
+      }
+    } catch { /* retry */ }
+    await page.waitForTimeout(900); // ease off LinkedIn's per-call throttle
+  }
+  return null;
 }
 
 // Index a normalized `included` array by every URN it can be referenced
