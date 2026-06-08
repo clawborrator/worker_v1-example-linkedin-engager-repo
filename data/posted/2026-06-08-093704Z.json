@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T09:37:04Z",
+  "post": {
+    "urn": "urn:li:activity:7469674615615967232",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469674615615967232/",
+    "author": "Ganesha Rajappa",
+    "topic_summary": "Argues that raw high-frequency sensor data dumped to cloud creates bandwidth and latency problems; true predictive maintenance requires edge contextualization via PLC-layer ingestion (OPC-UA/Modbus) and local threshold filtering before routing only meaningful events over MQTT to cloud."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Ganesha Rajappa",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469674615615967232/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469674615615967232?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469674615615967232%2C7469683790362288128%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469683790362288128%2Curn%3Ali%3Aactivity%3A7469674615615967232%29",
+    "comment_text": "OPC-UA and Modbus access to the PLC is the hidden assumption in most edge pipeline designs, and brownfield shops often cannot meet it. The PLC needs to be network-connected, the register map needs to be documented, and someone needs to approve touching a running production machine. Many plants cannot clear all three gates simultaneously.\n\nA practical alternative is to read at the physical signal level instead: 4-20mA loops, proximity sensors, VFD current output. Machine state, cycle counts, and utilization all come through without opening the PLC. The contextualization and threshold logic still lives at the edge, and only meaningful events go out over MQTT. Same architecture as described, but the data source is the machine’s electrical layer rather than its tag database."
+  },
+  "skip_reason": null
+}
