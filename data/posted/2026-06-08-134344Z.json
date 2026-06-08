@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469744230459129857",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469744230459129857/",
+    "author": "Carl Lee Tolbert, PhD, CMRP",
+    "topic_summary": "Building a VFD troubleshooting AI assistant trained on 9,725 scanned drive documents, manuals, and field notes, with cited answers and user-customizable knowledge base."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Carl Lee Tolbert, PhD, CMRP",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469744230459129857/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469715389342679041?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469715389342679041%2C7469745913729728512%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469745913729728512%2Curn%3Ali%3Aactivity%3A7469715389342679041%29",
+    "comment_text": "The document corpus is the tractable part. The harder part is tribal knowledge that never made it into any manual: the drive that got reprogrammed by a contractor three years ago, the parameters someone changed because \"it was vibrating\" with no documentation, the fault pattern on a specific installation that doesn't match the manual because the input wiring is different.\n\nCited answers matter for a different reason than accuracy theater. Standing in front of a faulted drive, a technician needs to know whether the answer came from the Yaskawa A1000 manual for that exact drive or from a similar-model fault table. Getting the wrong manual is a fast path to a second fault. Per-asset scoping of the knowledge base is what turns \"this probably applies\" into \"this is the answer for your drive.\"\n\nThe retirement wave makes this urgent and hard for the same reason: the people who hold the tribal knowledge are the ones leaving, and their knowledge is not in any scannable document."
+  },
+  "skip_reason": null
+}
