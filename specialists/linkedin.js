@@ -1001,6 +1001,45 @@ async function cmdHarvestPeople(postUrl) {
   }
 }
 
+// ─── Subcommand: debug-network (diagnostic) ───────────────────
+// Probes voyager endpoints for People You May Know + per-profile
+// network distance, for the v2 contacts sources.
+async function cmdDebugNetwork(targetPub) {
+  const { browser, ctx } = await newContext();
+  const page = await ctx.newPage();
+  try {
+    await gotoWithRetry(page, BASE + '/feed/');
+    await assertNotChallenged(page);
+    const out = { pymk: [], distance: [] };
+    const pymkCandidates = [
+      '/voyager/api/relationships/peopleYouMayKnow?count=8',
+      '/voyager/api/relationships/peopleYouMayKnow?count=8&q=neptuneFeedRanking',
+      '/voyager/api/relationships/dash/peopleYouMayKnow?count=8',
+    ];
+    for (const c of pymkCandidates) {
+      const r = await voyagerGet(page, c);
+      out.pymk.push({ path: c.slice(0, 70), status: r.status, len: r.text.length, hasMiniProfile: /miniProfile|MiniProfile/.test(r.text), sample: r.status === 200 ? r.text.slice(0, 120) : null });
+      if (r.status === 200 && /miniProfile/i.test(r.text)) { try { fs.writeFileSync('/tmp/pymk.json', r.text); } catch { /* */ } }
+    }
+    const pub = targetPub || 'amprather';
+    const distCandidates = [
+      `/voyager/api/identity/profiles/${pub}/networkinfo`,
+      `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${pub}`,
+    ];
+    for (const c of distCandidates) {
+      const r = await voyagerGet(page, c);
+      const dist = (r.text.match(/"(distance|memberDistance)":\s*(\{[^}]*\}|"[A-Z_0-9]+")/) || [])[0] || (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0] || null;
+      out.distance.push({ path: c.slice(0, 70), status: r.status, len: r.text.length, distanceFound: dist });
+    }
+    emit(out);
+  } catch (e) {
+    if (e.message && /process.exit/.test(e.message)) throw e;
+    die('debug_network_failed', e.message);
+  } finally {
+    await browser.close();
+  }
+}
+
 async function main() {
   const [, , cmd, ...rest] = process.argv;
   const args = parseArgs(rest);
@@ -1013,6 +1052,7 @@ async function main() {
     case 'reply-comment':  await cmdReplyComment(args._[0], args); break;
     case 'my-profile':     await cmdMyProfile(); break;
     case 'harvest-people': await cmdHarvestPeople(args._[0]); break;
+    case 'debug-network':  await cmdDebugNetwork(args._[0]); break;
     default:
       emit({
         ok: false,
