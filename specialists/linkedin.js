@@ -1023,14 +1023,32 @@ async function cmdDebugNetwork(targetPub) {
     }
     const pub = targetPub || 'amprather';
     const distCandidates = [
-      `/voyager/api/identity/profiles/${pub}/networkinfo`,
       `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${pub}`,
+      `/voyager/api/identity/dash/profiles?q=memberIdentity&memberIdentity=${pub}&decorationId=com.linkedin.voyager.dash.deco.identity.profile.WebTopCardCore-6`,
     ];
     for (const c of distCandidates) {
       const r = await voyagerGet(page, c);
-      const dist = (r.text.match(/"(distance|memberDistance)":\s*(\{[^}]*\}|"[A-Z_0-9]+")/) || [])[0] || (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0] || null;
-      out.distance.push({ path: c.slice(0, 70), status: r.status, len: r.text.length, distanceFound: dist });
+      const dist = (r.text.match(/DISTANCE_\d|OUT_OF_NETWORK|SELF/) || [])[0] || null;
+      const hasRel = /memberRelationship|MemberRelationship/.test(r.text);
+      out.distance.push({ path: c.slice(0, 60), status: r.status, len: r.text.length, distanceFound: dist, hasMemberRelationship: hasRel });
     }
+    // Find the real PYMK call by loading the network page + capturing.
+    out.pymkCaptured = [];
+    ctx.on('response', async (resp) => {
+      try {
+        const url = resp.url();
+        if (!/voyager|graphql|rsc-action/.test(url)) return;
+        let body = ''; try { body = await resp.text(); } catch { return; }
+        if (!/MayKnow|peopleYouMayKnow|pymk|FollowRecommend|cohort/i.test(url + body)) return;
+        if (!/miniProfile|fsd_profile|"firstName"/.test(body)) return;
+        out.pymkCaptured.push({ url: url.slice(0, 110), len: body.length, miniProfiles: (body.match(/firstName/g) || []).length });
+        try { fs.writeFileSync('/tmp/pymk.json', body); } catch { /* */ }
+      } catch { /* */ }
+    });
+    await gotoWithRetry(page, BASE + '/mynetwork/grow/').catch(() => {});
+    await page.waitForTimeout(4000);
+    await page.mouse.wheel(0, 2000).catch(() => {});
+    await page.waitForTimeout(3000);
     emit(out);
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
