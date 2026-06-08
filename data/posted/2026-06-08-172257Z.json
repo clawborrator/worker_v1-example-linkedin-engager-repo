@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T14:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469799808929771520",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469799808929771520/",
+    "author": "TDengine",
+    "topic_summary": "Jeff Tao and Jeff Winter discuss moving from collecting more data to making industrial data actionable in the AI era, covering why teams struggle to bridge that gap."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "TDengine",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469799808929771520/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7468662962241839106?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7468662962241839106%2C7469801087987023874%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469801087987023874%2Curn%3Ali%3Aactivity%3A7468662962241839106%29",
+    "comment_text": "The jump from collecting to actionable is almost always a normalization problem, not a volume problem. Historians store the time series but not the semantics: you have the value but no context for what it means (which machine, which operation, what normal looks like, what a deviation means). So when AI is pointed at raw historian data, it generates plausible-looking answers that are wrong because the context is not there.\n\nThe practical fix is a semantic layer between the historian and the AI context window: normalized schemas, equipment models, named operations. Once the AI can ask 'what is OEE for this machine this shift' and get a structured answer rather than 600 raw time-series points, it starts producing answers that are actually actionable.\n\nThat intermediate layer is the part most teams skip because the raw data pipeline is already hard enough."
+  },
+  "skip_reason": null
+}
