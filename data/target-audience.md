@@ -1,53 +1,62 @@
-# Target audience (derived 2026-06-08 from Chris Misztur's profile)
+# Target audience (derived 2026-06-08 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
 
 ## Who the operator is
 
-Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized APIs, and Tracebook for AI-powered OEM tech support. 25 years inside manufacturing IT/OT before going independent.
+Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers with neuromorphic anomaly detection, i3X for turning plant data into standardized semantic APIs (including AI/MCP access), Tracebook for agentic AI tech support for machine OEMs, and AI/LLM implementation services (local and cloud, RAG-grounded in plant documentation). 25+ years inside manufacturing IT/OT before going independent. Greater Chicago Area.
 
 ## Engage with
 
 **Roles / titles**
-- Controls engineers, automation engineers, electrical engineers on the plant floor
+- Controls engineers, automation engineers, PLC programmers on the plant floor
 - Plant IT managers and OT/IT convergence leads
-- Manufacturing engineers, process engineers who are actually connecting machines
-- Operations managers, plant managers who own uptime and utilization numbers
-- Digital transformation leads / Industry 4.0 program managers inside manufacturers
-- Machine OEM founders / product engineers (Tracebook audience)
-- Systems integrators (SIs) and automation consultants who deploy IIoT for manufacturers
+- Manufacturing engineers, process engineers, reliability/maintenance engineers who deal with machine connectivity day-to-day
+- Operations managers, plant managers, VP/Directors of Operations who own uptime and utilization numbers
+- Digital transformation leads, Industry 4.0 / smart manufacturing program managers inside manufacturers
+- Machine OEM founders, CEOs, product engineers, and field service engineers (Tracebook audience)
+- Systems integrators (SIs) and automation consultants who deploy IIoT solutions for manufacturers
 - Supply chain and procurement ops leads (Angel Parts angle)
+- IT directors at manufacturers who sit at the IT/OT boundary
 
 **Industries / company types**
-- Discrete manufacturers: automotive and auto suppliers, aerospace, metal fabrication, CNC job shops, plastics, consumer goods, electronics assembly
-- Process-adjacent discrete: food and beverage, bakeries, packaging, fluid systems
-- Machine OEMs and capital equipment builders who support equipment in the field
+- Discrete manufacturers: automotive and auto suppliers (Tier 1/2/3), aerospace, metal fabrication, metal stamping and forming, CNC job shops, plastics, consumer goods, electronics assembly
+- Process-adjacent discrete: food and beverage, bakeries and food processing, packaging, fluid systems
+- Machine OEMs and capital equipment builders (grinding machines, CNC, press, packaging, labeling equipment)
+- Defense contractors with secure OT/IT requirements
 - SIs and automation consultancies doing brownfield IIoT deployments
+- Industrial equipment labeling and coding companies (middleware integration)
 
 **Seniority band**
-- Individual contributors (engineers, technicians) who evaluate and implement
-- Mid-level operations and IT managers who own the problem and approve spend
-- Owners/founders of small-to-mid manufacturers (the "growing faster than I can hire" buyer)
+- Individual contributors (engineers, technicians) who evaluate and implement: these are the people who find the problem and test the solution
+- Mid-level operations and IT managers who own the problem and approve spend on small capital projects
+- Owners and founders of small-to-mid manufacturers facing growing pains ("growing faster than we can hire")
+- Senior leaders at SMB and mid-market manufacturers evaluating broader Industry 4.0 investment
 
 **Topics where Chris adds credible signal**
-- PLC connectivity and brownfield machine data collection (especially non-invasive / signal-level approaches)
-- Protocol translation: Fanuc, Siemens S7, Allen-Bradley/EtherNet-IP, Modbus, OPC-UA, MTConnect, SparkplugB
-- MQTT and industrial data pipelines
-- OEE, machine utilization, and real-time floor visibility
-- IT/OT convergence and network architecture for manufacturers
-- EDI and business system integration (ERP, WMS)
-- Sensor selection and industrial sensor connectivity
-- Data ownership and avoiding proprietary lock-in in IIoT deployments
-- AI applied to manufacturing: predictive maintenance, AI tech support for OEMs
-- Industry 4.0 / digital transformation strategy grounded in implementation reality
+- Brownfield machine connectivity without modifying PLC programs: read at the signal level (4-20mA, proximity sensors, discrete inputs), publish over MQTT, capture utilization and cycle state without touching ladder logic
+- Protocol translation in practice: Fanuc CNC/robots, Siemens S7, Allen-Bradley/EtherNet-IP, Beckhoff ADS, Yaskawa, Haas, Modbus, OPC-UA, MTConnect, SparkplugB
+- Edge architecture for industrial data: why data stays at the edge, latency trade-offs, fleet management across distributed sites
+- MQTT brokers and SparkplugB payloads in production OT environments
+- IT/OT network convergence: VLANs, segmentation, security for connected plant equipment
+- OEE, machine utilization, and cycle counting from raw sensor signals
+- EDI integration and business system automation (SPS Commerce, ERP, WMS)
+- Sensor selection and sensor wiring for industrial environments
+- Data ownership, open standards, and avoiding proprietary lock-in
+- AI applied to industrial data: semantic layers and normalized models as a prerequisite before AI agents can reason reliably over plant data; local LLM deployment and RAG for manufacturing SOPs and tribal knowledge
+- AI tech support for machine OEMs: agentic systems trained on manuals and resolved tickets
+- FDA traceability and SSCC labeling for food manufacturers
+- Neuromorphic / continuous learning for anomaly detection on industrial data streams
+- Industry 4.0 strategy from someone who has implemented it, not just designed it
 
 ## Skip
-- Pure enterprise software / SaaS with no manufacturing floor exposure
+- Pure enterprise software / SaaS with no manufacturing or OT floor exposure
 - Generic leadership and management content with no manufacturing angle
-- Financial services, healthcare, retail, logistics, professional services
+- Financial services, healthcare, retail, logistics, professional services, real estate
 - Recruiting and HR content
-- Motivational quote posts and thought-leader-bait with no specific technical or operational content
+- Motivational quotes and thought-leader-bait with no specific technical or operational content
 - M&A announcements and investment news unrelated to industrial tech
-- Sponsored / promoted posts
+- Robotics content focused purely on arms and manipulation without an IIoT/data angle
+- Sponsored / promoted posts (is_promoted: true)
 - Posts authored by Chris himself
 
 ## Voice fit
-Sound like a practitioner who has stood on the plant floor and connected the machine, not a vendor who sells platforms. Specific over general: name the protocol, the sensor type, the architecture decision. The audience distrusts hype and respects people who know what actually fails in brownfield environments.
+Sound like a practitioner who has personally wired the sensor, configured the broker, and negotiated the IT/OT VLAN policy inside a running plant. Name the protocol, the specific sensor type, the architecture decision. The audience (controls engineers, plant IT leads, OEM engineers) distrusts buzzwords and respects people who know what actually fails in brownfield environments and why.
