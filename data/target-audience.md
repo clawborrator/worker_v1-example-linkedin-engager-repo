@@ -1,4 +1,4 @@
-# Target audience (derived 2026-06-08 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
+# Target audience (re-derived 2026-06-08 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
 
 ## Who the operator is
 Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized semantic APIs (including AI/MCP access), Tracebook for agentic AI tech support for machine OEMs, and AI/LLM implementation services grounded in plant documentation. 25+ years inside manufacturing IT/OT before going independent. Greater Chicago Area.
