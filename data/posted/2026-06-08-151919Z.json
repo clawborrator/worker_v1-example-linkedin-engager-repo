@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-08T13:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7469720392199372800",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469720392199372800/",
+    "author": "Jacob Beningo",
+    "topic_summary": "Senior embedded systems engineers become more valuable, not less, in the age of AI because experience provides the judgment to verify and question what AI generates."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Jacob Beningo",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469720392199372800/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469720392199372800?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7469720392199372800%2C7469769963101167618%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287469769963101167618%2Curn%3Ali%3Aactivity%3A7469720392199372800%29",
+    "comment_text": "In OT and industrial automation, the skill gap is even wider. AI can write a working Modbus TCP client in two minutes. It cannot tell you that this particular machine's holding register 40015 returns garbage if you poll faster than once per 200ms, or that the vendor documentation doesn't mention it because it only applies to firmware revision B, which is on every unit shipped since 2019. You find that by watching the machine fail and reasoning backward.\n\nThe verification problem is harder too. There is no test suite you can run against a Siemens S7 managing a live press operation. You validate by interrogating the machine under production load, with someone standing next to the emergency stop. AI accelerates the boilerplate. It cannot replace the engineer who knows what to ask before going live."
+  },
+  "skip_reason": null
+}
