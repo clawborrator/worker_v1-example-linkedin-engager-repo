@@ -989,8 +989,14 @@ async function cmdMyProfile() {
           for (const link of links) {
             if (crawlBudget <= 0) break;
             try {
-              const p = await getText(link, Math.min(PER_PAGE, crawlBudget));
-              if (p.ok && p.text.trim()) { sup.crawled.push({ url: link, content: p.text }); crawlBudget -= p.text.length; }
+              // Render in the browser (executes JS) so dynamic/SPA sites
+              // give real text, not an empty shell. A raw fetch would
+              // only return boilerplate for Next.js-style pages.
+              await page.goto(link, { waitUntil: 'domcontentloaded', timeout: 20_000 }).catch(() => {});
+              await page.waitForTimeout(1_800);
+              const txt = ((await page.evaluate(() => document.querySelector('main')?.innerText || document.body?.innerText || '').catch(() => '')) || '')
+                .replace(/\s+/g, ' ').trim().slice(0, Math.min(PER_PAGE, crawlBudget));
+              if (txt.length > 200) { sup.crawled.push({ url: link, content: txt }); crawlBudget -= txt.length; }
             } catch { /* skip a bad link */ }
           }
         }
