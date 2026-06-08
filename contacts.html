@@ -28,11 +28,10 @@
     padding:3px 9px;font-size:12px;color:var(--dim);cursor:pointer}
   .chip.on{color:var(--txt);border-color:var(--accent2)}
   .chip b{color:var(--txt);font-weight:600}
-  #loader{margin:60px auto;max-width:520px;text-align:center;padding:40px;
-    border:2px dashed var(--line);border-radius:14px;background:var(--card)}
-  #loader.drag{border-color:var(--accent2);background:var(--card2)}
-  #loader h2{margin:0 0 6px;font-size:17px}
-  #loader p{color:var(--dim);margin:6px 0 18px}
+  #loader{margin:90px auto;max-width:420px;text-align:center;padding:30px;color:var(--dim)}
+  .spinner{width:38px;height:38px;border:3px solid var(--line);border-top-color:var(--accent2);
+    border-radius:50%;margin:0 auto 16px;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
   .btn{background:var(--accent);color:#fff;border:none;border-radius:8px;
     padding:10px 18px;font-size:14px;cursor:pointer}
   .btn:hover{background:#0959aa}
@@ -91,18 +90,14 @@
       <button data-f="1">1st</button>
       <button data-f="2">2nd</button>
       <button data-f="cold">Cold</button>
-      <button class="btn" id="reload" style="display:none">Load folder</button>
     </div>
   </div>
   <div class="companies" id="companies"></div>
 </header>
 
 <div id="loader">
-  <h2>Load your contacts</h2>
-  <p>Drop the <code>data</code> folder here, or pick it. The page reads
-     every <code>data/contacts/*.json</code> shortlist.</p>
-  <button class="btn" id="pick">Choose data folder</button>
-  <input id="dir" type="file" webkitdirectory directory multiple class="hidden">
+  <div class="spinner"></div>
+  <p id="loadstatus">Loading contacts…</p>
 </div>
 
 <div id="grid"></div>
@@ -170,7 +165,6 @@ function ingest(files){
 
 function render(){
   loader.classList.add('hidden');
-  $('#reload').style.display='inline-block';
   const shown = CONTACTS.filter(c=>{
     if(COMPANY && c.companyKey!==COMPANY) return false;
     if(BUCKET!=='all' && c.bucket!==BUCKET) return false;
@@ -238,57 +232,29 @@ grid.addEventListener('click', async e=>{
   try{ await navigator.clipboard.writeText(b.dataset.t); }catch(_){}
   b.textContent='copied'; b.classList.add('done'); setTimeout(()=>{b.textContent='copy';b.classList.remove('done')},1400);
 });
-$('#reload').addEventListener('click',()=>$('#dir').click());
-
-// ---- data loading ----
-async function readFileList(fileList){
-  const out = [];
-  for(const f of fileList){
-    const path = f.webkitRelativePath || f.name;
-    if(!/contacts\/.*\.json$/i.test(path) && !/contacts.*\.json$/i.test(f.name)) continue;
-    if(/surfaced/i.test(f.name)) continue;
-    out.push({ name:f.name, text: await f.text() });
-  }
-  return out;
-}
-$('#pick').addEventListener('click',()=>$('#dir').click());
-$('#dir').addEventListener('change', async e=>{
-  const files = await readFileList(e.target.files);
-  if(files.length) ingest(files); else alert('No data/contacts/*.json files found in that folder.');
-});
-
-// drag + drop of files or a folder
-async function walk(entry, acc){
-  if(entry.isFile){ await new Promise(r=>entry.file(async f=>{
-    if(/\.json$/i.test(f.name) && /contact/i.test(entry.fullPath) && !/surfaced/i.test(f.name))
-      acc.push({name:f.name, text:await f.text()}); r();
-  })); }
-  else if(entry.isDirectory){ const rd=entry.createReader();
-    await new Promise(r=>rd.readEntries(async ents=>{ for(const en of ents) await walk(en,acc); r(); })); }
-}
-['dragover','dragenter'].forEach(ev=>loader.addEventListener(ev,e=>{e.preventDefault();loader.classList.add('drag')}));
-['dragleave','drop'].forEach(ev=>loader.addEventListener(ev,e=>{e.preventDefault();loader.classList.remove('drag')}));
-loader.addEventListener('drop', async e=>{
-  const items=[...e.dataTransfer.items].map(i=>i.webkitGetAsEntry&&i.webkitGetAsEntry()).filter(Boolean);
-  const acc=[]; for(const it of items) await walk(it,acc);
-  if(acc.length) ingest(acc);
-  else { const acc2 = await readFileList(e.dataTransfer.files); if(acc2.length) ingest(acc2); else alert('Drop the data folder (or the contacts JSON files).'); }
-});
-
-// Auto-load when served (GitHub Pages / any http). file:// can't fetch,
-// so it falls through to the drop/pick loader. GitHub Pages can't list a
-// directory, so we try a manifest first, then probe recent dated files.
+// ---- data loading (served from GitHub Pages / any http) ----
+// GitHub Pages can't list a directory, so we try a manifest first, then
+// probe recent dated files. The loader shows a spinner + live progress
+// until the cards render.
+const status = (t) => { const el = $('#loadstatus'); if (el) el.textContent = t; };
 (async()=>{
-  if(location.protocol==='file:') return;
   const seen=new Set(), files=[];
   const add=async fn=>{ if(seen.has(fn))return; seen.add(fn);
-    try{ const r=await fetch('data/contacts/'+fn,{cache:'no-store'}); if(r.ok) files.push({name:fn,text:await r.text()});}catch(_){}};
-  // Merge both sources so a stale manifest never hides new files:
+    try{ const r=await fetch('data/contacts/'+fn,{cache:'no-store'}); if(r.ok){ files.push({name:fn,text:await r.text()}); status(`Loading contacts… ${files.length} day${files.length===1?'':'s'} found`); } }catch(_){}};
+  status('Loading contacts…');
   // 1. manifest (data/contacts/index.json, complete history if maintained)
   try{ const r=await fetch('data/contacts/index.json',{cache:'no-store'}); if(r.ok) for(const fn of await r.json()) await add(fn);}catch(_){}
-  // 2. probe the last 90 dated days (catches new files with no maintenance)
-  const t=Date.now(); for(let i=0;i<90;i++) await add(new Date(t-i*864e5).toISOString().slice(0,10)+'.json');
-  if(files.length) ingest(files);
+  // 2. probe the last 90 dated days, concurrently (catches new files even
+  // if the manifest is stale; fast since most are 404s on a CDN).
+  const t=Date.now();
+  await Promise.all(Array.from({length:90},(_,i)=>add(new Date(t-i*864e5).toISOString().slice(0,10)+'.json')));
+  if(files.length){ ingest(files); }
+  else {
+    const sp = $('.spinner'); if(sp) sp.style.display='none'; // not loading anymore
+    status(location.protocol==='file:'
+      ? 'Open this page over http (e.g. GitHub Pages) so it can load the contacts data.'
+      : 'No contacts found yet. They appear here after the first contacts cycle runs.');
+  }
 })();
 </script>
 </body>
