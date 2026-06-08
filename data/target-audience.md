@@ -1,8 +1,7 @@
 # Target audience (derived 2026-06-08 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
 
 ## Who the operator is
-
-Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers with neuromorphic anomaly detection, i3X for turning plant data into standardized semantic APIs (including AI/MCP access), Tracebook for agentic AI tech support for machine OEMs, and AI/LLM implementation services (local and cloud, RAG-grounded in plant documentation). 25+ years inside manufacturing IT/OT before going independent. Greater Chicago Area.
+Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized semantic APIs (including AI/MCP access), Tracebook for agentic AI tech support for machine OEMs, and AI/LLM implementation services grounded in plant documentation. 25+ years inside manufacturing IT/OT before going independent. Greater Chicago Area.
 
 ## Engage with
 
@@ -26,9 +25,9 @@ Chris Misztur builds industrial IoT connectivity and data infrastructure for man
 - Industrial equipment labeling and coding companies (middleware integration)
 
 **Seniority band**
-- Individual contributors (engineers, technicians) who evaluate and implement: these are the people who find the problem and test the solution
-- Mid-level operations and IT managers who own the problem and approve spend on small capital projects
-- Owners and founders of small-to-mid manufacturers facing growing pains ("growing faster than we can hire")
+- Individual contributors (engineers, technicians) who evaluate and implement the solution
+- Mid-level operations and IT managers who own the problem and approve small capital projects
+- Owners and founders of small-to-mid manufacturers facing growing pains
 - Senior leaders at SMB and mid-market manufacturers evaluating broader Industry 4.0 investment
 
 **Topics where Chris adds credible signal**
@@ -39,12 +38,11 @@ Chris Misztur builds industrial IoT connectivity and data infrastructure for man
 - IT/OT network convergence: VLANs, segmentation, security for connected plant equipment
 - OEE, machine utilization, and cycle counting from raw sensor signals
 - EDI integration and business system automation (SPS Commerce, ERP, WMS)
-- Sensor selection and sensor wiring for industrial environments
+- Sensor selection and wiring for industrial environments
 - Data ownership, open standards, and avoiding proprietary lock-in
 - AI applied to industrial data: semantic layers and normalized models as a prerequisite before AI agents can reason reliably over plant data; local LLM deployment and RAG for manufacturing SOPs and tribal knowledge
 - AI tech support for machine OEMs: agentic systems trained on manuals and resolved tickets
 - FDA traceability and SSCC labeling for food manufacturers
-- Neuromorphic / continuous learning for anomaly detection on industrial data streams
 - Industry 4.0 strategy from someone who has implemented it, not just designed it
 
 ## Skip
