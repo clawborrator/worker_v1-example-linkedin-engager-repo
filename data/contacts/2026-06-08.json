@@ -232,5 +232,57 @@
     "why_now": "Sells robotic integration to manufacturers. After the robotic cell is installed, clients ask about machine data. DIME speaks native robot controller protocols (Fanuc, Yaskawa) and SHARC handles legacy sensor-level monitoring on the same line.",
     "signal": "Commented on Jake Hall smart manufacturing post: Can not wait to hear this entire interview! Move the manufacturing not the product.",
     "suggested_opener": "The 'move the manufacturing, not the product' framing: after your robotic cells go in, are clients asking for machine data off the robot controllers, or does that question usually come up during the sales process?"
+  },
+  {
+    "name": "Albert Fernandez",
+    "headline": "Creative IT/OT Systems Engineer | Windows • M365 • Networking • Virtualization • SQL • SCADA | I turn cursed stacks into working systems",
+    "profile_url": "https://www.linkedin.com/in/albert-fernandez-it-email-solutions/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782345600&v=beta&t=hBy7sBJf_NobbCROHrr-Jl8rSm2_H-825fJGq5ahj1Q",
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "Process & Controls Engineering LLC / FAST One Solutions",
+    "icp_read": "IT Specialist at Process & Controls Engineering (controls engineering firm) and founder of FAST One Solutions (fractional IT for industrial/automation companies). Implements virtualized SCADA, historian systems, WIN911, Studio 5000, IT/OT cybersecurity. Engineering Services, 2-10 employees. Warm 1st-degree. His clients are the manufacturers who need connectivity.",
+    "why_now": "1st-degree connection, active practitioner doing the exact IT/OT integration work Chris has done for 25+ years. At a controls engineering firm whose clients are manufacturers. His humor on the OT SCADA CON post shows genuine engagement, not just lurking. An opener from Chris lands peer-to-peer.",
+    "signal": "Commented on OT SCADA CON Monday post: \"Ears on, music up, ticket backlog open, try not to cry about it, slay Happy Monday!\"",
+    "suggested_opener": "The Monday SCADA ticket backlog: is it more configuration drift on the historian side or alarm flood management eating the mornings?"
+  },
+  {
+    "name": "Christopher Bommarito",
+    "headline": "President @ Castor Engineering | 40 Under 40 Crains Detroit | MBA | Manufacturing Automation Expert",
+    "profile_url": "https://www.linkedin.com/in/cbommarito/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782345600&v=beta&t=hBy7sBJf_NobbCROHrr-Jl8rSm2_H-825fJGq5ahj1Q",
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "channel",
+    "company": "Castor Engineering",
+    "icp_read": "SI/automation integrator (Birmingham MI, 11-50 employees, founded 2009). Serves Boeing, Toyota, Stellantis, Ford, GM, Hitachi. Growing (actively hiring). Automation Machinery Manufacturing.",
+    "why_now": "Running an automotive/aerospace SI deploying into plants where brownfield connectivity matters. DIME speaks native Fanuc, Yaskawa, Allen-Bradley on the same lines Castor installs cells. Signal is thin (hiring post) but ICP fit at the automotive Tier 1 level is strong.",
+    "signal": "Authored hiring post for ABB robot programmer, noting Castor Engineering is growing rapidly.",
+    "suggested_opener": "Growing fast enough to add another ABB programmer: is this expanding capacity on an existing Castor account or a new customer driving the hire?"
+  },
+  {
+    "name": "Travis Cox",
+    "headline": "Ignition Expert | Industry 4.0 | Home Automation Enthusiast",
+    "profile_url": "https://www.linkedin.com/in/traviscox-automation/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782345600&v=beta&t=hBy7sBJf_NobbCROHrr-Jl8rSm2_H-825fJGq5ahj1Q",
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "vendor",
+    "company": "Inductive Automation",
+    "icp_read": "Chief Technology Evangelist at Inductive Automation (Ignition SCADA, 201-500 employees, Folsom CA). 21 years at Inductive Automation, formerly Co-Director of Sales Engineering. Deep expertise in Ignition, IIoT, OPC-UA, MQTT, SparkplugB, edge computing. Vendor (SCADA platform); potential ecosystem partner as DIME and SHARC feed data directly into Ignition.",
+    "why_now": "His post on Ignition 8.3 standardizing OT architecture for regulated manufacturers and building toward AI-driven operations maps directly onto what DIME and SHARC enable upstream of Ignition. Potential co-presentation or ecosystem partnership at Automate and similar events.",
+    "signal": "Authored post about joining NNIT Digital Manufacturing Division for a webinar on Ignition 8.3 helping regulated manufacturers standardize OT architecture and lay AI groundwork.",
+    "suggested_opener": "The OT architecture standardization for regulated environments is where most sites still run a historian patchwork pre-dating the LIMS by a decade: are the Ignition 8.3 deployments with NNIT going primarily greenfield or migrating from OSIsoft and Wonderware historians?"
+  },
+  {
+    "name": "Matt Kurantowicz",
+    "headline": "Building the future of industrial automation with AI | Educator | Founder | Innovator in Industry 4.0",
+    "profile_url": "https://www.linkedin.com/in/matt-kurantowicz/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782345600&v=beta&t=hBy7sBJf_NobbCROHrr-Jl8rSm2_H-825fJGq5ahj1Q",
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "vendor",
+    "company": "ControlByte",
+    "icp_read": "Founder of ControlByte (Warsaw, remote, 2-10 employees, Automation Machinery Manufacturing, founded 2020). Content creator/educator in industrial automation reaching 100k+ annual views. Live Siemens S7-1200 + Sinamics servo hardware at Automate show. Prior: energy project engineer and technical support at WAGO. Vendor (education platform for automation engineers).",
+    "why_now": "ControlByte curriculum covers Siemens TIA Portal, AI for automation, and OT cybersecurity, the same protocols and topics where Chris has deep practical case studies. Content partnership angle: Chris has factory-floor SHARC/DIME stories that would resonate with the ControlByte practitioner audience.",
+    "signal": "Authored post about ControlByte at Anexpo with live Siemens S7-1200 + Sinamics servo hardware, curriculum covering PLC, AI for automation, and OT cybersecurity.",
+    "suggested_opener": "The AI + OT cybersecurity combination in one curriculum: is the cybersecurity track driven by student demand or by what employers are specifying when they hire ControlByte graduates?"
   }
 ]
