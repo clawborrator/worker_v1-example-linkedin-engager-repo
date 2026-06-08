@@ -1,28 +1,49 @@
 # Target audience (derived 2026-06-08 from Chris Misztur's profile)
 
 ## Who the operator is
-Industrial IoT founder and practitioner: 20+ years in discrete manufacturing (automotive supply chain), builder of SHARC hardware (sensor-to-MQTT edge device), co-founder of Mr.IIoT, Data In Motion Enterprise, and Angel Parts. Credibility comes from hands-on machine connectivity work on brownfield equipment, two patents, and the lived experience of both running plant IT and building commercial IIoT products.
+Chris Misztur is a hands-on IIoT/Industry 4.0 builder with 25+ years on factory floors. He founded Mr. IIoT (SHARC sensor-to-MQTT hardware for brownfield machine connectivity), co-founded Data In Motion Enterprise (industrial transformation software/services) and Angel Parts (supply chain software). His credibility is practitioner-level: he did digital transformation from inside an auto-parts supplier before productizing it.
 
 ## Engage with
-- **Roles / titles**: controls engineers, manufacturing engineers, plant IT/OT leads, IIoT architects, automation engineers, production/operations managers, digital transformation leads, machine builder (OEM) engineers, system integrators
-- **Industries / company types**: discrete manufacturing (automotive, metal fabrication, plastics, contract manufacturing), OEM machine builders, industrial system integrators, supply chain software for manufacturing
-- **Seniority band**: individual contributors (engineers) through director/VP of operations or IT; founders/CEOs of manufacturing SMBs
-- **Topics where Chris adds real signal**:
-  - Legacy machine connectivity (PLC bypass, 4-20mA/proximity sensor wiring, MQTT edge publishing)
-  - Industrial protocols: MQTT, OPC-UA, SparkplugB, MTConnect
-  - IIoT hardware design tradeoffs (PoE vs 24Vdc, wired vs Wi-Fi, edge vs cloud)
-  - Brownfield Industry 4.0 rollouts in running production environments
-  - OEE, machine utilization, production counting, cycle-state capture
-  - Supply chain visibility and scheduling in manufacturing
-  - Building and selling IIoT hardware/software as a startup
+
+**Roles / titles**
+- Controls engineers, automation engineers, electrical engineers on plant floors
+- Manufacturing engineers, process engineers, production managers
+- IT/OT managers, plant IT leads, operational technology managers
+- VP/Director of Operations, VP/Director of Manufacturing (SMB to mid-market)
+- Maintenance managers, reliability engineers
+- IIoT/Industry 4.0 project leads at manufacturers
+- Systems Integrators (SIs) serving discrete manufacturers
+- IoT solution architects and product managers at industrial platform vendors
+
+**Industries / company types**
+- Discrete manufacturing: automotive Tier 1/2/3, metal fabrication, stamping, machining, plastics, electronics assembly
+- Contract manufacturers and job shops
+- OEMs with factory operations
+- Industrial SIs and value-added resellers serving manufacturers
+- Industrial IoT hardware/software vendors
+
+**Seniority band**
+- Practitioners to senior managers (the people who actually deploy or approve small capital projects)
+- C-suite at smaller manufacturers (50-500 employees) who wear many hats
+
+**Topics where Chris adds credible signal**
+- Brownfield machine connectivity: legacy PLCs, sensors, bypassing ladder logic, MQTT-over-Ethernet/WiFi
+- IIoT sensor hardware: 4-20mA, 0-10V, discrete I/O, SHARC-class adapters
+- Machine utilization and OEE data collection without PLC access or integration
+- Industry 4.0 / digital transformation practicalities in discrete manufacturing
+- Manufacturing data architecture: ERP-MES-machine-floor integration
+- The gap between IIoT hype and plant-floor reality (implementation friction, brownfield constraints)
+- Supply chain visibility and parts/inventory management
+- The 5C IIoT framework (Connect, Collect, Combine, Compute, Convey) from real deployments
 
 ## Skip
-- Generic leadership/mindset/motivational content unrelated to industrial ops
-- Non-manufacturing verticals (healthcare IT, fintech, enterprise SaaS without a manufacturing angle)
-- M&A, venture capital, recruiting posts
-- Academic or research posts with no practical manufacturing application
-- Automotive/EV posts focused on vehicles rather than manufacturing operations
-- High comment count posts (>200) where a reply would be buried
+- Generic leadership, career advice, motivational content
+- Pure enterprise software (SaaS, cloud-first, digital marketing) with no manufacturing angle
+- Process industries (oil and gas, pharma, chemical) unless directly relevant to discrete mfg parallels
+- Finance, HR, recruiting posts
+- High-follower "thought leader" engagement bait (emoji lists, hook-and-reveal, "agree?" posts)
+- Sponsored / promoted posts
+- Posts authored by Chris himself
 
 ## Voice fit
-Practitioner-first, specifics-heavy: cite actual protocols, hardware constraints, or operational tradeoffs drawn from factory floor and product-development experience.
+Sound like a practitioner who has wired sensors to brownfield machines and pushed the data upstream, not a consultant selling a transformation roadmap.
