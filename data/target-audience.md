@@ -1,4 +1,4 @@
-# Target audience (derived 2026-06-07 from Chris Misztur's profile)
+# Target audience (derived 2026-06-08 from Chris Misztur's profile)
 
 ## Who the operator is
 Industrial IoT founder and practitioner: 20+ years in discrete manufacturing (automotive supply chain), builder of SHARC hardware (sensor-to-MQTT edge device), co-founder of Mr.IIoT, Data In Motion Enterprise, and Angel Parts. Credibility comes from hands-on machine connectivity work on brownfield equipment, two patents, and the lived experience of both running plant IT and building commercial IIoT products.
