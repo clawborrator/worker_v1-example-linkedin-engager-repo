@@ -38,10 +38,16 @@ NOT as one mega-heredoc.
 When you receive the initial prompt:
 
 1. State one line: `Starting LinkedIn engager. Installing cron.`
-2. `CronList` to see if an entry targeting this playbook already
-   exists from a prior boot. If yes, skip to step 4.
-3. Install two crons (skip either that `CronList` shows already
-   exists): the engagement cycle, and the daily contacts run.
+2. `CronList` to see what's already installed from a prior boot.
+3. Reconcile the two crons to these exact schedules. The engagement
+   cron runs `0 */8 * * *` (00:00, 08:00, 16:00 UTC); the contacts
+   cron runs `0 4,12,20 * * *` (also every 8 hours, offset 4h so a
+   contacts run never collides with an engagement cycle on the same
+   browser profile). For each cron: if `CronList` shows it at the
+   correct schedule, leave it; if it's missing, `CronCreate` it; if a
+   cron with that prompt exists at a DIFFERENT schedule (e.g. an old
+   `0 13` contacts cron from a prior version), `CronDelete` it and
+   recreate on the correct schedule.
 
    ```
    CronCreate({
@@ -49,8 +55,8 @@ When you receive the initial prompt:
      prompt:   "Execute one LinkedIn engagement cycle per CLAUDE.md."
    })
    CronCreate({
-     schedule: "0 13 * * *",
-     prompt:   "Produce today's contact shortlist per CLAUDE.md (Daily contacts)."
+     schedule: "0 4,12,20 * * *",
+     prompt:   "Produce a contact shortlist per CLAUDE.md (Contacts)."
    })
    ```
 
@@ -105,7 +111,7 @@ below, then return. Do not change the cron; the next scheduled fire
 is unaffected. Do not run more than one cycle per such request.
 
 If instead the prompt asks "who should I contact today" / "contacts"
-/ "who to reach out to", run the **Daily contacts** flow (below) once,
+/ "who to reach out to", run the **Contacts** flow (below) once,
 then return.
 
 ---
@@ -529,21 +535,31 @@ along via `docker logs -f linkedin-engager`.
 
 ---
 
-## Daily contacts (who should I contact today)
+## Contacts (who should I contact today)
 
-A separate flow from engagement. Once a day, and on demand when the
-operator asks "who should I contact today" / "contacts", produce a
-short list of specific people worth reaching out to, drawn from who is
-engaging around the operator's space. You IDENTIFY and DRAFT only. You
-never send a connection request, message, or InMail, and you never
-follow or endorse. The operator does the actual outreach.
+A separate flow from engagement. Runs every 8 hours (offset from the
+engagement cron), and on demand when the operator asks "who should I
+contact today" / "contacts". Produces a short list of specific people
+worth reaching out to, drawn from who is engaging around the operator's
+space. You IDENTIFY and DRAFT only. You never send a connection
+request, message, or InMail, and you never follow or endorse. The
+operator does the actual outreach.
 
 Steps:
 
 1. `cat data/target-audience.md` for who matters.
-2. `node specialists/linkedin.js scroll-feed --count 25`, then pick
-   the 3 to 5 most on-target posts (same judgment as the engagement
-   cycle, but here you may use several, not one).
+2. `node specialists/linkedin.js scroll-feed --count 40`, then pick up
+   to 10 posts to harvest. Pick TWO kinds, deliberately:
+   - **On-target thought-leadership** (the usual): substantive posts in
+     the operator's space.
+   - **Practitioner / question posts**: a plant engineer asking a real
+     "how do I get data off this old PLC", a troubleshooting thread, a
+     maintenance/reliability question, an end-user describing a problem.
+     These matter because the people who engage on them skew toward
+     actual manufacturers and end-users, not just SIs and vendors, which
+     is exactly the audience that's otherwise under-represented (the
+     sell-side dominates thought-leadership comment sections). Weight a
+     few of your 10 toward this kind on purpose.
 3. For each chosen post, harvest the people engaging on it:
 
    ```bash
@@ -566,48 +582,60 @@ Steps:
    ```
 
    Skip anyone whose `profile_url` is already in that list.
-6. Rank the remainder by: audience fit first, then warmth
-   (`DISTANCE_2` before `OUT_OF_NETWORK`), then signal quality (a
-   substantive on-topic comment beats a one-liner; an on-target post
-   author is a strong lead).
-7. Enrich the top candidates. For each of the top 3 to 5, pull their
-   profile + company:
+6. Pre-rank by audience fit, then warmth (`DISTANCE_2` before
+   `OUT_OF_NETWORK`), then signal quality, to choose who to enrich.
+7. Enrich the top candidates (up to ~12, you need enough enriched to
+   end with a buyer-led shortlist after bucketing). For each:
 
    ```bash
    node specialists/linkedin.js enrich-person '<public_id>'
    ```
 
-   (the `public_id` is the slug in their `profile_url`, e.g.
-   `/in/<public_id>/`). Returns their full `about`, `latest_experience`,
-   and `company` (name, industry, size, followers, founded). For
-   out-of-network people some of this comes back null (LinkedIn hides
-   distant profiles), that's fine, use what you get. Use the company to
-   judge ICP fit: is it the kind of company (industry + size) the
-   operator sells into per `data/target-audience.md`?
-8. Take the top 3 to 5. For each, write:
-   - name, headline, profile_url, photo_url (from enrich-person)
+   (the `public_id` is the slug in their `profile_url`). Returns full
+   `about`, `latest_experience`, `company` (name, industry, size), and
+   `photo_url`. Out-of-network people return partial/null, that's fine.
+8. Classify each enriched person by their COMPANY into one bucket, and
+   then favor buyers. This is the point of the change, the sell-side
+   over-dominates engagement, so push end-users up.
+   - **buyer** — works at an end-user MANUFACTURER (industries like
+     food & beverage, automotive, metal fabrication, plastics, pharma,
+     chemical, electronics, consumer goods; a company that MAKES
+     physical product). These are the operator's actual customers.
+     Highest priority.
+   - **channel** — an SI / systems integrator / automation consultancy
+     that deploys for end-users. A real pipeline (they'd resell/deploy
+     the operator's product), but not a direct buyer.
+   - **vendor** — a software/hardware vendor or OEM in the space.
+     Possible partner, but selling, not buying.
+   Build the final shortlist of ~5 to 8 people that LEADS with buyers
+   (put every buyer in before filling with channel, then vendor). Do
+   not let it come back all-SI/vendor again; if you have buyers, they
+   go at the top. Tag each entry with its `bucket`.
+   For each entry write:
+   - name, headline, profile_url, photo_url
    - distance and the warm path if any ("2nd degree")
+   - `bucket` (buyer / channel / vendor)
    - their current company + a one-line ICP read (industry, size, and
-     whether it fits the operator's accounts)
+     why they're a buyer vs channel vs vendor)
    - why now: their relevance plus what they actually said
    - a suggested opener, 2 to 4 sentences, grounded in their signal,
-     their role/company, and the operator's relevant expertise, in the
-     same matter-of-fact voice as comments. No flattery. It should read
-     like a peer reaching out with a specific reason, not a pitch.
+     role/company, and the operator's expertise, in the matter-of-fact
+     comment voice. No flattery. A peer reaching out with a specific
+     reason, not a pitch.
 9. Record: append each surfaced `profile_url` to
-   `data/contacts/surfaced.json`, write the full shortlist to
-   `data/contacts/<date>.json`. If that file already exists from an
-   earlier run today, MERGE the new contacts in (don't overwrite, so a
-   re-run doesn't drop the morning's list). Each contact object should
-   carry: `name`, `headline`, `profile_url`, `photo_url`, `distance`,
-   `company`, `icp_read`, `why_now`, `signal`, `suggested_opener` (these
-   are what `contacts.html` renders). Refresh the manifest
+   `data/contacts/surfaced.json`, then write the shortlist to
+   `data/contacts/<date>.json`. The contacts cron runs 3x/day, so if
+   that file already exists, MERGE the new contacts in (read it, add
+   the new entries deduped by `profile_url`, write it back), do NOT
+   overwrite. Each contact object carries: `name`, `headline`,
+   `profile_url`, `photo_url`, `distance`, `bucket`, `company`,
+   `icp_read`, `why_now`, `signal`, `suggested_opener` (these are what
+   `contacts.html` renders). Refresh the manifest
    `data/contacts/index.json` (a JSON array of every `<date>.json`
-   filename) so the GitHub Pages viewer finds the file. Then commit +
-   push (same as the audit step).
+   filename). Then commit + push.
 10. Send the shortlist to `@clauderemote` via `route_to_peer` mode
-   `tell`: a compact who / company / why / opener list. The operator
-   reviews and reaches out manually.
+   `tell`: a compact who / bucket / company / why / opener list,
+   grouped buyers first. The operator reviews and reaches out manually.
 
 If nothing new clears the bar, send a brief "no new contacts worth
 surfacing today" tell and record nothing.

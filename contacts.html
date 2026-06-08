@@ -51,6 +51,9 @@
   .b1{background:rgba(63,185,80,.16);color:var(--warm1)}
   .b2{background:rgba(210,153,34,.16);color:var(--warm2)}
   .bc{background:rgba(110,118,129,.18);color:var(--cold)}
+  .bk-buyer{background:rgba(63,185,80,.18);color:#56d364;text-transform:capitalize}
+  .bk-channel{background:rgba(56,143,233,.18);color:var(--accent2);text-transform:capitalize}
+  .bk-vendor{background:rgba(110,118,129,.18);color:#adbac7;text-transform:capitalize}
   .headline{color:var(--dim);font-size:13px}
   .company{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
   .company .cn{font-weight:600;display:flex;align-items:center;gap:7px}
@@ -77,10 +80,16 @@
     <h1>LinkedIn Contacts</h1>
     <span class="stat" id="counts"></span>
     <span class="spacer"></span>
+    <div class="filters" id="buckets">
+      <button data-b="all" class="on">All</button>
+      <button data-b="buyer">Buyers</button>
+      <button data-b="channel">Channel</button>
+      <button data-b="vendor">Vendor</button>
+    </div>
     <div class="filters" id="filters">
-      <button data-f="all" class="on">All</button>
-      <button data-f="1">1st degree</button>
-      <button data-f="2">2nd degree</button>
+      <button data-f="all" class="on">All deg</button>
+      <button data-f="1">1st</button>
+      <button data-f="2">2nd</button>
       <button data-f="cold">Cold</button>
       <button class="btn" id="reload" style="display:none">Load folder</button>
     </div>
@@ -101,7 +110,7 @@
 <script>
 const $ = (s,el=document)=>el.querySelector(s);
 const grid = $('#grid'), loader = $('#loader');
-let CONTACTS = [], FILTER = 'all', COMPANY = null;
+let CONTACTS = [], FILTER = 'all', BUCKET = 'all', COMPANY = null;
 
 const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function degree(d){ d=String(d||''); if(/DISTANCE_1|1st/i.test(d))return 1;
@@ -127,6 +136,7 @@ function norm(entry, date){
     distanceRaw: entry.distance || '',
     companyKey: companyName(c),
     company: companyFull(c), companyMeta: companyMeta(c),
+    bucket: (entry.bucket||'').toLowerCase().match(/buyer|channel|vendor/)?.[0] || null,
     icp: entry.icp || entry.icp_read || entry.icp_fit || (c && (c.icp||c.icp_read)) || null,
     why: entry.why_now || entry.why || '',
     signal: entry.signal || entry.their_comment || '',
@@ -152,7 +162,9 @@ function ingest(files){
       if(!prev || score>pscore) byUrl.set(key, n);
     }
   }
-  CONTACTS = [...byUrl.values()].sort((a,b)=> (a.deg||9)-(b.deg||9) || (b.date>a.date?1:-1));
+  const bRank = {buyer:0, channel:1, vendor:2};
+  CONTACTS = [...byUrl.values()].sort((a,b)=>
+    (bRank[a.bucket]??3)-(bRank[b.bucket]??3) || (a.deg||9)-(b.deg||9) || (b.date>a.date?1:-1));
   render();
 }
 
@@ -161,14 +173,15 @@ function render(){
   $('#reload').style.display='inline-block';
   const shown = CONTACTS.filter(c=>{
     if(COMPANY && c.companyKey!==COMPANY) return false;
-    if(FILTER==='all') return true;
+    if(BUCKET!=='all' && c.bucket!==BUCKET) return false;
     if(FILTER==='1') return c.deg===1;
     if(FILTER==='2') return c.deg===2;
     if(FILTER==='cold') return c.deg===3;
     return true;
   });
   const companies = [...new Set(CONTACTS.map(c=>c.companyKey).filter(Boolean))];
-  $('#counts').textContent = `${CONTACTS.length} contacts · ${companies.length} companies`;
+  const buyers = CONTACTS.filter(c=>c.bucket==='buyer').length;
+  $('#counts').textContent = `${CONTACTS.length} contacts · ${buyers} buyers · ${companies.length} companies`;
   // company chips
   const counts = {};
   CONTACTS.forEach(c=>{ if(c.companyKey) counts[c.companyKey]=(counts[c.companyKey]||0)+1; });
@@ -197,7 +210,7 @@ function card(c){
   return `<div class="card">
     <div class="top">${av}
       <div style="min-width:0">
-        <div class="nm">${nameHtml}<span class="badge ${degClass(c.deg)}">${degLabel(c.deg)}</span></div>
+        <div class="nm">${nameHtml}<span class="badge ${degClass(c.deg)}">${degLabel(c.deg)}</span>${c.bucket?`<span class="badge bk-${c.bucket}">${c.bucket}</span>`:''}</div>
         <div class="headline">${esc(c.headline)}</div>
       </div></div>
     ${comp}${why}${sig}${op}
@@ -209,6 +222,11 @@ function card(c){
 $('#filters').addEventListener('click', e=>{
   const b = e.target.closest('button[data-f]'); if(!b) return;
   FILTER = b.dataset.f; [...$('#filters').querySelectorAll('button[data-f]')].forEach(x=>x.classList.toggle('on',x===b));
+  render();
+});
+$('#buckets').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-b]'); if(!b) return;
+  BUCKET = b.dataset.b; [...$('#buckets').querySelectorAll('button[data-b]')].forEach(x=>x.classList.toggle('on',x===b));
   render();
 });
 $('#companies').addEventListener('click', e=>{
