@@ -1,0 +1,11 @@
+{
+  "ts": "2026-06-08T14:22:20Z",
+  "post": {
+    "urn": "urn:li:activity:7469753761515606016",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7469753761515606016/",
+    "author": "Michael Grollmus",
+    "topic_summary": "Siemens S7 1200/1500 HMI connection failure due to security settings: anonymous user with HMI Access permission required under new TIA Portal security functions."
+  },
+  "comment_posted": null,
+  "skip_reason": "comment_form_not_found: LinkedIn comment editor not found. Selectors likely stale in linkedin.js."
+}
