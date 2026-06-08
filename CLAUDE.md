@@ -585,7 +585,7 @@ Steps:
    judge ICP fit: is it the kind of company (industry + size) the
    operator sells into per `data/target-audience.md`?
 8. Take the top 3 to 5. For each, write:
-   - name, headline, profile_url
+   - name, headline, profile_url, photo_url (from enrich-person)
    - distance and the warm path if any ("2nd degree")
    - their current company + a one-line ICP read (industry, size, and
      whether it fits the operator's accounts)

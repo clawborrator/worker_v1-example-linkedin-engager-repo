@@ -1049,12 +1049,20 @@ async function cmdEnrichPerson(publicId) {
     await gotoWithRetry(page, `${BASE}/in/${publicId}/`);
     await assertNotChallenged(page);
     await page.waitForTimeout(2800);
-    const name = await page.evaluate(() => {
+    const profileTop = await page.evaluate(() => {
       const h1 = (document.querySelector('h1')?.innerText || '').trim();
-      if (h1) return h1;
-      const m = (document.title || '').replace(/^\(\d+\)\s*/, '').match(/^([^|]+?)\s*\|/);
-      return m ? m[1].trim() : null;
-    }).catch(() => null);
+      let name = h1 || null;
+      if (!name) {
+        const m = (document.title || '').replace(/^\(\d+\)\s*/, '').match(/^([^|]+?)\s*\|/);
+        name = m ? m[1].trim() : null;
+      }
+      // The profile photo is the first profile-displayphoto img on the
+      // page (og:image isn't set on the logged-in view). The first one
+      // is the profile owner; later ones are "people also viewed".
+      const pimg = document.querySelector('img[src*="profile-displayphoto"]');
+      return { name, photo_url: pimg ? pimg.src : null };
+    }).catch(() => ({ name: null, photo_url: null }));
+    const name = profileTop.name;
     const about = await page.evaluate(() => {
       for (const sec of document.querySelectorAll('section')) {
         const h = sec.querySelector('h2,[role="heading"]');
@@ -1112,7 +1120,7 @@ async function cmdEnrichPerson(publicId) {
       }, exp.companyId).catch(() => null);
     }
 
-    emit({ ok: true, public_id: publicId, profile_url: `${BASE}/in/${publicId}/`, name, about, latest_role: exp.latestRole, latest_experience: exp.text, company });
+    emit({ ok: true, public_id: publicId, profile_url: `${BASE}/in/${publicId}/`, name, photo_url: profileTop.photo_url, about, latest_role: exp.latestRole, latest_experience: exp.text, company });
   } catch (e) {
     if (e.message && /process.exit/.test(e.message)) throw e;
     die('enrich_person_failed', e.message);
