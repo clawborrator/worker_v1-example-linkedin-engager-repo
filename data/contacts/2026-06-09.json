@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Matthew Johnson",
+    "headline": "Automation Manager at Shaw Industries",
+    "profile_url": "https://www.linkedin.com/in/matthew-johnson-162236aa/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Shaw Industries",
+    "icp_read": "Large textile/flooring manufacturer (10k+ employees, Dalton GA). Automation Manager who owns floor automation, OEE, and data visibility across plants. Prior background at Tier 1 auto suppliers (AAM, Sejong) means he has brownfield muscle memory.",
+    "why_now": "Answered a PLC SFC troubleshooting question with a practical check-the-i/o answer, signaling he debugs these problems hands-on. As Automation Manager at a large manufacturer who promoted from Maintenance Engineer through Automation Engineer, he is the decision-maker and implementer in one. Shaw has multiple large carpet/flooring plants; machine data visibility across those sites is a natural fit for SHARC (analog/discrete signal capture without PLC program changes) and DIME (data aggregation).",
+    "signal": "Just checking the i/o that's not letting step1 enable",
+    "suggested_opener": "At a plant like Shaw, what does your machine data collection look like beyond the PLC program - historian integration, or are you mostly reading tags directly out of the controller?"
+  },
+  {
+    "name": "Saif Ghouse",
+    "headline": "Lead Automation and Process Control Engineer at DuPont",
+    "profile_url": "https://www.linkedin.com/in/saif-ghouse-7b406889/",
+    "photo_url": null,
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "buyer",
+    "company": "DuPont (formerly Dow Chemical)",
+    "icp_read": "Large chemical/materials manufacturer. 25+ years combined Dow/DuPont. Currently leading control platform migrations (Rockwell PlantPax, ACM) at DuPont, Greater Chicago Area. OT brownfield migration work every day.",
+    "why_now": "His signal on the SFC troubleshooting post was a teaching moment: he reframed the diagnostic question before answering it. He leads LOPA and PlantPax migrations - the exact moment when plants need to standardize their connectivity and historian layers. DIME reads natively from Rockwell EtherNet-IP without requiring program changes, which fits directly into what he does during migrations.",
+    "signal": "If I use this as a teaching moment to a mentee, I would ask what am I troubleshooting? We're assuming failure to make the transition, but is that actually the desired action?",
+    "suggested_opener": "Your 'what are we actually troubleshooting' framing on the SFC post is the right starting question. On the PlantPax migrations you're leading at DuPont - does the plant have a standard historian/OPC layer, or does each site wire it up differently?"
+  },
+  {
+    "name": "Steffen Treutlein",
+    "headline": "Manufacturing Manager (Tooling & Die Manufacturing) at Hirschvogel Components Mexico",
+    "profile_url": "https://www.linkedin.com/in/steffen-treutlein-14336223b/",
+    "photo_url": null,
+    "distance": "DISTANCE_3",
+    "bucket": "buyer",
+    "company": "Hirschvogel Components Mexico",
+    "icp_read": "Automotive forging supplier (motor vehicle manufacturing, 501-1000 employees, San Juan del Rio Mexico). Runs a 40+ person tooling & die manufacturing department. Increased output 4x in 3 years through process discipline and data-driven decisions. Lean Six Sigma Black Belt. Parent Hirschvogel is a Tier 1 auto supplier.",
+    "why_now": "Authored a post comparing Germany vs. Mexico manufacturing culture, signaling he thinks actively about operational systems. His About explicitly calls out data-driven decision making. A tooling & die department that grew from 400 to 1700 tools/month is producing machine-level activity that would benefit from utilization tracking - exactly what SHARC captures at the signal level without touching the PLC program. DISTANCE_3 means cold approach.",
+    "signal": "Authored post on Germany vs. Mexico manufacturing culture differences and operational discipline",
+    "suggested_opener": "Your Germany vs. Mexico post got me thinking about tooling ops specifically - at Hirschvogel, are you pulling machine utilization data off the tooling equipment, or is most of the output tracking still manual?"
+  },
+  {
+    "name": "Andrew Schulman",
+    "headline": "CEO / Industrial Automation Engineer at Schulman Engineering",
+    "profile_url": "https://www.linkedin.com/in/andrew-schulman-schulmanengineering/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "Schulman Engineering",
+    "icp_read": "Small SI (2-10 employees, Westlake Village CA). Codesys enthusiast and Allen-Bradley practitioner doing industrial automation integration. Founded 2022. DISTANCE_1 - warmest path, can message directly.",
+    "why_now": "His signal on the PLC post was actively curious about which platform the SFC was written in. Codesys plus Allen-Bradley experience in his headline means he handles mixed-platform brownfield environments. DIME speaks Codesys/ADS natively alongside Rockwell EtherNet-IP, which would be directly useful on mixed-vendor sites. DISTANCE_1 means he can be messaged without a connection request first.",
+    "signal": "What software is this in, out of curiosity?",
+    "suggested_opener": "Curious what your client platform spread looks like at Schulman - whether you're mostly on Codesys-based controllers or dealing with mixed Allen-Bradley / Siemens environments on the same site."
+  },
+  {
+    "name": "Steve Dobson, P.E.",
+    "headline": "Chairman at TechVisor Group / iiOTec, Inc.",
+    "profile_url": "https://www.linkedin.com/in/dobsonsteve/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "TechVisor Group / iiOTec",
+    "icp_read": "Aggregating solo and small automation integrators into a consolidated platform (Green Bay WI). iiOTec is the foundational platform. Three acquisitions in motion. Member firms serve manufacturing, food & beverage, material handling clients.",
+    "why_now": "He is building an integration roll-up. If TechVisor standardizes on a brownfield connectivity stack across its integrator network, a single adoption decision reaches multiple firms and their clients. He still engages at the controls level (his PLC comment was precise). DIME or SHARC as a standard tool across TechVisor member firms would be a channel multiplier - one conversation that touches several deployments.",
+    "signal": "All of those need to = 1. Put your mouse over each one individually and see which of them are not 1.",
+    "suggested_opener": "The TechVisor roll-up model is interesting - do the integrators you're bringing in share a common stack for protocol connectivity on client sites, or is it rebuilt per project?"
+  },
+  {
+    "name": "Jimmy DiTraglia",
+    "headline": "Owner - JD Controls LLC | Automation Controls Engineer",
+    "profile_url": "https://www.linkedin.com/in/jimmy-ditraglia-36657150/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "JD Controls LLC",
+    "icp_read": "Solo controls engineering firm (0-1 employees, Simpsonville SC, founded June 2024). 14 years experience across food & beverage, conveyance, packaging, natural gas processing, chemical process, robotics. Allen-Bradley and TwinCAT 3 experience.",
+    "why_now": "Freshly independent for one year. His SFC comment was the most technically detailed of any commenter - he named exactly what to look at (transition tags), referenced Rockwell SFC behavior specifically, and has both Allen-Bradley and Beckhoff (TwinCAT 3) platform experience. A solo integrator without hardware capital is exactly the profile SHARC and DIME serve: he can deploy brownfield connectivity on a client site in hours and bill it as a deliverable without floating PO capital.",
+    "signal": "Program is being called, hence the green outline on Step_000. Switch the view to see the online values, then you'd know which condition(s) are not being met to move into Step_001.",
+    "suggested_opener": "For your food & bev and packaging work at JD Controls - do your clients typically give you access to the PLC program for data extraction, or are you often working around restricted ladder logic on older installs?"
+  },
+  {
+    "name": "John Tarter",
+    "headline": "Founder at QED Automation LLC | Automation Systems Fixer",
+    "profile_url": "https://www.linkedin.com/in/john-tarter-7256b96/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "QED Automation LLC",
+    "icp_read": "Custom automation firm (2-10 employees, Henderson NV, founded 2018). Called in when systems pass development but break in production. Background in medical device, semiconductor, energy, and industrial automation. Delivers full systems from concept through commissioning.",
+    "why_now": "His positioning is explicitly 'I get pulled in when it is broken.' His listed failure modes: systems that work in development but fall apart in production, integration issues across mechanical, controls, and software. That is often a connectivity problem, not a logic problem. His skeptical comment on the bakery post showed he critically evaluates automation claims - he will appreciate a practitioner framing over a product pitch.",
+    "signal": "Not really sure I believe the pretzel twisting thing. Done work in baked product production and seems really slow. Is this a real example of a real executed process?",
+    "suggested_opener": "When you're called in to stabilize systems that passed development but fall apart in production - is the failure usually in the control logic, the sensor layer, or the handoff between the control system and data infrastructure?"
+  }
+]
