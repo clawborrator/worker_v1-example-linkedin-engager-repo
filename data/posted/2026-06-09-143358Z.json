@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-09T14:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7470119813621784576",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470119813621784576/",
+    "author": "Jeff Winter",
+    "topic_summary": "Biggest mistake in industrial automation is expecting technology to fix organizational dysfunction that leadership never addressed; automation inherits the broken process."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Jeff Winter",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470119813621784576/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470096976123138048?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7470096976123138048%2C7470120934033649664%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287470120934033649664%2Curn%3Ali%3Aactivity%3A7470096976123138048%29",
+    "comment_text": "The \"Jim who just knows how it works\" maps exactly to the PLC program in most brownfield plants. The controller is the exception logic: twelve years of patches from people who no longer work there, documentation that's incomplete or gone, and nobody touches it because the line is running.\n\nOne practical path for machine data visibility: bypass the program entirely. Read at the signal level (proximity sensors, current loops, discrete outputs) and publish over MQTT. You still get cycle state, counts, and utilization without opening a line of ladder logic. You do not need Jim's mental model to start seeing what's running.\n\nThe organizational clarity still has to happen. But you can build a working picture of the floor before anyone has the political capital to touch the code."
+  },
+  "skip_reason": null
+}
