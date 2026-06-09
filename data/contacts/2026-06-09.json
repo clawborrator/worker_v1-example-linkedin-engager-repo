@@ -39,6 +39,19 @@
     "suggested_opener": "Your Germany vs. Mexico post got me thinking about tooling ops specifically - at Hirschvogel, are you pulling machine utilization data off the tooling equipment, or is most of the output tracking still manual?"
   },
   {
+    "name": "Dennis Strack",
+    "headline": "Fabrications Manager at KION North America",
+    "profile_url": "https://www.linkedin.com/in/dennisdstrack/",
+    "photo_url": null,
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "buyer",
+    "company": "KION North America",
+    "icp_read": "Discrete machinery manufacturer (forklift/industrial trucks, 201-500 employees, Summerville SC). Fabrications Manager overseeing welding, cutting, and forming operations. 30 years at Caterpillar as Manufacturing Operations Manager and Fabrications Manager before joining KION. Navy veteran.",
+    "why_now": "A fabrications manager at a machinery manufacturer owns exactly the equipment where SHARC delivers fastest ROI: welders, plasma/laser cutters, press brakes, and other high-energy discrete machinery where signal-level utilization data is unavailable from the PLC program. His 30 years at Caterpillar means he has seen every generation of brownfield equipment and knows the pain of undocumented machines. OUT_OF_NETWORK means cold approach needed.",
+    "signal": "Now I know why the strongbacks are so critical (comment on Columbia-class submarine bow dome construction photo at Newport News Shipbuilding)",
+    "suggested_opener": "Thirty years of fabrication ops at Caterpillar before KION - on the fabrication floor there, are you getting machine utilization data off the welders and cutting equipment, or is it still mostly production counts from the PLC?"
+  },
+  {
     "name": "Andrew Schulman",
     "headline": "CEO / Industrial Automation Engineer at Schulman Engineering",
     "profile_url": "https://www.linkedin.com/in/andrew-schulman-schulmanengineering/",
@@ -89,5 +102,57 @@
     "why_now": "His positioning is explicitly 'I get pulled in when it is broken.' His listed failure modes: systems that work in development but fall apart in production, integration issues across mechanical, controls, and software. That is often a connectivity problem, not a logic problem. His skeptical comment on the bakery post showed he critically evaluates automation claims - he will appreciate a practitioner framing over a product pitch.",
     "signal": "Not really sure I believe the pretzel twisting thing. Done work in baked product production and seems really slow. Is this a real example of a real executed process?",
     "suggested_opener": "When you're called in to stabilize systems that passed development but fall apart in production - is the failure usually in the control logic, the sensor layer, or the handoff between the control system and data infrastructure?"
+  },
+  {
+    "name": "Alex Marcy",
+    "headline": "CEO at Corso Systems | Industrial Automation SI",
+    "profile_url": "https://www.linkedin.com/in/alex-marcy-599378251/",
+    "photo_url": null,
+    "distance": null,
+    "bucket": "channel",
+    "company": "Corso Systems",
+    "icp_read": "Manufacturing SI (11-50 employees, Chicago, founded 2011). Specialties: PLC programming, HMI/SCADA, MES, IIoT, Ignition, Unified Namespace, Industry 4.0. PE license 2010. Built Corso from scratch over 14 years serving manufacturing clients.",
+    "why_now": "Active SI doing brownfield connectivity and data integration for manufacturers. His authored post on RFP confusion signals he is actively winning new manufacturing automation projects. Ignition shop doing IIoT work - on brownfield sites where legacy controllers do not speak OPC-UA natively, DIME handles protocol translation without custom code and slots directly into their deployment stack. CEO with technical PE background means he makes tooling decisions.",
+    "signal": "Authored post complaining about a confusing amendment-heavy RFP in industrial automation bidding",
+    "suggested_opener": "Corso has been at this 14 years - on brownfield deployments where the legacy controllers do not have native OPC-UA, what is your current go-to for the connectivity layer before Ignition?"
+  },
+  {
+    "name": "Jim Bercik",
+    "headline": "VP of Sales and Marketing at Southern Flow, Inc.",
+    "profile_url": "https://www.linkedin.com/in/jim-bercik-88295616/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Southern Flow, Inc.",
+    "icp_read": "SCADA/PLC/HMI/panel fabrication SI (11-50 employees, Alpharetta GA). Specialties: PLC programming, HMI, high-performance SCADA graphics, panel fabrication, instrument calibration, field service. VP Sales spent 20+ years at MR Systems (automation integrator) before Southern Flow.",
+    "why_now": "His comment on the digital transformation post hit the execution accountability gap directly: who owns the connectivity and integration work once the project is sold. That is where DIME removes friction - the protocol driver runs without a dedicated owner writing custom code. His VP Sales role means he sees the project lifecycle from proposal to delivery and can influence which tools the team standardizes on.",
+    "signal": "The missing question is often who owns execution, and when does it begin (comment on Dylan DuFresne digital transformation post)",
+    "suggested_opener": "Your execution ownership point on Dylan's post is the right question - at Southern Flow, once a connectivity or historian project is sold, who actually owns the protocol layer day-to-day through delivery?"
+  },
+  {
+    "name": "Dustin Symes",
+    "headline": "CTO at JPI Solutions | SCADA, IIoT, OT/IT Convergence",
+    "profile_url": "https://www.linkedin.com/in/dustin-symes/",
+    "photo_url": null,
+    "distance": null,
+    "bucket": "channel",
+    "company": "JPI Solutions",
+    "icp_read": "SCADA/IIoT integrator (11-50 employees, Calgary AB). Specialties: SCADA, IIoT, automation, DCS, PLC, HMI, digital transformation, OT/IT convergence. Serves oil & gas, mining, and manufacturing. CTO sets technical direction and tooling decisions for the firm.",
+    "why_now": "Canadian SI doing OT/IT convergence with brownfield equipment across oil & gas and manufacturing. DIME and SHARC are useful anywhere Modbus, DNP3, or legacy industrial protocols surface - common across oil & gas field equipment. CTO role means he makes or directly influences stack decisions. Signal is weak (personal post) but role alignment is strong.",
+    "signal": "Feed post about new Framework laptop (off-topic personal post; role and company are on-target)",
+    "suggested_opener": "JPI does OT/IT convergence across oil & gas and manufacturing - on brownfield retrofits, what protocols are you hitting most often where connectivity is still the bottleneck?"
+  },
+  {
+    "name": "Rick Bullotta",
+    "headline": "Advisor / Investor / Mentor | IIoT and Industrial Software Ecosystem",
+    "profile_url": "https://www.linkedin.com/in/rickbullotta/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "Various (HighByte, Tulip, TwinThread, InfluxData, OpsmateAI, Losant)",
+    "icp_read": "IIoT ecosystem insider. Founded Lighthammer (acquired by SAP 2003) and ThingWorx (acquired by PTC 2013). Currently advising and investing in HighByte (industrial data ops), Tulip (manufacturing operations platform), TwinThread (industrial intelligence), InfluxData (time series DB), OpsmateAI, Losant. Deep rolodex across the IIoT vendor space.",
+    "why_now": "Not a direct buyer or channel integrator, but positioned as a high-value network node. His portfolio companies (HighByte, TwinThread) are data infrastructure plays where DIME and SHARC fill the edge connectivity gap. His pragmatic signal - results over methodology - aligns with Chris's signal-level bypass philosophy. A connection here is a peer and network play, not a direct product sale.",
+    "signal": "Well, if tablets running Excel delivers the results, who cares? (comment on industrial automation ROI discussion at Abelara/Dylan DuFresne post)",
+    "suggested_opener": "Your tablets-running-Excel take is a useful gut check against IIoT theater. In the companies you are advising now - where does the brownfield connectivity layer still cause the most integration pain?"
   }
 ]
