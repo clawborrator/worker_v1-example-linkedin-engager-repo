@@ -1,0 +1,80 @@
+[
+  {
+    "name": "Lemuel Gomez",
+    "headline": "Sr. Controls Engineer at MilliporeSigma | Pharma Manufacturing Automation",
+    "profile_url": "https://www.linkedin.com/in/lemuel-gomez/",
+    "photo_url": null,
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "buyer",
+    "company": "MilliporeSigma",
+    "icp_read": "Pharmaceutical/biotech manufacturer (Biotechnology Research, 10,001+ employees, Burlington MA). MilliporeSigma is the life science division of Merck KGaA -- manufactures pharmaceutical reagents, bioprocessing equipment, filtration systems, and lab solutions. Leads a team of controls engineers overseeing PLC, HMI/SCADA, process control, motion systems, and VFD implementation for pharma production. Prior experience at Georgia-Pacific (process controls).",
+    "why_now": "Pharma manufacturing is one of the hardest environments for brownfield connectivity: revalidating after PLC program changes is a months-long process under 21 CFR Part 11 and GMP change control. SHARC reads at the signal level and DIME reads native protocol data without modifying the PLC program -- both bypass the validation problem entirely. He leads a team doing production support, obsolescence management, and system upgrades. OUT_OF_NETWORK means cold approach, but his role and employer size make him high-value. His AVEVA PRiSM-level thinking (she previously worked with predictive analytics) suggests data infrastructure is on his radar.",
+    "signal": "Hovering the mouse over each of those will tell you their state. That transition is looking for a 1 in each of those -- essentially just an AND gate. Whichever one is not 1 is what is gating the transition. (Tim Wilborne PLC troubleshooting post)",
+    "suggested_opener": "In pharma manufacturing, revalidating after PLC changes can run months under change control -- are you able to pull machine data off the production controllers without touching the validated program, or does every data integration go through the same change process?"
+  },
+  {
+    "name": "Caina Fernandes",
+    "headline": "Senior Control Engineer at Air Liquide | PLC, HMI, SCADA, Industrial Automation",
+    "profile_url": "https://www.linkedin.com/in/caina-fernandes/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Air Liquide",
+    "icp_read": "Industrial gas manufacturer (Chemical Manufacturing, 10,001+ employees, France HQ). Air Liquide operates air separation units, hydrogen plants, and specialty gas production -- continuous process manufacturing with DCS/PLC/SCADA infrastructure across dozens of sites. Previously Process Controls Engineer at Georgia-Pacific. Expertise includes Allen-Bradley Studio 5000, Siemens, GE, AVEVA PRiSM (predictive analytics and asset health monitoring).",
+    "why_now": "Senior controls engineer at a large process manufacturer doing PLC, HMI/SCADA support, automation troubleshooting, and commissioning. AVEVA PRiSM deployment (mentioned in her About) means she is already working on the data infrastructure side -- feeding asset health models requires reliable, contextualized process data. DIME reads native protocol from Rockwell and Siemens controllers without program changes. Air Liquide runs many sites; fleet connectivity is a natural extension. Her Georgia-Pacific background (discrete/process hybrid) adds cross-industry breadth.",
+    "signal": "Check states of each of the Tran_000 tags (Tim Wilborne PLC troubleshooting post, minimal but technically precise)",
+    "suggested_opener": "At Air Liquide, for the AVEVA PRiSM asset health monitoring -- are you pulling the process data through the DCS historian tags, or does that integration run a separate path off the controllers?"
+  },
+  {
+    "name": "Logan Terry",
+    "headline": "Operational Director at LSI - Logical Systems Inc. | UNS, Ignition, OT/IT Convergence",
+    "profile_url": "https://www.linkedin.com/in/logan-terry-63175092/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "LSI - Logical Systems Inc.",
+    "icp_read": "Large SI and engineering services firm (201-500 employees, Memphis TN, founded 1985). Specialties: system integration, process automation, MES, data historian, digital transformation, ICS/OT networking, batch process control. Operational Director at LSI since Nov 2024. Prior: Director of Operations at mode40 (IIoT consultancy), 7 years at Grantec. Deeply focused on UNS architecture, data democratization, Ignition platform, and OT/IT convergence for global manufacturers.",
+    "why_now": "Operational Director at a 200+ person SI that delivers MES, historian, and digital transformation projects for manufacturers. His UNS and data architecture background maps exactly to where DIME fits: the connectivity layer between legacy machine controllers and the UNS broker. His comment on the DuFresne post showed he distinguishes dependency-creating integrators from enabling ones -- he designs systems so clients can own and maintain them after the engagement ends. That stance is compatible with DIME (no custom code, swap the analytics layer without re-engineering the connectivity). DISTANCE_1 means no connection request needed.",
+    "signal": "I agree with the sentiment of your post, and I see this far too often where an integrator forces their clients into dependency. That is absolutely a problem. However, I disagree with the way partnership is framed here. (Dylan DuFresne integrator lock-in post)",
+    "suggested_opener": "Your dependency vs. enablement framing on Dylan's post is the right distinction. At LSI, when you are architecting a UNS deployment, how are you handling the legacy equipment that does not speak native OPC-UA or SparkplugB -- building custom drivers per project, or using a protocol translation layer?"
+  },
+  {
+    "name": "Benjamin Furlani",
+    "headline": "Director of Factory Business Integration at Blue Ridge Inc.",
+    "profile_url": "https://www.linkedin.com/in/benjamin-furlani-5022591b3/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Blue Ridge Inc.",
+    "icp_read": "Automation SI (11-50 employees, Pendleton Indiana, founded 2011). Specialties: Industrial Automation, Allen Bradley PLCs, Wonderware, Siemens, HMI, CIP, batch processing, MES, packaging, project engineering. Ignition shop. Director of Factory Business Integration: works with customers to develop scope of work and design data integration solutions from digital sources into business insights. Previously System Architect at same company.",
+    "why_now": "Active Ignition shop doing factory data integration for manufacturing clients. His signal on the Travis Cox post showed he is using Ignition 8.3 Git integration right now and has moved to agile delivery on SCADA projects. His role -- Factory Business Integration -- means he owns the gap between the OT data layer and the business insight layer. DIME fills the upstream connectivity gap on legacy PLCs that do not surface clean data. Blue Ridge does CIP and batch processing (food and bev, pharma adjacent) where old machines are common. DISTANCE_2.",
+    "signal": "The power of GIT and Ignition is a game changer. We are using it for rapid testing, and changing from what felt like more waterfall development to Agile at a scale like never before. (Travis Cox Ignition SCADA version control post)",
+    "suggested_opener": "Blue Ridge does Ignition and factory integration together -- for the clients where the older PLCs are not surfacing clean OPC-UA data into Ignition, what is your current pattern for closing that gap?"
+  },
+  {
+    "name": "Seth Kahle",
+    "headline": "Principal Engineer at Techne Industrial Inc | Controls, DCS/SCADA, Chemical/Process Manufacturing",
+    "profile_url": "https://www.linkedin.com/in/seth-kahle/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Techne Industrial Inc",
+    "icp_read": "Small industrial consulting and SI firm (2-10 employees, founded 2025). Dual-degree chemical engineer and computer scientist. Background covers mineral, hydrocarbon, specialty chemical, and plastics manufacturing. Prior: 12 years at Enginova Inc (Vice President of Automation, Controls, and Information Systems; Principal Engineer). Focus on DCS and SCADA design, engineering, construction, and commissioning for industrial manufacturing processes. Panel shop capabilities.",
+    "why_now": "12 years as VP of Automation, Controls, and Information Systems at a Chicago-area industrial SI, now principal at a new firm. His chemical engineering + CS background means he works across process and data layers. His detailed SFC workaround on the Wilborne post showed he writes the custom variable transition logic himself -- exactly the kind of practitioner who would appreciate DIME removing that burden for data extraction. Hydrocarbon and specialty chemical clients run Rockwell or Siemens PLCs on continuous processes; DIME reads both without program changes. DISTANCE_2.",
+    "signal": "Such a big shortcoming of Rockwell Studio 5000 SFC implementation. What I do is create a single boolean variable called something like t_000_001 as the transition logic and calculate it in either a structured text or ladder rung. (Tim Wilborne PLC troubleshooting post)",
+    "suggested_opener": "Your t_000_001 pattern is clean. In the hydrocarbon and specialty chemical work -- are clients typically letting you read process data off the Rockwell or Siemens controllers for historian use, or is that usually a separate project scope from the controls work?"
+  },
+  {
+    "name": "Jonathan Wise",
+    "headline": "Chief Technology Architect at CESMII | CTO at ACE Technologies | Industrial Information Architect",
+    "profile_url": "https://www.linkedin.com/in/jonathanmwise/",
+    "photo_url": null,
+    "distance": null,
+    "bucket": "vendor",
+    "company": "CESMII / ACE Technologies",
+    "icp_read": "CESMII is a Manufacturing USA non-profit institute focused on smart manufacturing and clean energy (11-50 employees, Los Angeles). ACE Technologies is his consultancy advising manufacturers and technology providers on Industry 4.0 transformations. 25+ years in product development. Chief Technology Architect at CESMII advocating for open, standards-based smart manufacturing approaches. Actively developing the i3X 1.0 Release Specification SDK and documentation.",
+    "why_now": "Not a direct buyer or SI channel, but a high-leverage ecosystem node. He is actively developing the i3X 1.0 spec and SDK -- the same standard that Chris's i3X product implements. His post about AI-assisted SDK updates tagged i3X directly. Rick Bullotta also commenting (plans to run a Claude-generated i3X Node.js server against it) confirms this is the i3X inner circle. A direct connection here is a peer/ecosystem play that could accelerate i3X adoption through CESMII's Manufacturing USA network of manufacturers and technology providers. Null distance because he authored the post (LinkedIn does not reveal network distance for authors).",
+    "signal": "A half-dozen AI-enabled coding sessions updating the docs, tools and SDK for the #i3X 1.0 Release Specification. Fable is pretty clever! (i3X SDK post)",
+    "suggested_opener": "For the 1.0 spec work -- are there particular semantic patterns or protocol bindings you are trying to lock down first, or is the SDK scaffolding leading ahead of the full spec?"
+  }
+]
