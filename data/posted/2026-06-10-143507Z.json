@@ -1,0 +1,11 @@
+{
+  "ts": "2026-06-10T14:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7470175937662234624",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470175937662234624/",
+    "author": "Estefania Amundaray",
+    "topic_summary": "Industrial AI failures are a data trust problem, not a data collection problem: QoS mismatches, dropped messages, and timestamp drift mean delivered data is not trustworthy, and 50%+ of AI projects fail to reach production due to data issues."
+  },
+  "comment_posted": null,
+  "skip_reason": "comment_post_failed: pressSequentially timeout 30000ms -- Playwright typed into textbox (locator resolved) but character-by-character input timed out before completing; LinkedIn comment not posted."
+}
