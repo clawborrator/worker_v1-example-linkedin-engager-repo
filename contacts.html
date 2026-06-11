@@ -81,14 +81,6 @@ h1 .dot{color:var(--signal)}
 .seg-lbl{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--mute);
   text-transform:uppercase;margin-right:-8px}
 
-.companies{display:flex;gap:7px;flex-wrap:wrap;padding:14px 0 16px}
-.chip{font-family:var(--mono);font-size:11px;color:var(--dim);background:var(--bg2);
-  border:1px solid var(--line);border-radius:3px;padding:4px 9px;cursor:pointer;transition:.14s}
-.chip:hover{color:var(--ink);border-color:var(--line2)}
-.chip.on{color:var(--signal);border-color:var(--signal);background:var(--signal-dim)}
-.chip i{color:var(--mute);font-style:normal;margin-left:6px}
-.chip.on i{color:var(--signal)}
-
 /* ── grid + cards ───────────────────────────────────── */
 main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
 #grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:18px}
@@ -193,10 +185,9 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
   .kicker{font-size:11px;letter-spacing:.18em}
   .readout{font-size:11px;flex-basis:100%;text-align:left;order:3}
   .ftoggle{display:inline-flex;align-items:center;gap:6px;margin-left:auto}
-  /* collapse the filter controls + company chips behind the toggle */
-  .controls,.companies{display:none}
+  /* collapse the filter controls behind the toggle */
+  .controls{display:none}
   header.open .controls{display:flex;padding-top:12px}
-  header.open .companies{display:flex;padding:12px 0 14px;max-height:42vh;overflow-y:auto}
   main{padding:16px 15px 60px}
   #grid{grid-template-columns:1fr;gap:14px}
   .card{padding:16px 15px 14px}
@@ -231,7 +222,6 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
         <button data-f="cold">Cold</button>
       </div>
     </div>
-    <div class="companies" id="companies"></div>
   </div>
 </header>
 
@@ -246,7 +236,7 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
 <script>
 const $ = (s,el=document)=>el.querySelector(s);
 const grid = $('#grid'), loader = $('#loader');
-let CONTACTS = [], FILTER = 'all', BUCKET = 'all', COMPANY = null;
+let CONTACTS = [], FILTER = 'all', BUCKET = 'all';
 
 const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function degree(d){ d=String(d||''); if(/DISTANCE_1|1st/i.test(d))return 1;
@@ -302,7 +292,6 @@ function ingest(files){
 function render(){
   loader.classList.add('hidden');
   const shown = CONTACTS.filter(c=>{
-    if(COMPANY && c.companyKey!==COMPANY) return false;
     if(BUCKET!=='all' && c.bucket!==BUCKET) return false;
     if(FILTER==='1') return c.deg===1;
     if(FILTER==='2') return c.deg===2;
@@ -313,10 +302,6 @@ function render(){
   const buyers = CONTACTS.filter(c=>c.bucket==='buyer').length;
   $('#counts').innerHTML = `<span class="live">LIVE</span> &nbsp; <b>${CONTACTS.length}</b> CONTACTS · `
     + `<b>${buyers}</b> BUYERS · <b>${companies.length}</b> COMPANIES`;
-  const counts = {};
-  CONTACTS.forEach(c=>{ if(c.companyKey) counts[c.companyKey]=(counts[c.companyKey]||0)+1; });
-  $('#companies').innerHTML = companies.sort((a,b)=>counts[b]-counts[a])
-    .map(co=>`<span class="chip ${COMPANY===co?'on':''}" data-co="${esc(co)}">${esc(co)}<i>${counts[co]}</i></span>`).join('');
   grid.innerHTML = shown.map(card).join('')
     || `<p style="font-family:var(--mono);color:var(--mute);padding:18px;letter-spacing:.05em">// no contacts match this filter</p>`;
 }
@@ -366,8 +351,6 @@ $('#filters').addEventListener('click', e=>{ const b=e.target.closest('button[da
   FILTER=b.dataset.f; [...$('#filters').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b)); render(); });
 $('#buckets').addEventListener('click', e=>{ const b=e.target.closest('button[data-b]'); if(!b) return;
   BUCKET=b.dataset.b; [...$('#buckets').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b)); render(); });
-$('#companies').addEventListener('click', e=>{ const ch=e.target.closest('.chip'); if(!ch) return;
-  COMPANY=COMPANY===ch.dataset.co?null:ch.dataset.co; render(); });
 grid.addEventListener('click', async e=>{ const b=e.target.closest('.copy'); if(!b) return;
   try{ await navigator.clipboard.writeText(b.dataset.t); }catch(_){}
   b.textContent='copied'; b.classList.add('done'); setTimeout(()=>{b.textContent='copy';b.classList.remove('done')},1400); });
