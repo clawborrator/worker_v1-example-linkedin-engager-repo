@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-11T01:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7470725667953913856",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470725667953913856/",
+    "author": "Andreas Heine",
+    "topic_summary": "i3x2ua v1.0.0 release: Python/FastAPI bridge from OPC-UA to i3X, now passing the i3X 1.0 conformance baseline for all MUST behaviors."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Andreas Heine",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470725667953913856/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470725667953913856?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7470725667953913856%2C7470732188561494018%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287470732188561494018%2Curn%3Ali%3Aactivity%3A7470725667953913856%29",
+    "comment_text": "The conformance pass on the i3X MUST behaviors is a meaningful checkpoint. One thing this highlights: the semantic richness i3X can expose is bounded by what arrives at the OPC-UA layer above the hardware. For equipment that does not speak native OPC-UA -- legacy PLCs, older CNCs, non-Profinet field devices -- the translation step that feeds i3x2ua is still solved piecemeal on each deployment, usually custom drivers or OPC-DA bridges. The i3X spec work and the upstream connectivity problem are on different timelines, and the slower one determines when a plant actually sees the benefit."
+  },
+  "skip_reason": null
+}
