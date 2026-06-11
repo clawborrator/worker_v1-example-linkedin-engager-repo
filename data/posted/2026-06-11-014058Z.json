@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-11T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7470505080874536962",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470505080874536962/",
+    "author": "Travis Cox",
+    "topic_summary": "Ignition 8.3 stores SCADA config as plain files, enabling Git version control for OT teams."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Travis Cox",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470505080874536962/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7470369175463432192?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7470369175463432192%2C7470651142721654784%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287470651142721654784%2Curn%3Ali%3AugcPost%3A7470369175463432192%29",
+    "comment_text": "Ignition 8.3 making the project directory Git-compatible is a real step forward. The gap that remains: Git tracks changes to the Ignition config, but the machine behavior that drove the change is still recorded separately in the PLC program history, controller recipe setpoints, or often nowhere at all. You can see when someone adjusted the alarm setpoint in SCADA. Knowing why (what the machine was actually doing when that change happened) requires correlating against the signal history from the controller below. Those two records rarely live in the same place, which is where most \"what broke last Tuesday\" investigations get stuck."
+  },
+  "skip_reason": null
+}
