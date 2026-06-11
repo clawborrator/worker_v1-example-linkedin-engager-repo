@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Dan Jones",
+    "headline": "Owner at Leading Edge Controls | Industrial Controls and Robotics",
+    "profile_url": "https://www.linkedin.com/in/dan-jones-1b405895/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Leading Edge Controls",
+    "icp_read": "Small SI owner (2-10 employees, Spring Lake MI, founded Aug 2023). Specialties: food & beverage to automotive control systems design, electrical design, panel building. Came from JR Automation (7+ years as Controls Project Engineer). AutoCAD Electrical, PLC programming.",
+    "why_now": "Fresh SI owner 2 years in, building his book of business out of JR Automation. Food & bev and automotive clients will have brownfield PLCs that don't speak EtherNet/IP or OPC-UA natively. As a small shop, he needs to reduce per-engagement engineering cost -- a protocol translation layer that reads native without custom driver work saves him hours on each deployment. DIME is exactly that. DISTANCE_2.",
+    "signal": "Sounds like a great experience Jeff! Congrats and enjoy! (Jeff Opperman Convergix expat post)",
+    "suggested_opener": "Leading Edge Controls -- food and bev to automotive. On the brownfield work where older equipment is not natively connected, how are you typically solving the protocol layer?"
+  },
+  {
+    "name": "Kathryn Coulter",
+    "headline": "Senior Controls Specialist at JMP Solutions",
+    "profile_url": "https://www.linkedin.com/in/kathryn-coulter-b560b654/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "JMP Solutions",
+    "icp_read": "JMP Solutions is a major Canadian SI (Burlington Ontario, Ignition Gold Certified partner, 200+ employees). Senior Controls Specialist for 4 years doing PLC/HMI/SCADA design and commissioning. Industrial Electrician (442A), Manufacturing Engineering degree (McMaster). Previously at JTK Integrated Controls and Elite Automation.",
+    "why_now": "Senior hands-on controls engineer at one of Canada's larger SIs. JMP does Ignition deployments for manufacturers, which means brownfield connectivity is a recurring scope item -- getting older PLCs to surface clean data into Ignition before version-controlled config (per Travis Cox's post) can even matter. DIME's native protocol reads on Rockwell and Siemens without program changes reduces engineering hours per project. DISTANCE_2.",
+    "signal": "Amazing opportunity! (Jeff Opperman Convergix expat post)",
+    "suggested_opener": "JMP does a lot of Ignition work -- on brownfield deployments where the older PLCs are not surfacing OPC-UA data cleanly into Ignition, what is the current approach for closing that gap?"
+  },
+  {
+    "name": "Ryan Lillibridge",
+    "headline": "Vice President @ Mission Design & Automation | Driving Manufacturing Success",
+    "profile_url": "https://www.linkedin.com/in/ryan-lillibridge-at-mission/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Mission Design & Automation",
+    "icp_read": "Mid-size SI (51-200 employees, Holland MI, founded 2004). Custom automation for automotive, aerospace, medical device, data center manufacturing, welding automation. VP since May 2023, before that Director of Biz Dev at same company. 14+ years at JR Automation (Concept & Cost Development Manager). MDA builds bespoke systems, not off-the-shelf.",
+    "why_now": "VP at a mid-size SI covers both biz dev and engineering direction. MDA's custom automation model means each client project requires solving connectivity from whatever equipment the client has. Automotive and aerospace clients typically have older PLCs on long production runs -- native protocol reads without program change are valuable at that scale. A VP-level connection at a 50+ person SI is a channel relationship worth developing. DISTANCE_2.",
+    "signal": "Good luck with your move Jeff, I hope they have a barbershop in Scotland, sounds like an adventure. (Jeff Opperman Convergix expat post)",
+    "suggested_opener": "Mission Design & Automation -- custom automation across automotive and aerospace. On the projects where existing equipment is older and not natively connected, how are you handling the connectivity layer?"
+  },
+  {
+    "name": "Barry Williams",
+    "headline": "Lead Controls Engineer at CONVERGIX Automation Solutions | Pharma OT | Life Sciences",
+    "profile_url": "https://www.linkedin.com/in/bwbarry1970/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "CONVERGIX Automation Solutions",
+    "icp_read": "Lead Controls Engineer at Convergix (large SI, 501-1000 employees, Arbroath Scotland). Previously OT and Industrial Automation & Controls Manager at Douglas Pharmaceuticals Auckland NZ (4+ years). Extensive background in GxP, GAMP, 21 CFR/Annex 11, data integrity, OT networks, cybersecurity, ICS in pharma, oil & gas, water/wastewater, FMCG, chemical, food & bev. Certified in TUV process safety, Prince2 PM.",
+    "why_now": "He spent 4+ years as the OT manager inside a pharma manufacturer dealing with 21 CFR change control for PLC program modifications -- he knows exactly how expensive that validation cycle is. Now at an SI deploying automation for life sciences clients, he is in a position to recommend tools that bypass the validation problem (reading at the signal level without touching the validated PLC program). SHARC and DIME are the exact architecture he would have wanted at Douglas. DISTANCE_2.",
+    "signal": "Welcome to the team Jeff Opperman (Convergix expat post)",
+    "suggested_opener": "Your pharma OT background -- the 21 CFR change validation cycle -- were clients able to pull production data off validated PLCs without triggering revalidation, or did every data integration go through the same change control process?"
+  },
+  {
+    "name": "Gary Lucas",
+    "headline": "Project Engineer at Zaic Design | Controls, PLC, Process Automation",
+    "profile_url": "https://www.linkedin.com/in/gary-lucas-8ba85215/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Zaic Design",
+    "icp_read": "Small automation and design shop (2-10 employees, Princeton NJ). Specialties: industrial automation, cobots, robotics, CNC machining, 3D printing. Gary is 72 with 18-year stints in each domain: commercial greenhouse automation, wastewater membrane systems, manufacturing automation. Mentors FIRST Robotics. Started as an electrician running industrial jobs at 22. Now mentors younger engineers at Zaic.",
+    "why_now": "Hands-on automation engineer who has worked across greenhouse controls, wastewater membrane systems, and manufacturing -- all non-standard environments with whatever controller was installed. His improvisational approach (made custom tongs for casting in the Sarah Jordan post) signals someone who solves connectivity problems practically rather than prescriptively. For a small shop doing diverse automation work, DIME's 50+ protocol coverage means he does not need to build custom I/O per client. DISTANCE_2.",
+    "signal": "I didn't like transferring a hot crucible so I made these tongs. Out of the furnace, pour, back in the furnace! (Sarah Jordan metals manufacturing post)",
+    "suggested_opener": "Greenhouse automation and wastewater membrane systems -- are those controllers speaking anything standard, or are you usually reading whatever is there via ladder logic and analog I/O?"
+  },
+  {
+    "name": "Ernst Holger Amort",
+    "headline": "Contractor @ AHAB | Industrial Data Science | Rockwell + AVEVA Certified",
+    "profile_url": "https://www.linkedin.com/in/holgeramort/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "AHAB",
+    "icp_read": "Independent contractor (solo, AHAB) since Jul 2025. Previously Senior Data Scientist MSAT at TQS Integration (4+ years) -- major process control and MES consulting firm serving pharma, biotech, chemical, food & bev, energy. PhD and MSc in chemistry. Certifications in Rockwell Automation and AVEVA. Built PiFrame Python library for manufacturing ML. Multi-patents in polyelectrolyte membranes. Worked with SEEQ, multivariate modeling, digital twins.",
+    "why_now": "DISTANCE_1 -- direct connection, no request needed. His comment on Shirajum's PI emulator post showed he understands the SDK lock-in problem: 'OT data sitting behind one vendor SDK is a liability.' He does manufacturing timeseries ML work that requires reliable upstream data from controllers. For his pharma and chemical clients, getting clean signal data off Rockwell PLCs is the upstream problem his models depend on. DIME reads Rockwell native without a PI SDK dependency. The AVEVA PI SDK change likely affects some of his delivery pipeline directly.",
+    "signal": "What a great idea! (Shirajum M. AVEVA PI WebAPI Emulator post) -- plus his follow-up comment: 'the durable fix is decoupling at the historian boundary' showing deep technical understanding of the PI lock-in risk",
+    "suggested_opener": "Your point about decoupling at the historian boundary after the PI SDK change -- are you seeing that shift the upstream work at all, or is it mostly a development and testing workflow problem for your clients so far?"
+  },
+  {
+    "name": "Jie Chou",
+    "headline": "Founder and CEO at Tycho Data | Industrial Data Observability",
+    "profile_url": "https://www.linkedin.com/in/jiechou/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "Tycho Data",
+    "icp_read": "Tycho Data (founded Nov 2024, 2-10 employees) -- 'Industrial Data Observability for teams that operate and maintain critical infrastructure.' Previously Engineering Director at data.world (acquired by ServiceNow), 2+ years. Before that 6+ years at Element (product engineering and forward-deployed engineering). Building an early-stage startup at the intersection of industrial operations and data quality/observability.",
+    "why_now": "Building an industrial data observability product means he needs to understand what happens upstream of the observability layer -- how clean or dirty the data is when it arrives. If his target clients run legacy manufacturing or utility equipment, connectivity is the gap that determines data quality before his platform can observe anything. Possible ecosystem or integration play: DIME feeding clean, contextualized data to Tycho's observability layer. DISTANCE_2.",
+    "signal": "Really great for integration tests. I wonder how comprehensive the NuGreen database is in terms of test cases. (Shirajum M. AVEVA PI WebAPI Emulator post)",
+    "suggested_opener": "Industrial data observability for critical infrastructure operators -- are most of your target clients coming in with historians already in place, or is raw connectivity a gap you are seeing on the intake side?"
+  }
+]
