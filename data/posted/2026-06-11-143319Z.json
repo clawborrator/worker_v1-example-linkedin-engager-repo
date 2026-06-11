@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-11T14:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7470844416274968578",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470844416274968578/",
+    "author": "Pyry Grönholm",
+    "topic_summary": "Why i3X exists: takes OPC UA's best ideas (VQT model, namespaces, subscriptions) and serves them over HTTP/JSON, scoped to OT-IT data exchange rather than PLC-to-SCADA."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Pyry Grönholm",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470844416274968578/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7470758040309473280?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7470758040309473280%2C7470845550435774465%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287470845550435774465%2Curn%3Ali%3Aactivity%3A7470758040309473280%29",
+    "comment_text": "i3X works as an OT-IT exchange layer precisely because it does not try to be everything OPC UA is. That scope discipline is correct. The constraint worth naming: for i3X to serve useful data at the IT boundary, something upstream has to normalize raw signals from controllers that do not speak native OPC UA. That step, reading native protocol off legacy PLCs and translating to a meaningful namespace before surfacing via OPC UA, is still assembled separately on most deployments. i3X makes the IT-side consumption layer tractable. The OT-side ingestion problem it sits on top of is a separate build."
+  },
+  "skip_reason": null
+}
