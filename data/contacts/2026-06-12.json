@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Richard Lisowski",
+    "headline": "President at JCS Automation Inc.",
+    "profile_url": "https://www.linkedin.com/in/richard-lisowski-55a84423/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "JCS Automation Inc.",
+    "icp_read": "30-year SI in Rochester NY — programs Allen-Bradley, Siemens, Beckhoff, Fanuc robots for manufacturers. ICP fit: brownfield automation shop doing exactly the kind of PLC-heavy deployments that need machine connectivity layered on top without touching ladder logic.",
+    "why_now": "He commented on the Christofer Dutz Mitsubishi Q03 post asking whether the Mitsubishi drivers would be for sale for individuals 'to use to develop in their own applications.' That is a direct commercial signal: he has active projects requiring Mitsubishi brownfield connectivity and is actively evaluating tools. Chris just commented on the same post with specific MC Protocol detail (port 5007, QJ71E71-100, CC-Link split) that Richard would have read. They are already in the same thread with overlapping interests.",
+    "signal": "Christofer, are these drivers that you are building for sale for individuals like myself to use to develop in their own applications.",
+    "suggested_opener": "Your question in the Dutz thread about commercial Mitsubishi driver availability is the core issue for most SIs doing Q-series brownfield work. Which variants are you running into most often — older Q02/Q06 CPUs with the Ethernet module, or newer ones with built-in connectivity?"
+  },
+  {
+    "name": "Sam Elsner",
+    "headline": "VP Product Experience at Litmus",
+    "profile_url": "https://www.linkedin.com/in/sam-c-elsner/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "vendor",
+    "company": "Litmus",
+    "icp_read": "Industrial DataOps platform (51-200, Santa Clara). Ex-PTC/Kepware Director for 9 years — deep in industrial protocol gateways. Now VP at Litmus, which does industrial edge data and OT-IT convergence. Vendor in the same space as DIME; potential integration/channel partner rather than a customer.",
+    "why_now": "Sam responded directly to Chris's MC Protocol comment on the Christofer Dutz thread with a practitioner war story: 'First PLC I touched was a Mits with a QJ71E71 Eth card, and it was 15 years old in 2011. I am still integrating to brand new QJ71E71 cards and fighting with two decade Eth stack bugs.' They already share a specific reference point (QJ71E71 bugs) and are first-degree connections. Sam ran Kepware's global solutions consulting team — he knows every protocol corner case. This is a natural follow-through on a thread where they already spoke the same language.",
+    "signal": "First PLC I touched was a Mits with a QJ71E71 Eth card, and it was 15 years old in 2011. I am still integrating to brand new QJ71E71 cards and fighting with two decade Eth stack bugs.",
+    "suggested_opener": "The QJ71E71 comment landed — still buying that card new in 2026. When you hit the 20-year-old Eth stack bugs on it, is it usually the 3E frame fragmentation or something deeper in the TCP keep-alive behavior?"
+  },
+  {
+    "name": "Brad Hicks",
+    "headline": "Director of Business Development at Belden Inc.",
+    "profile_url": "https://www.linkedin.com/in/bradmhicks/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "Belden Inc.",
+    "icp_read": "Large industrial networking vendor (5,001-10,000, St. Louis). Belden makes the cables, managed switches, and industrial networking infrastructure in the plants Chris's products run on. Brad is 6 months into a new BD Director role focused on SI/EPC/cloud partners. Not a buyer — potential channel partner whose infrastructure footprint is where SHARC and DIME deploy.",
+    "why_now": "New in his BD Director role (Jan 2026). His own bio says he's looking to build partner motions with SIs and cloud partners in the OT space, and his background is engineering + OT automation. He'll be at Automate 2026 in Chicago. DIME's 50+ protocol connectors are running on top of Belden's OT network infrastructure in many of the same plants. A short introductory conversation before the Automate show makes natural sense.",
+    "signal": "Excited to join the team at this event! (Automate 2026 with Jeff Winter/Belden team)",
+    "suggested_opener": "You'll be at Automate with the Belden team — are you mostly focused on the networking/infrastructure positioning or has Belden moved into the data layer above the wire?"
+  },
+  {
+    "name": "Jacob Abel, P.E.",
+    "headline": "Virtual PLC Advocate | Principal Automation Engineer at OTee",
+    "profile_url": "https://www.linkedin.com/in/jake-otee/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "OTee",
+    "icp_read": "Early-stage OEM making virtual PLC software for industrial PCs (11-50, San Diego, founded 2022). Jacob is their principal automation engineer and technical evangelist. OTee's vPLC runs on standard industrial PCs instead of dedicated PLC hardware. Their customers will need data connectivity from vPLC environments to historians, MES, and cloud — and Tracebook-style AI support as the install base grows.",
+    "why_now": "Jacob posted a live demo of OTee's vPLC running 3x faster than a ControlLogix 5580 on a CIMON industrial PC. When plants adopt vPLC, the connectivity question shifts: how does data get from the soft controller to analytics and MES? DIME handles that path. And as OTee's install base grows, engineers will ask the same 10 questions about configuration over and over — exactly the use case Tracebook was built for. He's cross-functional at OTee (customer success, product, sales engineering) so he's the right person to have the conversation with.",
+    "signal": "Showing vPLC running 3x faster than ControlLogix 5580 on CIMON IPC; 'still on a mission to show the raw power of vPLCs on off-the-shelf industrial PCs.'",
+    "suggested_opener": "When you're handing off data from the vPLC environment to analytics or MES upstream, what's the current recommended path — OPC-UA server built into the vPLC runtime, or do you expose it another way?"
+  },
+  {
+    "name": "Tamer Salem",
+    "headline": "Automation at Aris Machina",
+    "profile_url": "https://www.linkedin.com/in/tamersalem/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "vendor",
+    "company": "Aris Machina",
+    "icp_read": "Early-stage AI+automation startup (11-50, Stockholm, founded 2025, 'Moving Automation to AI'). Tamer joined in May 2025 from Northvolt where he was Manager of Automation Engineering for 2.5 years — overseeing SCADA across Northvolt's manufacturing entities. Before that, 8 years as MES/Automation Manager at MenaBev (Saudi Arabia food/bev manufacturer). He's now building software at a startup focused on bringing AI to factory automation. First-degree connection.",
+    "why_now": "He's active on the i3X 1.0 spec freeze post (a signal he follows standards work), and his background is 15+ years building SCADA/MES at real manufacturers. Aris Machina is 12 months old and working on AI for automation — the exact data connectivity and semantic layer problems that DIME and i3X solve are foundation questions for any AI-on-the-factory-floor product. A first-degree connection worth a short outreach to understand what Aris Machina is building on.",
+    "signal": "Thanks, it's great efforts done (on i3X 1.0 spec freeze post)",
+    "suggested_opener": "Saw you tracking the i3X spec work. At Aris Machina, are you building the AI layer on top of existing connectivity stacks or is the connectivity problem still part of what you're solving?"
+  }
+]
