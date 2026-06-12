@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-12T14:33:40Z",
+  "post": {
+    "urn": "urn:li:activity:7471162096290836480",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471162096290836480/",
+    "author": "Christofer Dutz",
+    "topic_summary": "Acquired a Mitsubishi Q03UDECPU to build Mitsubishi protocol drivers for ToddySoft GmbH, possibly contributing to Apache PLC4X if community helps."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Christofer Dutz",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471162096290836480/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471162096290836480?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7471162096290836480%2C7471208040088686592%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287471208040088686592%2Curn%3Ali%3AugcPost%3A7471162096290836480%29",
+    "comment_text": "The Q03UDECPU's built-in Ethernet runs MC Protocol (3E frame, TCP, port 5007). That part is relatively well-documented. The harder part of the Q-series landscape is that many production installs on automotive and packaging lines still use older Q02/Q06 CPUs with a QJ71E71-100 Ethernet module added later: those add the network/station/unit addressing layer the driver has to account for.\n\nThe other thing that tends to surface in field deployments: a lot of the process data plants actually want to collect lives in CC-Link remote stations rather than the main CPU registers. MC Protocol gets you the CPU data space fine, but cycle counters and analog values on remote I/O heads are a separate protocol path entirely. That distinction usually appears after the driver is working and the plant engineer says the number they want is on the remote head."
+  },
+  "skip_reason": null
+}
