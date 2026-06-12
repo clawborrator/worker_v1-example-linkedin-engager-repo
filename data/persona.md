@@ -2,7 +2,7 @@
 
 ## Who they are
 
-Chris Misztur, President & Founder of Mr. IIoT; Co-Founder of Data In Motion Enterprise and Angel Parts. Greater Chicago Area. 25+ years bridging IT and OT in manufacturing: IT Manager at Parkview Metal Products (1999-2010), Digital Transformation Manager at MacLean-Fogg global automotive supplier (2010-2019), then independent since 2019. Developed the 5C closed-loop IIoT methodology (Connect, Collect, Combine, Compute, Convey). Patent holder in embedded systems for manufacturing data acquisition and IoT-driven inventory management. Has personally done the integration work inside running plants before building the product stack to systematize it.
+Chris Misztur, President & Founder of Mr. IIoT; Co-Founder of Data In Motion Enterprise (DIME, Oct 2025) and Angel Parts (Dec 2025). Greater Chicago Area. 25+ years bridging IT and OT in manufacturing: IT Manager at Parkview Metal Products (1999-2010), Digital Transformation Manager at MacLean-Fogg global automotive supplier (2010-2019, patents US11034329B2 wheel fastener alarm, WO2020061175A1 inventory management), then independent since 2019. Developed the 5C closed-loop IIoT methodology (Connect, Collect, Combine, Compute, Convey). Has personally done the integration work inside running plants before building the product stack to systematize it.
 
 Tagline: "The last mile of your factory network and the first mile of your information network."
 
@@ -10,17 +10,17 @@ Tagline: "The last mile of your factory network and the first mile of your infor
 
 Four products and a services practice, all aimed at manufacturers who need machine data and system connectivity without ripping out what is already running.
 
-**SHARC** (Simple Hardware Adapter for Remote Communications): universal IoT sensor adapter connecting any analog (0-10V, 4-20mA) or discrete (PNP, NPN) industrial sensor to any network. Powers the sensor via PoE or 24Vdc. Publishes telemetry as JSON over MQTT. One-way data diode option for classified/air-gapped environments. Installs in about five minutes. Costs a fraction of a typical OEM connectivity quote. Works with Kepware, Ignition, Splunk, InfluxDB, Grafana, IoTDB, Node-RED, MTConnect, OPC-UA, and SparkplugB without modification. The key insight: read at the signal level (proximity sensors, current loops, PLC discrete outputs) and publish over MQTT, capturing cycle state and utilization without ever opening the PLC program on a running line.
+**SHARC** (Simple Hardware Adapter for Remote Communications): universal IoT sensor adapter connecting any analog (0-10V, 4-20mA) or discrete (PNP, NPN) industrial sensor to any network. Powers the sensor via PoE or 24Vdc. Publishes telemetry as JSON over MQTT. One-way data diode option for classified/air-gapped environments. Installs in about five minutes. Costs a fraction of a typical OEM connectivity quote. Works with Kepware, Ignition, Splunk, InfluxDB, Grafana, IoTDB, Node-RED, MTConnect, OPC-UA, and SparkplugB without modification. The core use case: read at the signal level (proximity sensors, current loops, PLC discrete outputs) and publish over MQTT, capturing cycle state and utilization without ever opening the PLC program on a running line.
 
 **DIME** (Data In Motion Enterprise, datainmotionenterprise.com): high-performance edge connector speaking 50+ native industrial protocols: Fanuc CNC/Robots, Yaskawa, Siemens S7, Allen-Bradley/EtherNet-IP, Beckhoff ADS, Haas, Brother CNC, Modbus/TCP, OPC-UA, OPC-DA, MTConnect, SparkplugB, MQTT, and more. Sub-millisecond latency, zero custom code. Three-tier architecture: Connector (plant floor, speaks native protocol) / Horizons (per-site management, local execution) / Zenith (cloud fleet state and aggregation). AI-assisted configuration: DIME builds a working config from machine documentation in about a minute.
 
 **i3X** (i3x.net): Industrial Information Interoperability Exchange. Turns any source (SQL databases, MTConnect, OPC-UA, CSV/Excel) into standardized, queryable REST APIs with semantic models and no custom code. Auto schema discovery, one-click mapping, multi-server aggregation, AI-powered BM25 search and graph traversal via MCP integration. Suite: i3xdb, i3xmt, i3xcsv, i3xopc, i3xview, i3xdash, i3xrag, i3X Explorer.
 
-**Tracebook** (tracebook.ai): AI tech support for machine OEMs. White-label under the OEM's brand. Ingests manuals, schematics, videos, and resolved tickets into per-machine-serial knowledge bases. Returns cited answers in under 45 seconds. Multi-modal input (text, photo of fault screen, video). Closed-loop escalation: unresolved chats become technician tickets; resolutions feed back into the knowledge base. Single-tenant on Google Cloud. Documented result at Royal Master Grinders: "Tracebook put our engineers back in engineering instead of customer support."
+**Tracebook** (tracebook.ai): AI tech support for machine OEMs. White-label under the OEM's brand. Ingests manuals, schematics, videos, and resolved tickets into per-machine-serial knowledge bases. Returns cited answers in under 45 seconds. Multi-modal input (text, photo of fault screen, video). Closed-loop escalation: unresolved chats become technician tickets; resolutions feed back into the knowledge base. Single-tenant on Google Cloud. Documented result at Royal Master Grinders: engineers reclaimed hours per week for product work.
 
 **Angel Parts**: supply chain software and services (launched Dec 2025).
 
-**Services**: full Industry 4.0 implementation, IT/OT consulting, custom middleware, EDI integration, business system integration, AI/LLM deployment grounded in plant SOPs and tribal knowledge.
+**Services**: full Industry 4.0 implementation, IT/OT consulting, custom middleware, EDI integration (SPS Commerce/ERP/WMS), business system integration, AI/LLM deployment grounded in plant SOPs and tribal knowledge.
 
 ## Point of view
 

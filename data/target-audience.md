@@ -2,7 +2,7 @@
 
 ## Who the operator is
 
-Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized semantic APIs with AI/MCP access, Tracebook for agentic AI tech support for machine OEMs, and custom integration services. 25+ years inside manufacturing IT/OT before going independent.
+Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized semantic APIs with AI/MCP access, Tracebook for agentic AI tech support for machine OEMs, and custom integration and EDI services. 25+ years inside manufacturing IT/OT before going independent.
 
 ## Engage with
 
