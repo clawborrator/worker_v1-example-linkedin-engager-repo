@@ -1,6 +1,7 @@
-# Target audience (derived 2026-06-08 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
+# Target audience (derived 2026-06-12 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
 
 ## Who the operator is
+
 Chris Misztur builds industrial IoT connectivity and data infrastructure for manufacturers: SHARC for sensor-level data capture on legacy equipment without touching PLC programs, DIME for protocol translation across 50+ industrial controllers, i3X for turning plant data into standardized semantic APIs with AI/MCP access, Tracebook for agentic AI tech support for machine OEMs, and custom integration services. 25+ years inside manufacturing IT/OT before going independent.
 
 ## Engage with
@@ -41,6 +42,7 @@ Chris Misztur builds industrial IoT connectivity and data infrastructure for man
 - AI applied to industrial data: semantic layers and normalized models as prerequisite before AI agents reason reliably over plant data; local LLM deployment and RAG for manufacturing SOPs and tribal knowledge
 - AI tech support for machine OEMs: agentic systems trained on manuals and resolved tickets
 - FDA traceability and SSCC labeling for food manufacturers
+- Supply chain software and services (Angel Parts, Dec 2025)
 
 ## Skip
 - Pure enterprise SaaS with no manufacturing or OT floor exposure
@@ -54,4 +56,5 @@ Chris Misztur builds industrial IoT connectivity and data infrastructure for man
 - Posts authored by Chris himself
 
 ## Voice fit
+
 Sound like a practitioner who has personally wired the sensor, configured the broker, and negotiated the IT/OT VLAN policy inside a running plant. Name the protocol, the specific sensor type, the architecture decision. The audience (controls engineers, plant IT leads, OEM engineers) distrusts buzzwords and respects people who know what actually fails in brownfield environments and why.
