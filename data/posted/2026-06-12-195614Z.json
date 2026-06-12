@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-12T19:56:14Z",
+  "post": {
+    "urn": "urn:li:activity:7471288197583605760",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471288197583605760/",
+    "author": "Jeff Winter",
+    "topic_summary": "Announcing a live talk at Automate 2026 in Chicago on the premise that manufacturing infrastructure must transform before AI can deliver value."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Jeff Winter",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471288197583605760/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471182564368609280?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7471182564368609280%2C7471289215369142272%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287471289215369142272%2Curn%3Ali%3Aactivity%3A7471182564368609280%29",
+    "comment_text": "The transformation that has to happen first is mostly unglamorous: getting reliable, real-time data off the machines. Most plants still can't see their own floor clearly. PLC programs on running lines don't get touched because nobody knows what changed last time someone touched them and the documentation is gone. Half the brownfield assets speak protocols nothing upstream understands. Before an AI agent can optimize a process, someone has to have solved connectivity. That work is slower and less exciting than deploying a model, but it's where most industrial AI projects stall."
+  },
+  "skip_reason": null
+}
