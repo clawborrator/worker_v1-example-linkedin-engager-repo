@@ -63,5 +63,83 @@
     "why_now": "He's active on the i3X 1.0 spec freeze post (a signal he follows standards work), and his background is 15+ years building SCADA/MES at real manufacturers. Aris Machina is 12 months old and working on AI for automation — the exact data connectivity and semantic layer problems that DIME and i3X solve are foundation questions for any AI-on-the-factory-floor product. A first-degree connection worth a short outreach to understand what Aris Machina is building on.",
     "signal": "Thanks, it's great efforts done (on i3X 1.0 spec freeze post)",
     "suggested_opener": "Saw you tracking the i3X spec work. At Aris Machina, are you building the AI layer on top of existing connectivity stacks or is the connectivity problem still part of what you're solving?"
+  },
+  {
+    "name": "Nate A.",
+    "headline": "Manufacturing Executive | Aerospace & Defense | People First Growth Strategist | Servant Leader Genuine Machine Products",
+    "profile_url": "https://www.linkedin.com/in/nate-a-8161b068/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Genuine Machine Products",
+    "icp_read": "51-200 employee precision CNC machining shop in Gilbert, AZ. Aerospace & defense components for Northrop, Lockheed, Raytheon, Collins, Honeywell. Pursuing CMMC Level 2. Has robotic welding, multi-axis CNC. President for 6+ years. Exact ICP: small-to-mid aerospace/defense contract manufacturer, owner/president, making capital and technology decisions.",
+    "why_now": "Commented on the Jake Hall/Keyence post about his Quality team's frustration with aggressive vendor sales tactics: 'My Quality team hates to contact them, even when they have such great metrology advances. Badgering like a telemarketer at its finest. Imagine how much they could sale if they toned it back.' This signals an active technology evaluator who resents being pitched but is evaluating metrology and automation tools. The CMMC Level 2 cybersecurity path they are on is relevant to SHARC's data diode option for air-gapped environments. A precision machining shop doing aerospace components needs machine utilization, cycle counting, and OEE from CNC equipment without touching ladder logic on running lines.",
+    "signal": "My Quality team hates to contact them, even when they have such great metrology advances. Badgering like a telemarketer at its finest. Imagine how much they could sale if they toned it back.",
+    "suggested_opener": "When your Quality team does go looking for a solution rather than fielding a Keyence call, what does that evaluation actually look like at a shop your size?"
+  },
+  {
+    "name": "Derek Drews",
+    "headline": "Contract Manufacturing - Precision Sheet Metal Fab",
+    "profile_url": "https://www.linkedin.com/in/derek-drews-75943262/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "MET Manufacturing Group",
+    "icp_read": "11-50 employee contract manufacturer in Mishawaka, IN (2016, co-owner). Precision sheet metal: waterjet, CNC routing, photochemical etching, robotic welding, laser cutting. VP of Sales and co-owner. Makes purchasing decisions for the shop. Materials include steel, aluminum, copper, titanium -- high-mix, low-to-mid volume contract fab.",
+    "why_now": "Commented on the Jake Hall/Keyence post: 'I'd repost this, but I already get 3 calls a day from them.' Light signal, but he is a co-owner and decision-maker at an active contract fab shop doing CNC routing and robotic welding. Those are exactly the assets SHARC captures cycle state from without touching PLC programs. A job shop with mixed processes (waterjet, CNC, robotic welding) needs utilization data per cell without the complexity of a full MES deployment.",
+    "signal": "I'd repost this, but I already get 3 calls a day from them.",
+    "suggested_opener": "Contract shop with waterjet, CNC routing, and robotic welding on the same floor -- how are you currently tracking utilization across those three cell types?"
+  },
+  {
+    "name": "Vladimir Romanov",
+    "headline": "Manufacturing Modernization & Data Strategy | SCADA, MES, IT/OT | Digital Transformation Consulting | Founder @Joltek, SolisPLC",
+    "profile_url": "https://www.linkedin.com/in/vladromanov/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "Joltek",
+    "icp_read": "Independent consulting firm (2-10, founded 2019). Director at Joltek doing IT/OT convergence, SCADA/MES design and deployment, plant modernization for Fortune 500 manufacturers (P&G, Kraft Heinz, Post Holdings). Also founder of SolisPLC, a PLC training platform used by Kroger, General Mills, Danone. Based in Canada, working North America. Currently available for projects. First-degree connection.",
+    "why_now": "DISTANCE_1 and actively looking for manufacturing consulting projects per his profile. His background (P&G, Kraft Heinz, Post Holdings) overlaps directly with DIME/SHARC territory -- brownfield lines, multiple controller types, IT/OT convergence. SolisPLC's user base at large food manufacturers (Kroger, General Mills, Danone) represents potential warm intros into buyer companies. He would recognize DIME's protocol coverage immediately. Signal from Dustin Symes' post was light (laptop choice curiosity), but the connection warmth and professional overlap justify a short outreach.",
+    "signal": "Interesting choice. I'm getting to a point of needing a new laptop myself... Curious to see what the feedback on these is in a few months.",
+    "suggested_opener": "With the factory-floor consulting you're doing at Joltek, what's your current setup for edge work on customer sites -- anything for local execution when the customer site doesn't have reliable connectivity back?"
+  },
+  {
+    "name": "Aaron Pfeifer",
+    "headline": "Principal @ Atlas OT - Industrial System Integrations | SCORE Mentor",
+    "profile_url": "https://www.linkedin.com/in/adpfeifer/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Atlas OT",
+    "icp_read": "Industrial system integrations SI (Principal level). SCORE mentor. Signal across two posts today: active on commissioning/field work content (Alicia Lomas) and the vendor tech support discussion (Jake Hall/Keyence). He made a specific point about the frustration when you need live technical help and 'a week later your ticket is still waiting to be processed' -- which is the exact Tracebook use case for machine OEMs.",
+    "why_now": "Two separate posts today, both on-topic. On the Alicia Lomas commissioning post he asked about the ASi replacement with field-level curiosity. On the Jake Hall/Keyence post he made a specific comment about the value of live human support vs slow ticket queues: 'I mean, as obnoxious as it can be, at least you can get a contact. Even worse when you need a human to talk through a spec or technical troubleshooting and a week later your ticket is still waiting to be processed.' That is the exact pain Tracebook solves for machine OEMs' field engineers. Atlas OT does industrial system integrations -- DIME and SHARC fit directly into the brownfield deployments they run.",
+    "signal": "Even worse when you need a human to talk through a spec or technical troubleshooting and a week later your ticket is still waiting to be processed.",
+    "suggested_opener": "The slow-ticket problem you described is real on the OEM side too -- when your field team needs machine-specific answers at a customer site, is it usually the OEM's support line or onsite documentation that fails first?"
+  },
+  {
+    "name": "Preston Hadley",
+    "headline": "President & Founder at Envision Automation & Controls",
+    "profile_url": "https://www.linkedin.com/in/preston-hadley/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "Envision Automation & Controls",
+    "icp_read": "Small automation SI (2-10 employees, founded 2019) in Evansville, IN. Specialties: PLC Programming, Machine Vision, Robotics Integration, HMI & SCADA, IIoT, Remote Connectivity, Network Integration. First-degree connection. President and founder.",
+    "why_now": "DISTANCE_1 and his company explicitly lists IIoT and Remote Connectivity in its specialties -- that is SHARC and DIME territory. Evansville, IN is a regional manufacturing hub. A small SI doing brownfield IIoT deployments is exactly the kind of partner who resells or recommends SHARC for sensor-level capture and DIME for protocol translation without the SI having to build custom drivers. Signal from Alicia Lomas' commissioning post was humor (crawfish joke), but the warmth of a first-degree connection with an IIoT-focused SI in the Midwest makes this worth a short message.",
+    "signal": "That's good and all. But how were the crawfish?",
+    "suggested_opener": "Saw you commenting on Alicia's commissioning post -- at Envision, are you doing much brownfield sensor-level capture on legacy equipment, or mostly PLC program-based connectivity?"
+  },
+  {
+    "name": "Robert Falzon",
+    "headline": "CEO and Co-Founder, Inkwell Data. We build Altior, a sovereign industrial data PaaS creating edge digital twins, applying business logic to OT data in transit, and enabling secure AI in regulated environments.",
+    "profile_url": "https://www.linkedin.com/in/robert-falzon-4683987b/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "Inkwell Data Limited",
+    "icp_read": "Early-stage industrial data PaaS (11-50, London/Dublin, founded 2018). Altior creates edge digital twins for multi-vendor smart assets in utilities, buildings, critical infrastructure. Sovereign/air-gapped focus. Overlaps with DIME (protocol bridging) and i3X (semantic layer) but targets regulated/utility verticals rather than discrete manufacturing. Not a direct competitor in the same buyer base.",
+    "why_now": "His comment on Kai Hackbarth's IoT/MCP post was the most substantive in the thread: 'Fully agree. Transporting data is a solved problem, but ensuring an AI model can contextualise, trust, and verify the lineage of a legacy edge sensor input is where the real friction lies. Bridging that data gap down to the legacy edge is where we have focused.' This maps directly to what DIME and i3X do for manufacturing. Different vertical (utilities/regulated vs discrete manufacturing) but same technical layer. Potential ecosystem or integration conversation -- Inkwell handles utilities/critical infrastructure, Chris handles discrete manufacturing, both need the same semantic layer below AI.",
+    "signal": "Transporting data is a solved problem, but ensuring an AI model can contextualise, trust, and verify the lineage of a legacy edge sensor input is where the real friction lies. Bridging that data gap down to the legacy edge is where we've focused.",
+    "suggested_opener": "The lineage problem you described for legacy edge sensor data is the same one we run into in discrete manufacturing. At Inkwell, are you solving it primarily at the metadata schema layer or is the protocol bridge itself still the hard part?"
   }
 ]
