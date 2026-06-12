@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-12T00:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7471001963434917888",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471001963434917888/",
+    "author": "David Rodriguez",
+    "topic_summary": "Demo of Claude generating a working PI Vision display using an MCP server for PI System access plus a semantic wind turbine skill for asset context."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "David Rodriguez",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471001963434917888/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7470877581781884929?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7470877581781884929%2C7471003926432075776%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287471003926432075776%2Curn%3Ali%3AugcPost%3A7470877581781884929%29",
+    "comment_text": "The wind turbine skill is doing more work than the video length suggests. Without asset context, the MCP connection gives Claude raw PI tag names and AF paths that mean nothing outside the plant that named them. \"TT-101\" could be a blade temperature or a cooling water loop; the model cannot tell, and neither display layout nor alarm threshold makes sense without knowing which.\n\nThe sequence you described, tags to AF to Vision, is right for exactly that reason. The AF hierarchy is what turns a flat list of time series into a structure the LLM can reason about. That semantic step is not optional if you want display generation that stays coherent as you add more asset types."
+  },
+  "skip_reason": null
+}
