@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-13T14:17:27Z",
+  "post": {
+    "urn": "urn:li:activity:7471495240818958336",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471495240818958336/",
+    "author": "Andreas Heine",
+    "topic_summary": "Announcing i3x2ua v1.2, an industrial OPC UA interoperability tool that progressed from protocol compliance (v1.0) to MCP tooling for AI (v1.1) to a human-friendly UI (v1.2)."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Andreas Heine",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471495240818958336/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7471495237820006400?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7471495237820006400%2C7471566350809710592%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287471566350809710592%2Curn%3Ali%3AugcPost%3A7471495237820006400%29",
+    "comment_text": "The sequence is right. Protocol compliance gets you to \"data is technically accessible.\" MCP tooling gets you to \"an AI agent can reason over what's there without a human hardcoding every query\": the agent can ask what endpoints exist, what schemas they return, and what the operating limits are before it acts. The UI step matters in practice too: the engineer debugging why an agent query returned the wrong value on a Tuesday is rarely the same person who configured the OPC UA server, and they need to read the tool schemas without opening a terminal."
+  },
+  "skip_reason": null
+}
