@@ -1,0 +1,93 @@
+[
+  {
+    "name": "Hector Yzquierdo",
+    "headline": "Senior Site Director at Darigold",
+    "profile_url": "https://www.linkedin.com/in/hector-yzquierdo/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Darigold",
+    "icp_read": "Dairy cooperative, Food & Beverages, 1,001-5,000 employees, Seattle, WA. Plant operations executive at a large food manufacturer. Classic end-user buyer.",
+    "why_now": "New to the Darigold role (Oct 2025, 9 months in), likely standing up or optimizing a new site. Prior at Chobani: launched the largest yogurt plant in the US (1.2MM sq ft, 1,000+ employees, 18+ lines, 60MM+ cases/year). Signal is light ('fixing everything' comment on a commissioning post) but ICP is strong. New site director tenure and food manufacturing scale make SHARC/DIME for machine connectivity and OEE visibility very relevant.",
+    "signal": "Doing what you and team do best! Fixing everything. (comment on Alicia Lomas' commissioning post about field troubleshooting)",
+    "suggested_opener": "Saw your comment on Alicia's post. New Darigold site, still in the fixing-everything phase, or further along than that?"
+  },
+  {
+    "name": "Simon Christiansen",
+    "headline": "Local OT Specialist at Coloplast",
+    "profile_url": "https://www.linkedin.com/in/simon-christiansen-7b941b18a/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Coloplast",
+    "icp_read": "Medical equipment manufacturer, 10,001+ employees. OT specialist embedded inside a large medical device manufacturer. Created ILA (Industrial Layered Architecture), an open OT framework. Prior: automation engineer at Novo Nordisk and Elos Medtech. Deep end-user buyer.",
+    "why_now": "His comment about 'structured data as the AI prerequisite' and GIGO is precisely the normalization problem i3X solves. He's also building ILA to address OT architecture chaos, which means he has technical influence over what connectivity and data infrastructure Coloplast adopts. DIME for floor connectivity, i3X for the semantic layer before AI agents run on plant data.",
+    "signal": "Context is everything. The more structured your data is before you feed it, the better the output. Garbage in, garbage out still applies. In my homelab I've been... (comment on a post about AI applied to industrial data)",
+    "suggested_opener": "Your note about structured data as the AI prerequisite is right. At Coloplast is the OT landscape unified enough to build on, or is ILA what you are using to close that gap first?"
+  },
+  {
+    "name": "Bas van den Brink",
+    "headline": "Global Business Applications Manager at Arxada",
+    "profile_url": "https://www.linkedin.com/in/bas-van-den-brink-0652ba21/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Arxada",
+    "icp_read": "Specialty chemical manufacturing (microbial control, coatings), 1,001-5,000 employees, Basel. Global Business Applications Manager with 15+ years IT/OT integration and MOMS implementations across pharma, chemical, semiconductor, and energy sectors. End-user IT/OT decision-maker at a manufacturer.",
+    "why_now": "He reacted positively to a PI System + Claude MCP integration demo, signaling awareness of AI-connected industrial data tools. His background is IT/OT integration and MES/MOMS inside manufacturers. DIME for protocol-level connectivity to Arxada process equipment, i3X for the semantic API and MCP layer over process data.",
+    "signal": "Really nice to see! (comment on David Rodriguez's post about PI System + Claude MCP integration demo)",
+    "suggested_opener": "You liked the PI + Claude MCP demo. Curious what the process data landscape looks like at Arxada and whether anyone there is asking about AI connectivity internally."
+  },
+  {
+    "name": "William Hearne O'Sullivan",
+    "headline": "CEO at Connected Manufacturing | Publisher, Industrial AI Review",
+    "profile_url": "https://www.linkedin.com/in/williamhearneosullivan/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Connected Manufacturing",
+    "icp_read": "Software and services firm for manufacturers, 19+ years. Also publisher of Industrial AI Review (launched Jun 2026). Channel partner and influencer: works directly with manufacturers and publishes about industrial AI.",
+    "why_now": "His question about commercially available QLMs (quantized language models) for industrial edge AI is directly adjacent to the data infrastructure problem. As CEO of Connected Manufacturing, he has direct access to the buyer decision-makers Chris is targeting. As a publisher, he reaches that same audience at scale. His QLM question shows he is actively thinking about edge AI deployment in OT environments where cloud is not an option, which is the context where DIME and i3X fit. Worth a conversation about either a deployment partnership or content collaboration.",
+    "signal": "Solaimalai Srinivasan have you seen examples of commercially available QLMs? (question in thread about AI and industrial data, asking about quantized models for edge inference)",
+    "suggested_opener": "Your QLM question on Solaimalai's thread caught my attention. At the edge deployments I have seen, quantized models work, but getting clean normalized data to the inference layer first is usually the harder problem."
+  },
+  {
+    "name": "Stijn Abeloos",
+    "headline": "Founding Partner & CTO at Omnicon Automation | EnvisionSCADA Product Owner | IT/OT Engineer at Novartis",
+    "profile_url": "https://www.linkedin.com/in/stijn-abeloos-62742595/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "Omnicon Automation / EnvisionSCADA",
+    "icp_read": "Automation/SCADA firm and product company (vendor/SI). CTO and Product Owner of EnvisionSCADA, an open SCADA platform with 105 MCP tools. Also IT/OT Engineer at Novartis Japan via Capgemini. Primarily vendor/SI.",
+    "why_now": "EnvisionSCADA already has MCP integration (105 tools) and was demonstrated with Claude Code. Possible integration angle: DIME as the plant-floor connectivity layer feeding into EnvisionSCADA, or i3X as a semantic API complement on top of SCADA data. His interest in how MCP exposes tag-level vs. semantic-model data maps exactly to what i3X handles. As the CTO building an open SCADA with AI agent integration, worth a technical conversation about architectural fit.",
+    "signal": "Thank you Florian S.! (thanking Florian for demonstrating EnvisionSCADA's MCP integration with Claude Code)",
+    "suggested_opener": "EnvisionSCADA's MCP surface looks well-structured from what Florian showed. Does it expose time-series at the raw tag level, or is there a semantic model between the tag store and the tool output?"
+  },
+  {
+    "name": "Jacob Baran",
+    "headline": "SCADA Systems Engineer | PLC Programmer | Exploring Opportunities in Switzerland",
+    "profile_url": "https://www.linkedin.com/in/jacob-baran-958987291/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Between roles (prior: Equans France)",
+    "icp_read": "25+ years electrical/controls. ISA Level II CST, CCNA, IEC-62443 industrial cybersecurity. Most recent: SCADA programmer at Equans France (transportation energy). Background in pharma, biotech, food-safe manufacturing, wastewater. Currently on career break, relocating to Switzerland. Channel practitioner who deploys SCADA and PLC systems for end-users.",
+    "why_now": "Between roles and actively evaluating what to work on next, which vendors to partner with, and what toolkit to build around. His 25 years of SCADA/PLC work span pharma, biotech, food, and wastewater, all target end-user industries. His lab comment shows he stays hands-on between engagements. Worth staying warm as a potential channel partner who deploys IIoT solutions.",
+    "signal": "I have a decommissioned micro1400 in my lab with the same dead battery. (comment on Alicia Lomas' post about Allen-Bradley PLC field troubleshooting)",
+    "suggested_opener": "The Micro1400 comment resonated. Are those ending up in your lab because they are being pulled off active lines, or more the someone-threw-it-in-a-box-in-2012 variety?"
+  },
+  {
+    "name": "Faebian Bastiman",
+    "headline": "CTO/COO & Co-Founder at Bizmuth MBE Ltd",
+    "profile_url": "https://www.linkedin.com/in/faebianbastiman/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "Bizmuth MBE Ltd",
+    "icp_read": "Semiconductor manufacturing startup, 2-10 employees, London, founded 2024. Builds AI-driven process control for MBE, CVD, ALD, and PVD thin-film deposition equipment. Machine OEM. Tracebook angle: AI tech support for deposition equipment operators and end-users.",
+    "why_now": "Co-founder and CTO building autonomous AI-driven process control for semiconductor thin-film deposition. His comment about latency and functional safety when bridging IT intelligence into OT process loops is directly about the architecture problem Chris has solved. As a machine OEM building advanced process control, Tracebook is a direct fit: AI tech support trained on deposition equipment manuals and resolved tickets, under the Bizmuth brand, to reduce support burden as customers deploy autonomous fab systems.",
+    "signal": "The focus on SCADA/Historians addresses one of the biggest challenges: ensuring low latency and functional safety when bridging modern IT intelligence into rigid OT process control. (comment on a post about SCADA and Historian integration with AI in OT environments)",
+    "suggested_opener": "The latency plus functional safety point for OT/IT bridging is real. For your MBE and CVD process loops, what does the current control path look like from chamber to feedback response?"
+  }
+]
