@@ -1,4 +1,4 @@
-# Target audience (derived 2026-06-12 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
+# Target audience (derived 2026-06-14 from Chris Misztur's profile + mriiot.com + chrismisztur.com)
 
 ## Who the operator is
 
