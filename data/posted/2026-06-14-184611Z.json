@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-14T18:55:00Z",
+  "post": {
+    "urn": "urn:li:activity:7471214891362844673",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471214891362844673/",
+    "author": "Alicia Lomas",
+    "topic_summary": "Field commissioning a sludge centrifuge in Louisiana, dealing with lost programs on brownfield HMIs (Schneider Magelis, MicroLogix PanelView Plus IP recovery)."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Alicia Lomas",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7471214891362844673/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7471204474707972096?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7471204474707972096%2C7471996342534582272%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287471996342534582272%2Curn%3Ali%3AugcPost%3A7471204474707972096%29",
+    "comment_text": "Lost programs on brownfield equipment show up more often than anyone admits. Most of what is running in plants today was patched in place by someone who left years ago, and the original files are on a floppy, a dead drive, or were never backed up. When MicroLogix or older Magelis panels are in the mix, the \"hunt the backup\" path dead-ends roughly half the time.\n\nThe practical way out: stop trying to recover the program. Read discrete and analog signals at the machine, proximity sensors or current loops, publish over MQTT, and capture cycle state and counts without touching the ladder logic. Slower to set up than a restore, but the running line stays safe and you get utilization data regardless of how the backup search goes."
+  },
+  "skip_reason": null
+}
