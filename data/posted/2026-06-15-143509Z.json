@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-15T14:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7472257652107059200",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7472257652107059200/",
+    "author": "Andreas Heine",
+    "topic_summary": "Open-source i3x2ua bridge project connecting OPC UA Companion Specifications to i3X REST APIs, making structured industrial data accessible to web developers without OPC UA SDK expertise."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Andreas Heine",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7472257652107059200/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:ugcPost:7472257651515736065?commentUrn=urn%3Ali%3Acomment%3A%28ugcPost%3A7472257651515736065%2C7472295572163600387%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287472295572163600387%2Curn%3Ali%3AugcPost%3A7472257651515736065%29",
+    "comment_text": "The gap i3x2ua closes is real. OPC UA Companion Specifications define the information model but don't enforce how vendors implement the nodeset, so in practice you find partial nodesets, vendor extensions that shadow the standard nodes, and address spaces that browse correctly but return errors on the companion spec paths. Getting that into a REST layer means consumers don't have to navigate any of that directly.\n\nThe downstream benefit for AI integration is concrete: a BrowseNames-structured OPC UA namespace is machine-readable but not LLM-friendly. A flat REST API with normalized keys is."
+  },
+  "skip_reason": null
+}
