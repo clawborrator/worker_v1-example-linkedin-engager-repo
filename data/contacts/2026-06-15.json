@@ -1,0 +1,67 @@
+[
+  {
+    "name": "John Piller",
+    "headline": "Founder, JPiller Design & Consulting | Fractional CTO & Controls Engineer for SMBs | Board Advisor | Smart Manufacturing & Industry 4.0 Expert",
+    "profile_url": "https://www.linkedin.com/in/japiller/",
+    "photo_url": null,
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "JPiller Design and Consulting — Granger, IN. 16 years. 2-10 person fractional OT/controls consultancy serving small and mid-sized manufacturers.",
+    "icp_read": "Fractional CTO and Controls Engineer for SMB manufacturers. Runs OT/IT convergence projects, PLC/SCADA architecture, and Industry 4.0 roadmaps. He's the integrator who carries outside products into client plants. His clients are the buyers; he's the channel.",
+    "why_now": "Warm (1st degree). Attending Automate 2026 in Chicago (June 23), same metro as Chris. He builds the systems that need exactly what SHARC and DIME deliver: sensor-level capture without PLC modification, protocol translation across 50+ controllers. The manufacturers he serves are the ones stuck on brownfield connectivity with no internal OT expertise. If he starts recommending SHARC or DIME to his clients, it multiplies. Signal is a social attendance post, so the opener should be light and curious, not a product handoff.",
+    "signal": "Commenting on Automate 2026 event post (attending). Also 1st-degree connection — someone in Chris's network knows him.",
+    "suggested_opener": "Are most of your SMB clients still on the 'rip and replace the PLC' path when they need connectivity data, or are you seeing more signal-level capture approaches take hold?"
+  },
+  {
+    "name": "Mark Joppru",
+    "headline": "Managing Director at FactoryXT | Digital Transformation Leader",
+    "profile_url": "https://www.linkedin.com/in/markjoppru/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "FactoryXT — business unit inside CED's Industrial Solutions Network (large electrical distributor). Founded 2024. 'We connect manufacturing plant floor automation technology (OT) to enterprise IT.' Prior: VP/GM ABB Robotics USA, VP MiR Robots Americas.",
+    "icp_read": "Runs OT/IT convergence as a managed service inside a large electrical distributor. CED has branches near every major manufacturer in the US — if FactoryXT has a product or integration they recommend, that distribution reach is significant. His mission statement is identical to Chris's value prop.",
+    "why_now": "His company (FactoryXT) exists to do exactly what Chris does — connect plant floor OT to enterprise IT — but as a services overlay inside an electrical distributor. That makes him either a partnership candidate or a channel to get Chris's products in front of his clients. He attended Automate (the signal), and his LinkedIn bio specifically says 'connecting OT to enterprise IT.' Light signal on the post ('Can't wait'), so opener should be short and curious.",
+    "signal": "Commented 'Can't wait' on Automate 2026 event post.",
+    "suggested_opener": "Curious how FactoryXT handles the connectivity layer when clients have brownfield equipment — do you build around existing protocols or are you typically bypassing at the signal level?"
+  },
+  {
+    "name": "Joe Lauf",
+    "headline": "Director of AI Integration at Full Circle Industrial | AI + GEO Strategy for Industrial Operations | Reliability, Procurement & Automation Solutions",
+    "profile_url": "https://www.linkedin.com/in/joe-lauf-9593a4266/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Full Circle Industrial — Oglesby, IL. 11-50 employees. Industrial services: gearbox repair, pump repair, preventative maintenance, millwrighting, MRO parts. Serves manufacturers on the maintenance/reliability side.",
+    "icp_read": "He's the AI integration lead at an industrial MRO/maintenance services company. Before this he ran a Hot End at Ardagh Group (glass packaging manufacturer) and was a shift supervisor at Owens Illinois (glass manufacturer) — genuine plant floor operations background. Now he's building AI systems for his clients' industrial operations. The connectivity layer (machine data to AI) is exactly where DIME/SHARC would slot in.",
+    "why_now": "Former glass plant floor supervisor, now building AI integration for industrial operations clients. He understands the machine data problem from the inside. His company's clients are manufacturers with reliability and maintenance pain — exactly who buys SHARC for utilization and cycle counting. The Automate event signal was a light movie reference, so the opener should be short and curious about the data side of what he's building.",
+    "signal": "Commented a Blues Brothers movie reference ('Got a full tank of gas and a half pack of cigarettes. It's dark and I'm wearing sunglasses.') on Automate 2026 event post.",
+    "suggested_opener": "Coming from Ardagh into the AI integration side — what's the hardest part right now, getting the machine data out cleanly or getting people to act on it once it's there?"
+  },
+  {
+    "name": "John S Rinaldi",
+    "headline": "Focused, Fast and Rock-Solid Plant Floor Gateways, Historians & IoT Edge Gateways | CEO, Real Time Automation",
+    "profile_url": "https://www.linkedin.com/in/johnsrinaldi/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "vendor",
+    "company": "RTA — Real Time Automation, Inc. Pewaukee, WI. 11-50 employees. Founded 1989. Makes protocol translation gateways (Modbus, EtherNet/IP, Profinet, OPC-UA, BACnet, etc.) and IoT edge gateways for industrial environments.",
+    "icp_read": "CEO and founder of RTA, a 37-year protocol gateway company. His products translate protocols between plant floor devices — adjacent to DIME's territory but targeting a different segment (smaller, simpler point-to-point gateways vs DIME's full edge platform). He's a vendor, not a buyer, but he runs in exactly the same practitioner circles and his post about data model quality is substantive and directly overlaps with Chris's i3X positioning.",
+    "why_now": "He just posted that smart manufacturing projects fail because the data model is sloppy, not because the software is bad. That's the exact argument Chris makes for why i3X exists. He's a thought leader in the same space with a real audience (~1400 automation professionals on his newsletter). Less a sales target than an ecosystem peer and potential collaborator — but starting from his post is natural.",
+    "signal": "Authored a post titled 'HAPPY UGLY TRUTH DAY' arguing that smart manufacturing projects fail because the data model is sloppy, not the software. Directly relevant to Chris's i3X positioning.",
+    "suggested_opener": "Your ugly truth post nails the reason most projects stall — the data model work is unglamorous and nobody budgets for it. Do you see RTA customers running into that before they even get to the gateway layer?"
+  },
+  {
+    "name": "Courtney Fernandez",
+    "headline": "Sr Robotics Hardware Engineer at Relativity Space | Automation Engineer & Consultant | 'I can integrate anything to anything'",
+    "profile_url": "https://www.linkedin.com/in/courtneydfernandez/",
+    "photo_url": null,
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Relativity Space (current, aerospace manufacturer, Long Beach CA, 1001-5000) + FAST One Solutions (co-founded consulting firm for SME manufacturers). Also co-hosts Automation Ladies podcast.",
+    "icp_read": "Automation engineer with hands-on multi-protocol background (Siemens S7, Omron, KUKA, Fanuc, IO Link, Cognex, Keyence, Sick). She's currently at an aerospace manufacturer (potential buyer context) and runs a consulting firm serving SME manufacturers. Her consulting clients are exactly the brownfield shops that need SHARC or DIME to connect legacy machines without opening ladder logic.",
+    "why_now": "Her 'I can integrate anything to anything' framing means she's the person clients call when their legacy equipment won't talk to anything else. If DIME reduces the custom code burden on her consulting work, she has direct incentive to use it. Signal was a light wildlife/wasp joke on Alicia's commissioning post — same practitioner circle Chris just commented in.",
+    "signal": "Commented playfully on Alicia Lomas's brownfield commissioning post (the same post Chris commented on yesterday).",
+    "suggested_opener": "You and Alicia were describing exactly the brownfield pain I know — when you're hunting lost programs and the HMI lost its IP, do you typically try to recover the PLC program or do you find it faster to read at the signal level and bypass?"
+  }
+]
