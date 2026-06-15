@@ -221,6 +221,14 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
         <button data-f="2">2nd</button>
         <button data-f="cold">Cold</button>
       </div>
+      <span class="seg-lbl">Date</span>
+      <div class="seg" id="dates">
+        <button data-d="all" class="on">All</button>
+        <button data-d="today">Today</button>
+        <button data-d="yesterday">Yesterday</button>
+        <button data-d="week">This wk</button>
+        <button data-d="lastweek">Last wk</button>
+      </div>
     </div>
   </div>
 </header>
@@ -236,13 +244,37 @@ main{max-width:1560px;margin:0 auto;padding:22px 26px 80px}
 <script>
 const $ = (s,el=document)=>el.querySelector(s);
 const grid = $('#grid'), loader = $('#loader');
-let CONTACTS = [], FILTER = 'all', BUCKET = 'all';
+let CONTACTS = [], FILTER = 'all', BUCKET = 'all', DATEF = 'all';
 
 const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function degree(d){ d=String(d||''); if(/DISTANCE_1|1st/i.test(d))return 1;
   if(/DISTANCE_2|2nd/i.test(d))return 2; if(/DISTANCE_3|OUT_OF_NETWORK|cold|3rd/i.test(d))return 3; return 0; }
 function degLabel(n){ return n===1?'1st degree · connected':n===2?'2nd degree':n===3?'out of network':'distance unknown'; }
 function initials(name){ return (name||'?').split(/\s+/).map(w=>w[0]).filter(Boolean).slice(0,2).join('').toUpperCase(); }
+
+// Local YYYY-MM-DD (NOT toISOString, which is UTC and can shift the day).
+function ymd(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+// Boundaries for the date filter, computed against local "now". Weeks run
+// Monday→Sunday. Contact dates are 'YYYY-MM-DD' strings so they compare
+// chronologically with plain string </> once aligned to these bounds.
+function dateBounds(){
+  const now = new Date(); now.setHours(0,0,0,0);
+  const wk = new Date(now); wk.setDate(wk.getDate() - ((now.getDay()+6)%7)); // Monday of this week
+  const y  = new Date(now); y.setDate(y.getDate()-1);
+  const lwEnd   = new Date(wk); lwEnd.setDate(lwEnd.getDate()-1);   // last Sunday
+  const lwStart = new Date(wk); lwStart.setDate(lwStart.getDate()-7); // last Monday
+  return { today:ymd(now), yest:ymd(y), weekStart:ymd(wk), lastStart:ymd(lwStart), lastEnd:ymd(lwEnd) };
+}
+function matchesDate(date){
+  if(DATEF==='all') return true;
+  if(!date) return false;
+  const b = dateBounds();
+  if(DATEF==='today')     return date===b.today;
+  if(DATEF==='yesterday') return date===b.yest;
+  if(DATEF==='week')      return date>=b.weekStart;
+  if(DATEF==='lastweek')  return date>=b.lastStart && date<=b.lastEnd;
+  return true;
+}
 
 function companyName(c){ if(!c) return null; if(typeof c==='string') return c.split(/\s+[—–-]\s+/)[0].trim()||c; return c.name||c.company||null; }
 function companyFull(c){ if(!c) return null; if(typeof c==='string') return c; return c.name||c.company||null; }
@@ -285,7 +317,7 @@ function ingest(files){
   }
   const bRank = {buyer:0, channel:1, vendor:2};
   CONTACTS = [...byUrl.values()].sort((a,b)=>
-    (bRank[a.bucket]??3)-(bRank[b.bucket]??3) || (a.deg||9)-(b.deg||9) || (b.date>a.date?1:-1));
+    (b.date>a.date?1:b.date<a.date?-1:0) || (bRank[a.bucket]??3)-(bRank[b.bucket]??3) || (a.deg||9)-(b.deg||9));
   render();
 }
 
@@ -293,6 +325,7 @@ function render(){
   loader.classList.add('hidden');
   const shown = CONTACTS.filter(c=>{
     if(BUCKET!=='all' && c.bucket!==BUCKET) return false;
+    if(!matchesDate(c.date)) return false;
     if(FILTER==='1') return c.deg===1;
     if(FILTER==='2') return c.deg===2;
     if(FILTER==='cold') return c.deg===3;
@@ -351,6 +384,8 @@ $('#filters').addEventListener('click', e=>{ const b=e.target.closest('button[da
   FILTER=b.dataset.f; [...$('#filters').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b)); render(); });
 $('#buckets').addEventListener('click', e=>{ const b=e.target.closest('button[data-b]'); if(!b) return;
   BUCKET=b.dataset.b; [...$('#buckets').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b)); render(); });
+$('#dates').addEventListener('click', e=>{ const b=e.target.closest('button[data-d]'); if(!b) return;
+  DATEF=b.dataset.d; [...$('#dates').querySelectorAll('button')].forEach(x=>x.classList.toggle('on',x===b)); render(); });
 grid.addEventListener('click', async e=>{ const b=e.target.closest('.copy'); if(!b) return;
   try{ await navigator.clipboard.writeText(b.dataset.t); }catch(_){}
   b.textContent='copied'; b.classList.add('done'); setTimeout(()=>{b.textContent='copy';b.classList.remove('done')},1400); });
