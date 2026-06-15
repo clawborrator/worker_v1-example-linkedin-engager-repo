@@ -63,5 +63,83 @@
     "why_now": "Her 'I can integrate anything to anything' framing means she's the person clients call when their legacy equipment won't talk to anything else. If DIME reduces the custom code burden on her consulting work, she has direct incentive to use it. Signal was a light wildlife/wasp joke on Alicia's commissioning post — same practitioner circle Chris just commented in.",
     "signal": "Commented playfully on Alicia Lomas's brownfield commissioning post (the same post Chris commented on yesterday).",
     "suggested_opener": "You and Alicia were describing exactly the brownfield pain I know — when you're hunting lost programs and the HMI lost its IP, do you typically try to recover the PLC program or do you find it faster to read at the signal level and bypass?"
+  },
+  {
+    "name": "Matthew Swope",
+    "headline": "Enterprise Digital Manufacturing Transformation Strategist | Manufacturing Systems Integration Strategy | IT/OT & Operational Data Architecture | Multi-Site Manufacturing Core-Flex",
+    "profile_url": "https://www.linkedin.com/in/matthew-swope/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Materion Corporation (contract) — Specialty materials manufacturer, Mayfield Heights OH, 1001-5000 employees. High performance alloys, beryllium, advanced materials.",
+    "icp_read": "Contract MES Solution Architect with 30+ years in manufacturing (automotive, aerospace, nuclear component). Currently at Materion building MQTT/UNS, Ignition, SparkPlug B, and SAP integration — in the architecture seat choosing the technology stack on a live project right now.",
+    "why_now": "He is actively specifying MQTT brokers, Ignition topology, and SparkPlug B payloads at Materion today. His comment on Jeff Winter's post showed he thinks about tech-as-multiplier rather than tech-as-solution — the framing that makes someone open to DIME's zero-custom-code pitch. As a freelance architect he carries relationships across future client engagements too.",
+    "signal": "Commented on Jeff Winter's AI-vs-broken-production post: \"Advanced technologies often act as multipliers rather than solutions. Organizations sometimes view AI, analytics, MES, or digital transformation initiatives as substitutes for disciplined operations.\"",
+    "suggested_opener": "The multiplier framing you put in Jeff Winter's thread is the right read — what does the connectivity foundation look like at Materion before the analytics stack, and are you working with native connectors or an edge broker layer for the MQTT piece?"
+  },
+  {
+    "name": "Jonathan Alexander",
+    "headline": "Manufacturing AI & Advanced Analytics | Digital Transformation | Keynote Speaker | Industry 4.0 | Operational Excellence | Change Management | People Empowerment",
+    "profile_url": "https://www.linkedin.com/in/jonathan-alexander1/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "DISTANCE_1",
+    "bucket": "channel",
+    "company": "AI Applied Consortium (Advisory Board, part-time volunteer). Independent manufacturing AI and digital transformation consultant. 15 years inside manufacturing: instrumentation, maintenance, chemical engineering, operations leadership.",
+    "icp_read": "15 years on the shop floor and in operations leadership before moving to manufacturing AI consulting. He recommends and designs the IIoT and analytics stack for manufacturers. DISTANCE_1 makes this a warm outreach. His ICP-adjacent expertise means he influences what tools clients buy.",
+    "why_now": "He specifically called out the firefighting-plant paradox on Jeff Winter's post: the plant that most needs to fix basics is also the one that never has capacity to stop and fix them. That is the exact problem SHARC and signal-level data capture solve — OEE visibility without opening the PLC program on a running line. His framing shows he understands the constraint clearly.",
+    "signal": "Commented on Jeff Winter's AI-vs-broken-production post: \"Classic shiny object syndrome. On the other side though — what if the plant is always firefighting and never has time? (cavemen pushing cart with square wheels, saying I'm too busy)\"",
+    "suggested_opener": "The square-wheels problem you described is real — are you seeing demand for approaches that give firefighting plants machine visibility without requiring them to stop the line and open the PLC program?"
+  },
+  {
+    "name": "Elliot Pedrick",
+    "headline": "Systems Engineer at Tata Steel UK",
+    "profile_url": "https://www.linkedin.com/in/elliot-pedrick-711290299/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "OUT_OF_NETWORK",
+    "bucket": "buyer",
+    "company": "Tata Steel UK — steel manufacturer, 5,001-10,000 employees. Heavy industry, brownfield capital equipment across continuous casting and rolling lines.",
+    "icp_read": "17+ years in heavy industry instrumentation and control: PLC fault finding, SCADA development, instrument calibration, X-ray gauge maintenance, asset improvement project management. Systems Engineer responsible for authorizing permits, managing contractors, planning maintenance. He owns the instrumentation layer at a large manufacturer.",
+    "why_now": "Large-scale brownfield steel manufacturing with ongoing capital transitions. Instrumentation engineers at this scale manage hundreds of legacy sensors and PLCs that nobody will touch because the line runs 24/7. SHARC and DIME address exactly that constraint. Outreach is cold (OUT_OF_NETWORK), so opener must be light and curious rather than a pitch.",
+    "signal": "Engaged on Jeff Winter's AI-vs-broken-production post (comment text not captured — likely a reaction or brief agreement).",
+    "suggested_opener": "What does brownfield connectivity look like at Tata Steel's scale — are you able to read off existing instrumentation, or are you dealing with aging PLCs that nobody will open?"
+  },
+  {
+    "name": "Phil Miller",
+    "headline": "Christ Follower | Husband | Father | Entrepreneur | Rebuilding American Manufacturing with Precision CNC Machining.",
+    "profile_url": "https://www.linkedin.com/in/phil-miller-979158288/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "DISTANCE_2",
+    "bucket": "buyer",
+    "company": "Star Machine LLC — Shipshewana, Indiana. 2-10 employees, founded 2020. CNC milling, CNC turning, prototyping to production, design for manufacturing support.",
+    "icp_read": "Owner of a 5-year-old precision CNC job shop in Indiana, 15 years machining experience before going independent. Small enough that machine utilization, cycle counts, and downtime tracking directly impact quoting and margin. Likely running Haas or similar equipment without dedicated OEE tools.",
+    "why_now": "Five years in at a small job shop is the inflection where owners start asking whether they're running at capacity and what that capacity actually is. He commented on Engle's post about Arda (inventory/order management for manufacturers), showing interest in manufacturing operations software. Signal is minimal, so opener must be genuinely light.",
+    "signal": "Commented \"Congratulations! 🎉\" on Benjamin Engle's post about joining Arda (inventory and order management for manufacturers).",
+    "suggested_opener": "Running a CNC shop at your scale — is machine utilization tracking something you have visibility into today or still on the to-do list?"
+  },
+  {
+    "name": "Mary Riedel",
+    "headline": "Administrative Director at MartinCSI | Industrial Control Systems Integrator | Legacy System Upgrades",
+    "profile_url": "https://www.linkedin.com/in/mary-riedel-36984042/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "MartinCSI — Plain City, Ohio. 11-50 employees, founded 1993. Industrial automation SI and system integrator serving OEM Manufacturing, Automotive, Food & Beverage, Packaging, Chemicals, Pharmaceuticals.",
+    "icp_read": "25 years at an Ohio SI doing PLC programming, HMI development, SCADA, OEE data collection, machine monitoring, and legacy/controls upgrades. She is on the principal and business development side — she recommends what goes into a project proposal. MartinCSI's client list is Chris's ICP.",
+    "why_now": "MartinCSI does the exact brownfield upgrade and OEE monitoring work where SHARC and DIME slot in. If Mary recommends them on an automotive or food & bev project, the client buys them. ISA community connection through Phillip Swinson. Signal is a congratulatory comment, so opener must be light.",
+    "signal": "Commented \"Congratulations Phillip! You will do great!\" on Phillip Swinson's ISA Executive Board post.",
+    "suggested_opener": "On your legacy upgrade projects, how are customers typically asking to handle machine data connectivity — through the PLC program or by reading signals at the sensor level?"
+  },
+  {
+    "name": "Phillip Swinson",
+    "headline": "VP of Automation - EDE ; Board Member - International Society of Automation (ISA) Southern North America District; Exhibit Chair, Past President - ISA Tampa Bay Section",
+    "profile_url": "https://www.linkedin.com/in/phillip-swinson-0718ab98/",
+    "photo_url": "https://media.licdn.com/dms/image/v2/D4D03AQGfqWiikXNKSg/profile-displayphoto-scale_100_100/B4DZ6kAzXaKUAc-/0/1780868136665?e=1782950400&v=beta&t=FhrPtq5OIu-LvrLpO-vgGpoWTiyz13YeEE-c_RWUb5M",
+    "distance": "DISTANCE_2",
+    "bucket": "channel",
+    "company": "Electro Design Engineering, Inc. (EDE) — Riverview, Florida. 201-500 employees, founded 1985. Automation and construction firm serving Pharma, Food & Beverage, Water/Wastewater, Mining, Robotics.",
+    "icp_read": "VP of Automation at a 400-person engineering firm, 25 years across global brownfield automation projects. He mentors and leads EDE's automation departments across five offices and handles business development and project execution. ISA Executive Board 2027-2030 means he will shape automation education and standards. He decides what connectivity products EDE specifies on projects.",
+    "why_now": "His posted career milestone (ISA board) is a natural and genuine opener. His industries — Food & Bev, Pharma, Water/Wastewater — are SHARC and DIME territories. At VP level he influences or approves what tools the automation team recommends. His 25-year global brownfield background means he knows the connectivity problem firsthand.",
+    "signal": "Authored post about joining the ISA Executive Board (2027-2030), sharing his 25-year journey from IBEW apprentice electrician to VP.",
+    "suggested_opener": "ISA Executive Board after 25 years in Food & Bev, Pharma, and Water/Wastewater — what brownfield connectivity problem do you see coming up most often in those industries?"
   }
 ]
