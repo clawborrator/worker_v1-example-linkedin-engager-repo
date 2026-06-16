@@ -1,0 +1,17 @@
+{
+  "ts": "2026-06-16T14:00:00Z",
+  "post": {
+    "urn": "urn:li:activity:7472656781706489856",
+    "post_url": "https://www.linkedin.com/feed/update/urn:li:activity:7472656781706489856/",
+    "author": "Brandon Smith",
+    "topic_summary": "Industrial systems need explicit contracts, observable state, and clear system boundaries to become AI-ready; hidden structure (not complexity) is what makes systems hard to operate and improve."
+  },
+  "comment_posted": {
+    "target": "post",
+    "target_author": "Brandon Smith",
+    "target_url": "https://www.linkedin.com/feed/update/urn:li:activity:7472656781706489856/",
+    "comment_url": "https://www.linkedin.com/feed/update/urn:li:activity:7472656781706489856?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7472656781706489856%2C7472657440560394240%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287472657440560394240%2Curn%3Ali%3Aactivity%3A7472656781706489856%29",
+    "comment_text": "The \"hidden structure\" framing is accurate. A system that technically works but doesn't expose itself clearly creates a whole class of problems that look like complexity but are really opacity.\n\nThe practical fix in industrial environments usually comes down to two things together: a defined payload schema at the edge (SparkplugB or something equivalent) and a semantic layer above the protocol data that makes state inspectable without reading native PLC registers. When those two exist, the frozen-project problem starts to break down. You can add tooling, swap analytics platforms, or build AI context against the same underlying state without renegotiating every integration point."
+  },
+  "skip_reason": null
+}
