@@ -1,0 +1,57 @@
+[
+  {
+    "name": "Julio Ruiz Velasco",
+    "profile_url": "https://www.linkedin.com/in/juliorvelasco/",
+    "headline": "President / Founder at IO SCADA | Systems Integrator Providing Automation Solutions",
+    "company": "IO SCADA",
+    "title": "President / Founder",
+    "bucket": "channel",
+    "signal": "Founded IO SCADA in 2025 after 20+ years in industrial automation including 9 years as Technology Solutions Manager at E Tech Group. Specializes in Ignition, MQTT, IIoT, MES, PLC/SCADA, and Node-RED — the exact integration stack where DIME and i3X slot in as the connectivity and semantic layer. Based in Modesto, CA.",
+    "source_post": "https://www.linkedin.com/feed/update/urn:li:activity:7472439892615122945/",
+    "harvested_date": "2026-06-16"
+  },
+  {
+    "name": "Andy Robinson",
+    "profile_url": "https://www.linkedin.com/in/andyrobinson2/",
+    "headline": "Product Manager, ConSynSys Technologies",
+    "company": "ConSynSys Technologies / Phase 2 Automation LLC",
+    "title": "Product Manager / Principal",
+    "bucket": "channel",
+    "signal": "1st connection. Deep SI background via Phase 2 Automation (8 years, Raleigh NC). Now Product Manager at ConSynSys (Cloud PLC, distributed manufacturing, Modbus-to-cloud integrations). Wrote 5 years of the Archestranaut blog and founded aaOpenSource. Philosophy is explicitly about open data sharing over monolithic stacks — direct alignment with i3X's micro-services and API-first approach.",
+    "source_post": "https://www.linkedin.com/feed/update/urn:li:activity:7472635282417344512/",
+    "harvested_date": "2026-06-16"
+  },
+  {
+    "name": "Davy Demeyer",
+    "profile_url": "https://www.linkedin.com/in/demeyerdavy/",
+    "headline": "Clarity for Brownfields, Acceleration for Greenfields",
+    "company": "Acceleer",
+    "title": "Founder",
+    "bucket": "channel",
+    "signal": "1st connection. 12+ years at Actemium Shanghai as Branch Manager for Industrial Automation, MES, Smart Manufacturing across food and fine chemicals industries. Founded Acceleer (Brussels, July 2024) — Design-Ops for Process Manufacturing. Engages actively with OPC UA, i3X, and DCS+AI topics. Commented on the DCS+Claude AI session post about PCS7 and brownfield challenges. Strong OT operator background with European SI network.",
+    "source_post": "https://www.linkedin.com/feed/update/urn:li:activity:7472635282417344512/",
+    "harvested_date": "2026-06-16"
+  },
+  {
+    "name": "Lammert Bies",
+    "profile_url": "https://www.linkedin.com/in/lammertbies/",
+    "headline": "Industrial Technology Strategist & Implementation Specialist | Disruptive Innovator",
+    "company": "Linoplan",
+    "title": "Independent Industrial Technology Professional",
+    "bucket": "channel",
+    "signal": "34 years independent industrial technology consulting at Linoplan (Netherlands). Expertise spans automation, software engineering, refrigeration, process engineering, AI, and industrial data platforms. Commented specifically that PCS7 engineering workflow is one of the most stubborn processes to automate with AI — signals hands-on experience with legacy DCS systems and real plant environments.",
+    "source_post": "https://www.linkedin.com/feed/update/urn:li:activity:7472635282417344512/",
+    "harvested_date": "2026-06-16"
+  },
+  {
+    "name": "Richard Meyer",
+    "profile_url": "https://www.linkedin.com/in/richard-meyer-5b606122/",
+    "headline": "Controls & Commissioning Engineer for the AI Era | Manufacturing · Process · Safety Critical Systems",
+    "company": "SimilarityWave Technology / Siemens Energy",
+    "title": "Engineering Consultant / Commissioning Project Manager",
+    "bucket": "vendor",
+    "signal": "1st connection. 15+ years commissioning gas turbines, EV manufacturing automation, oil & gas compressor trains, and water treatment systems. Founded SimilarityWave Technology to deliver AI-assisted engineering workflows (RAG, LLM fine-tuning, documentation acceleration) to system integrators and industrial facilities. Reaches the same SI/OT audience we target and builds adjacent tooling — useful ecosystem contact.",
+    "source_post": "https://www.linkedin.com/feed/update/urn:li:activity:7472635282417344512/",
+    "harvested_date": "2026-06-16"
+  }
+]
